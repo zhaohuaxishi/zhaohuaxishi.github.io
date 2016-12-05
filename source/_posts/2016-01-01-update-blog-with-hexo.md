@@ -5,14 +5,14 @@ tags:
  - hexo
  - next
  - github pages
----
+     ---
 
-年前在公司实习，和同事说起博客的事情，他推荐我使用 `hexo`。回来一直忙着其他事情
-，也就没有尝试去了解 `hexo` 到底是什么玩意。新年忙里偷闲，折腾了一下这技术，可以
-说是惊艳，爱不释手。于是把自己在 `github pages` 上面的博客使用 `hexo` 更新了一下
-，这里写一个小札记。
+     年前在公司实习，和同事说起博客的事情，他推荐我使用 `hexo`。回来一直忙着其他事情
+     ，也就没有尝试去了解 `hexo` 到底是什么玩意。新年忙里偷闲，折腾了一下这技术，可以
+     说是惊艳，爱不释手。于是把自己在 `github pages` 上面的博客使用 `hexo` 更新了一下
+     ，这里写一个小札记。
 
-<!--more-->
+     <!--more-->
 
 # hexo
 
@@ -24,7 +24,7 @@ tags:
 了。如果你偏好教程类的文章而不太喜欢读文档的话，你可以查看下面这些文章（我粗略的
 看过，感觉不算坑）。
 
-  [hexo系列教程：](http://www.zipperary.com/2013/05/28/hexo-guide-1/)
+[hexo系列教程：](http://www.zipperary.com/2013/05/28/hexo-guide-1/)
 
 # next 主题
 
@@ -35,11 +35,11 @@ tags:
 主题风格。个人觉得需要注意的地方有下面这些：
 
 1. `hexo` 和 `next` 在文档中都把配置写在 `_config` 文件中，但是他们分别有自己的
-   配置文件。`hexo` 的配置文件在根目录下面，而 `next` 的配置文件在主题的根目录下
-   面（通常是 themes/next）
+配置文件。`hexo` 的配置文件在根目录下面，而 `next` 的配置文件在主题的根目录下
+面（通常是 themes/next）
 
 2. `next` 有很多 custom.styl 文件可以用来定制你的主题。但是你更改这些文件之后需
-   要先把这些文件 commit 之后才会在 `github pages` 上起作用。
+要先把这些文件 commit 之后才会在 `github pages` 上起作用。
 
 # hexo 如何托管
 
@@ -79,10 +79,8 @@ tags:
 变成空格的问题](/2015/04/25/how-to-fix-the-markdown-newline-blank-problem/)一文
 。
 
-hexo 中解决这个问题非常简单，<del>你只需要安装插件
-[hexo-filter-fix-cjk-spacing][cjkspacing]即可。</del> 后来发现
-[hexo-renderer-markdown-it][markdownit]（和后面的脚注用的是同一个插件）也可以解
-决这个问题，所以我现在直接使用这个插件。
+hexo 中解决这个问题非常简单，你只需要安装插件
+[hexo-filter-fix-cjk-spacing][cjkspacing]即可。
 
 ## 脚注问题
 
@@ -95,8 +93,8 @@ hexo 中解决这个问题非常简单，<del>你只需要安装插件
 
 ```cpp
 markdown:
-    render:
-        html: true
+render:
+html: true
 ```
 
 具体的可以参考这个链接 https://github.com/hexojs/hexo/issues/1467 和这个链接
@@ -113,9 +111,9 @@ https://github.com/celsomiranda/hexo-renderer-markdown-it/issues/14
 旧版本的 Hexo 内置支持 deploy 到 git 仓库中，新版本的需要安装
 [hexo-deployer-git][gitdeployer]。
 
- [cjkspacing]: https://github.com/lotabout/hexo-filter-fix-cjk-spacing
- [markdownit]: https://github.com/celsomiranda/hexo-renderer-markdown-it
- [hexo]: https://hexo.io/
- [next]: http://theme-next.iissnan.com/
- [toc]: https://github.com/bubkoo/hexo-toc
- [gitdeployer]: https://github.com/hexojs/hexo-deployer-git
+[cjkspacing]: https://github.com/lotabout/hexo-filter-fix-cjk-spacing
+[markdownit]: https://github.com/celsomiranda/hexo-renderer-markdown-it
+[hexo]: https://hexo.io/
+[next]: http://theme-next.iissnan.com/
+[toc]: https://github.com/bubkoo/hexo-toc
+[gitdeployer]: https://github.com/hexojs/hexo-deployer-git

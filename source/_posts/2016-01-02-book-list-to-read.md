@@ -30,6 +30,10 @@ tags:
 - [More Exceptional C++](/2016/04/22/more-exceptional-cpp-note/)
 - [Exceptional C++ Style](/2016/04/25/exceptional-cpp-style/)
 - [Autotool](/2016/07/31/gnu-autotools-note/)
+- [C++编程规范](/2016/12/08/cpp-code-standards-note/)
+- [C++设计新思维](/2016/12/09/modern-cpp-design-note/)
+- [C++ Templates](#)
+- [测试驱动开发](#)
 - Effective Morden C++
 - 重构
 - 代码大全

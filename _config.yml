@@ -121,5 +121,5 @@ search:
   format: html
   limit: 10000
 
-#duoshuo_shortname: blogguorongfei
-disqus_shortname: blogguorongfei
+duoshuo_shortname: blogguorongfei
+#disqus_shortname: blogguorongfei

@@ -120,3 +120,6 @@ search:
   field: post
   format: html
   limit: 10000
+
+#duoshuo_shortname: blogguorongfei
+disqus_shortname: blogguorongfei

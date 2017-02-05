@@ -112,9 +112,15 @@ https://github.com/celsomiranda/hexo-renderer-markdown-it/issues/14
 旧版本的 Hexo 内置支持 deploy 到 git 仓库中，新版本的需要安装
 [hexo-deployer-git][gitdeployer]。
 
+## 搜索功能
+
+文章很多的时候，搜索功能显得非常的重要，hexo 3.0 之后可以使用下面
+[hexo-generator-search][search] 建立本地搜索。
+
 [cjkspacing]: https://github.com/lotabout/hexo-filter-fix-cjk-spacing
 [markdownit]: https://github.com/celsomiranda/hexo-renderer-markdown-it
 [hexo]: https://hexo.io/
 [next]: http://theme-next.iissnan.com/
 [toc]: https://github.com/bubkoo/hexo-toc
 [gitdeployer]: https://github.com/hexojs/hexo-deployer-git
+[search]: https://github.com/PaicHyperionDev/hexo-generator-search

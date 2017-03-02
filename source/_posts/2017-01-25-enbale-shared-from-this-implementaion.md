@@ -30,7 +30,7 @@ int main() {
 shared_from_this 成员函数
 
 ```c++
-class Widget : std::enable_shared_from_this<Widget> {
+class Widget : public std::enable_shared_from_this<Widget> {
     std::shared_ptr<Widget> GetPtr() {
         return shared_from_this();
     }

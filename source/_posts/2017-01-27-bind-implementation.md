@@ -85,10 +85,11 @@ public:
 };
 ```
 
-但是多个 L 却不行，因为类是没有办法重载的，你不能既定义 bind_t 有两个模板参数又
-定义它有三个模板参数。而且就算你可以这么做，这种方式也是一种不太合理的做法，因为
-这样会导致 L 和 A 进行排列组合，实现起来将会极其复杂，解决办法是归一，增加一层
-间接性，使用 List 而不是使用单个元素。
+<del>但是多个 L 却不行，因为类是没有办法重载的，你不能既定义 bind_t 有两个模板参
+数又定义它有三个模板参数。而且就算你可以这么做，</del>你可以以相同的方式处理L，
+使用模板的偏特化定义多个不同版本的 `bind_t`，这种方式是一种不太合理的做法，因为
+这样会导致 L 和 A 进行排列组合，实现起来将会极其复杂。boost 内部解决办法是归一，
+增加一层间接性，使用 List 而不是使用单个元素。
 
 ```c++
 template<typename A1>
@@ -325,6 +326,64 @@ private:
     int a1;     // 这个是函数调用的实参也就是 binder(5) 调用中的 `5`
 };
 ```
+
+# 如果实际调用的参数比绑定的参数多会怎么样？
+
+`std::bind` 有一个非常有意思的特性那就是你可以提供比绑定的参数更多的实际参数，多
+出来的这些参数会被自动忽略掉。
+
+```c++
+int foo(int a) {
+    return a;
+}
+
+auto binder = std::bind(foo, std::placeholder::_1);
+
+binder(1);
+binder(1, 2);       // 这个调用是合法的！
+```
+
+为什么呢？因为`binder`根本不知道`2`这个参数的存在。如前所述，`binder`的`L`是
+`List1`（因为绑定的时候只有 std::placeholder::_1 这个参数）：
+
+所以当我们调用`binder(1, 2)`的时候调用的是`List1`的`operator()(F f, A a)`成员函
+数，这里的`f`是`foo`，而`a`是我们提供的实际调用参数`List2`（1, 2）。
+
+实际上 `List1` 的 `operator()()` 实现如下：
+
+```c++
+template<typename F, typename L>
+operator()(F f, L l) {
+    f(l[a1]);   // a1 就是 std::placeholder::_1
+}
+```
+
+上面这个调用最终变成了`foo(1)`，也就是说 `2` 这个参数默默的被吞掉了。
+
+## 作用
+
+这种看似诡异的行为其实有它独特的作用，那就是选择性的忽略掉你不想处理参数，比如你
+有一个回调函数的原型如下：
+
+```c++
+std::function<void(int, double)>;
+```
+
+那么你在设置这个回调的时候可以使用下面这个`binder`：
+
+```c++
+void foo(int);
+std::bind(foo, std::placeholder::_1);
+```
+
+也可以使用下面这个`binder`：
+
+```c++
+void bar(int, double);
+std::bind(bar, std::placeholder::_1, std::placeholder::_2);
+```
+
+这种灵活性使用`lambda`好像没有办法实现。
 
 # 结束语
 

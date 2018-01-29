@@ -74,52 +74,17 @@ deploy:
   branch: master
   message:
 
-#marked:
-  #gfm: true
-  #pedantic: false
-  #sanitize: false
-  #tables: true
-  #breaks: false
-  #smartLists: true
-  #smartypants: true
-
-toc:
-  maxdepth: 3
-  class: toc
-  slugify: transliteration
-  #anchor: false
-    #position: after
-    #symbol: '#'
-    #style: header-anchor
-
-# Markdown-it config
-## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
-markdown:
-  render:
-    html: true
-    #xhtmlOut: false
-    breaks: false
-    linkify: true
-    #typographer: true
-    #quotes: '“”‘’'
-  plugins:
-    #- markdown-it-abbr
-    - markdown-it-footnote
-    #- markdown-it-ins
-    #- markdown-it-sub
-    #- markdown-it-sup
-  #anchors:
-    #level: 2
-    #collisionSuffix: 'v'
-    #permalink: true
-    #permalinkClass: header-anchor
-    #permalinkSymbol: ¶
+marked:
+  gfm: true
+  pedantic: false
+  sanitize: false
+  tables: true
+  breaks: false
+  smartLists: true
+  smartypants: true
 
 search:
   path: search.xml
   field: post
   format: html
   limit: 10000
-
-#duoshuo_shortname: blogguorongfei
-#disqus_shortname: blogguorongfei

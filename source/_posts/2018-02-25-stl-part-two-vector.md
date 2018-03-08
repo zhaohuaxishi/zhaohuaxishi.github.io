@@ -63,6 +63,76 @@ std::vector<int> ags(tmp);
 
 `std::vector`有一个特化版本`std::vector<bool>`，用于实现`dynamic bitset`，需要注意的是，这个特化版本并不是容器，它的迭代器无法很好的适配`STL`中的所有算法。它的存在是为了节省空间，它的每一个元素只占用一位而不是一个字节。为了实现这种优化，`operator[]`返回的是一个代理类，你没有办法取单个元素的地址。通常的建议是，如果你不需要动态的`bitset`，你可以使用`std::bitset`，如果你需要`dynamic bitset`你可以考虑使用`deque<bool>`替代。
 
+## `push_back` vs `emplace_back`
+
+C++11在容器尾部添加一个元素调用的函数是`push_back`，它在`libcxx`中的实现如下：
+
+```c++
+template <class _Tp, class _Allocator>
+inline _LIBCPP_INLINE_VISIBILITY
+void
+vector<_Tp, _Allocator>::push_back(const_reference __x)
+{
+    if (this->__end_ != this->__end_cap())
+    {
+        __RAII_IncreaseAnnotator __annotator(*this);
+        __alloc_traits::construct(this->__alloc(),
+                                  _VSTD::__to_raw_pointer(this->__end_), __x);
+        __annotator.__done();
+        ++this->__end_;
+    }
+    else
+        __push_back_slow_path(__x);
+}
+```
+
+这里存在两次元素的构造，一次是 __x 参数的构造，一次是容器内部原始的拷贝构造。也就是说使用拷贝构造在末尾构造一个新的元素。`emplace_back`是C++11为减少其中一次拷贝而引入的新的接口，在`libcxx`中的实现如下
+
+```c++
+template <class _Tp, class _Allocator>
+template <class... _Args>
+inline
+#if _LIBCPP_STD_VER > 14
+typename vector<_Tp, _Allocator>::reference
+#else
+void
+#endif
+vector<_Tp, _Allocator>::emplace_back(_Args&&... __args)
+{
+    if (this->__end_ < this->__end_cap())
+    {
+        __RAII_IncreaseAnnotator __annotator(*this);
+        __alloc_traits::construct(this->__alloc(),
+                                  _VSTD::__to_raw_pointer(this->__end_),
+                                  _VSTD::forward<_Args>(__args)...);
+        __annotator.__done();
+        ++this->__end_;
+    }
+    else
+        __emplace_back_slow_path(_VSTD::forward<_Args>(__args)...);
+#if _LIBCPP_STD_VER > 14
+    return this->back();
+#endif
+}
+```
+
+## back() 和 pop_back()
+
+std::vector内部的数据使用连续的空间存储，除了在尾部插入和删除之外都会需要涉及到其他元素的挪动（空间不足的时候在尾部插入也会需要挪动元素）。std::vector 提供了两个接口用于删除尾部数据，
+
+```c++
+reference back();
+void pop_back();
+```
+
+理想状态下，我们可以用一个接口完成
+
+```c++
+value_type pop_back();
+```
+
+之所以分开成两个接口是为了保证异常安全，如果让`pop_back`返回尾部数据就必然涉及到尾部数据的拷贝，而这个拷贝可能抛出异常导致数据的丢失。
+
 ## 自动增长
 
 `std::vector` 会在内存不够的时候自动增长空间，这是相对于C数组来说最大的一个优势。那么空间不够的时候怎么增长呢？答案是不知道。之所以特地强调这一点是为了说明C++标准一个非常重要的特点，规定结果不规定实现，甚至不规定结果。很多人因此抨击C++，带着来自其他语言的优越感嘲笑着为不确定性而焦头烂额的C++工程师。标准之所以这样规定，很大程度上承袭自C语言，C语言标准在很多地方不给出确定的结果是为了给编译器最大的选择，从而达到性能的最优化，毕竟那个时代性能真的很重要。
@@ -88,34 +158,7 @@ void swap( vector& other );
 
 临时变量（前面哪个匿名对象）是右值，无法绑定到一个左值引用上面。
 
-# `push_back` vs `emplace_back`
-
-C++11在容器尾部添加一个元素调用的函数是`push_back`，它在`libcxx`中的实现如下：
-
-```c++
-template <class _Tp, class _Allocator>
-inline _LIBCPP_INLINE_VISIBILITY
-void
-vector<_Tp, _Allocator>::push_back(const_reference __x)
-{
-    if (this->__end_ != this->__end_cap())
-    {
-        __RAII_IncreaseAnnotator __annotator(*this);
-        __alloc_traits::construct(this->__alloc(),
-                                  _VSTD::__to_raw_pointer(this->__end_), __x);
-        __annotator.__done();
-        ++this->__end_;
-    }
-    else
-        __push_back_slow_path(__x);
-}
-```
-
-也就是说使用拷贝构造在末尾构造一个新的元素。
-
->  TODO:  <25-02-18, yourname> > 完成这一部分
-
-# 兼容 C 数组
+## 兼容 C 数组
 
 C++很重要的一个特性就是兼容C语言，C的接口中，如果需要传入一个数组，通常的方式s是传入一个起始地址加上一个长度，如下：
 
@@ -125,5 +168,25 @@ void* memset( void* dest, int ch, std::size_t count );
 
 如果你现在有一个`std::vector`，现在需要把它传递给C，接口你可以调用`std::vector::data`这个成员变量获取底层的内存空间的首地址。`std::vector`和其他的容器一个非常重要的区别就是它保证了底层的内存空间的连续性，也就是说，它保证了内存空间和C数组的兼容性，能用C数组的地方都可以使用`std::vector`，而且它还能保证内存空间的自动管理。
 
+## std::vector 的内存模型
+
+std::vector的实现的内存模型并不完全一样，但是基本上都大同小异，类似下面这种结构。
+
+```c++
+            stack
+        +------------+
+        |  begin     +----------+
+        +------------+          |
+        |  end       +-------------------------------+
+        +------------+          |                    |
++-------+  cap       |          v                    v
+|       +------------+          +--------------------+----------+
+|       |   ......   |          |                    |          |   heap
+|       +------------+          +--------------------+----------+
+|                                                               ^
++---------------------------------------------------------------+
+```
+
+## 返回一个 std::vector 的开销到底有多大
 
 [1】C++标准只规定了结果，并不规定如何实现，不同的C++编译器对于`std::vector`的实现可能完全不一样，这里看的源码是来自llvm的`libcxx`实现。

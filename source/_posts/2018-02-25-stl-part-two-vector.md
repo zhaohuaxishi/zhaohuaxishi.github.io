@@ -13,6 +13,7 @@ STL中大家最耳熟能详的可能就是容器，容器大致可以分为两�
 - std::deque
 - std::queue
 - std::stack
+- std::priority_queue
 - std::list
 - std::forward_list
 
@@ -443,6 +444,42 @@ int main(int argc, char *argv[])
 说完FIFO的队列，我们顺便说一下FILO的栈，在STL中提供了`std::stack`用来实现栈的功能，它和`std::queue`一样是容器适配器而不是容器，而且它同样默认使用`std::deque`作为默认的容器，和`std::queue`不同的是，`std::stack`只需要操作容器的尾部，所以你可以用vector当作来适配`std::stack`。
 
 `std::stack`的接口比较直观这里不再赘述，有需要的同学可以自行查看devdocs或者cppreference上面的文档。
+
+# std::priority_queue
+
+在STL中，优先队列也是一个容器适配器，每次获取的数据都是优先级最大值的值（如何定义优先级可以通过模板参数来控制）。和前面两个容器适配器不同的是，它默认适配的容器是`std::vector`（`std::deque`也可以用于适配优先队列）。
+
+## 堆
+
+优先队列和前面两个容器适配器一个重要的区别就是它不仅仅是用底层的容器来存取数据，它会调整存储的数据的顺序，构建一个堆来达到优先队列每次都在常量时间取得优先级最大的数据的功能。
+
+这里说的堆不是堆空间而是一种特殊的数据结构，它是基于数组实现的一颗完全二叉树，有大堆和小堆之分，默认情况下，`std::priority_queue`是基于大堆实现的，它的特点是父节点比子节点都要大（相反小堆是指它的父节点比子节点都要小）。正是因为堆的这种特点，所以它获取最高优先级的数据可以在常量时间内完成。
+
+堆STL中也是一个非常独特的存在，在传统的数据结构和算法课程中，它属于数据结构部分，经常和队列和栈一起讲。但是在STL中它是放在算法库而不是容器或者容器适配器中实现的，和堆相关的算法有下面这些：
+
+- `std::make_heap`
+- `std::pop_heap`
+- `std::push_heap`
+
+之所以这样设计是因为堆只需要底层是一个逻辑数组就可以了，把它设计成算法可以让它适用于各种逻辑数组的实现（std::vector，std::deque，std::array，c array）。
+
+## 逆序
+
+如果你需要实现的是每次找到最小值而不是最大值，你可以通过改变默认的模板参数来控制。`std::priority_queue`的原型如下：
+
+```
+template<
+    class T,
+    class Container = std::vector<T>,
+    class Compare = std::less<typename Container::value_type>
+> class priority_queue;
+```
+
+第二个参数可以替换成`std::deque`，最后一个参数可以替换成你想要的排序算法，比如`std::greater`，下面是一个具体的例子：
+
+```
+std::priority_queue<int, std::deque<int>, std::greater<int>> q;
+```
 
 # std::list
 

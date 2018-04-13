@@ -143,3 +143,115 @@ boost::find(ia);
 ```
 
 # 迭代器
+
+算法的输入通常是一个区间，而这个区间由两个迭代器组成。迭代器是指针这个概念的泛化，和其他所有的泛型定义一样，它实际上是一个[Concept](http://devdocs.io/cpp/concept/iterator)，基本定义如下：
+
+> The Iterator concept describes types that can be used to identify and traverse the elements of a container.
+
+也就是说它主要提供两个功能，标识元素以及遍历容器。对于一个普通的泛型算法来说，遍历功能表现在它的参数上面，而标识功能表现在它的返回值。
+
+迭代器作为容器（这里说的容器是广义上的容器，C数组也算是容器之一）和算法之间的桥梁而存在。但是算法的输入通常都不是迭代器这个Concept，而是这个Concept的5个Refinement。
+
+## 迭代器的分类
+
+迭代器虽然是指针的泛化版本，但是大部分的算法实际要求的特性会比指针少很多，为了尽可能的提升算法的适用性，迭代器的功能被拆分成5个不同的Concept：输入迭代器，输出迭代器，前向迭代器，双向迭代器，随机迭代器。
+
+### 输入迭代器
+
+一个指针最常见的功能就是对它取值，而这个功能组成了输入迭代器的核心概念：支持从中读取数据（这里面有一些隐含的条件，比如需要支持判等）。这是一个非常简单的功能，但是仅仅基于这个功能我们就可以写出很多有用的算法：
+
+比如求和：
+
+```
+template< class InputIt, class T >
+T accumulate( InputIt first, InputIt last, T init );
+```
+
+判等：
+
+```
+template< class InputIt1, class InputIt2 >
+bool equal( InputIt1 first1, InputIt1 last1,
+            InputIt2 first2 );
+```
+
+迭代：
+
+```
+template< class InputIt, class UnaryFunction >
+UnaryFunction for_each( InputIt first, InputIt last, UnaryFunction f );
+```
+
+查找：
+
+```
+template< class InputIt, class T >
+InputIt find( InputIt first, InputIt last, const T& value );
+```
+
+注意这些算法需要的最低条件，你可以提供功能更强大的迭代器作为输入。
+
+### 输出迭代器
+
+和输入迭代器相对的一个概念是输出迭代器，它要求的核心功能是能够对指定的元素写入数据：也就是说支持 `*i = x`，需要注意的是，这是一个只读的概念，支持写入并不代表支持读取数据，比如 `x = *i` 不一定合法。因为`*`操作符可能返回的是对象，这个对象可能并不支持拷贝或者到`x`类型的转换。输出迭代器通常用于算法的输出参数，比如：
+
+拷贝：
+
+```
+template< class InputIt, class OutputIt >
+OutputIt copy( InputIt first, InputIt last, OutputIt d_first );
+```
+
+### 前向迭代器
+
+前向迭代器是一个支持数据多次读取的输入迭代器，如果前向迭代器是一个可变（mutable相对于只读const而言）迭代器的话，它符合输出迭代器的要求。
+
+前向迭代器于前两个迭代器最大的区别是它支持多次读写，对于输入迭代器来说`*i == *i` 是不一定成立的，而对于前向迭代器来说却成立，输入迭代器的++操作可能使得之前保留的迭代器失效，而前向迭代器不会，也就是说你可以保存一个中间值，然后继续递增。这个特性使得它可以用于`Multipass`（表示区间可多次扫描，相对于Singlepass的单次扫描）的算法。
+
+```
+template< class ForwardIt, class T >
+bool binary_search( ForwardIt first, ForwardIt last, const T& value );
+```
+
+它同时也适用于既需要输出有需要判等的情况：
+
+```
+template< class ForwardIt, class T >
+void fill( ForwardIt first, ForwardIt last, const T& value );
+```
+
+### 双向迭代器
+
+双向迭代器是一种支持双向迭代的前向迭代器，也就是说它支持`--`操作，大部分涉及到逆序相关的算法都需要使用到双向迭代器：
+
+```
+template< class BidirIt >
+void reverse( BidirIt first, BidirIt last );
+```
+
+```
+template< class BidirIt1, class BidirIt2 >
+BidirIt2 copy_backward( BidirIt1 first, BidirIt1 last, BidirIt2 d_last );
+```
+
+### 随机迭代器
+
+最后这个迭代器，是最接近指针概念的迭代器。它是一种能在常量时间内指向任意元素的双向迭代器。它要求迭代器支持算数运行，也就是 `i + n`，`b - a` 这一类的操作。这种迭代器要求比较高，能够实现的算法的效率也通常比较高。
+
+打乱数据：
+
+```
+template< class RandomIt, class URBG >
+void shuffle( RandomIt first, RandomIt last, URBG&& g );
+```
+
+排序：
+
+```
+template< class RandomIt >
+void sort( RandomIt first, RandomIt last );
+```
+
+## tag
+
+# 迭代器适配器

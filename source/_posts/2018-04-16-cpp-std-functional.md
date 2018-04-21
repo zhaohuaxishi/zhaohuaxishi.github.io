@@ -36,14 +36,13 @@ std::find_if(std::begin(a), std::end(a), is_odd)
 
 ```C++
 bool is_even(int a) { return !is_odd(a); }
-
 std::find_if(std::begin(a), std::end(a), is_even)
 ```
 
 但是如果我实现成仿函数，我们可以这样写：
 
 ```C++
-class NumberPredicate {
+class FindOdd {
 public:
     NumberPredicate(bool found_odd) { ... }
 
@@ -59,10 +58,13 @@ private:
     bool found_odd_;
 };
 
-std::find_if(std::begin(a), std::end(a), NumberPredicate());
+std::find_if(std::begin(a), std::end(a), FindOdd(true));
+std::find_if(std::begin(a), std::end(a), FindOdd(false));
 ```
 
 上面这个例子其实并不太恰当，我不推荐在一个函数中实现两个功能，但是它展示了仿函数区别于普通函数的重要特性——可以保存状态。
+
+<!--more-->
 
 # Predicate 应该是纯函数
 
@@ -185,7 +187,7 @@ private:
 };
 ```
 
-注意，默认情况下，函数调用符重载用默认用的`const`，这意味着下面的写法是不合法的：
+注意，默认情况下，函数调用符重载用默认用的`const`，这意味着你不能改变通过值拷贝捕获到`lambda`内部的值，下面的写法是不合法的：
 
 ```C++
 [num](int a) {
@@ -198,7 +200,7 @@ private:
 
 ```C++
 [num](int a) mutable {
-    num++;  // error
+    num++;  // ok
     return a % num;
 }
 ```
@@ -207,7 +209,7 @@ private:
 
 ```C++
 [num](int a) mutable -> bool {
-    num++;  // error
+    num++;  // ok
     return a % num;
 }
 ```
@@ -292,18 +294,18 @@ void HandleData(const Data& data) {
 }
 ```
 
-详细的用法：[std::function](http://devdocs.io/cpp/utility/functional/function)中给了一个更全面的例子。
+详细的用法，请参考[std::function](http://devdocs.io/cpp/utility/functional/function)。
 
 ## 如何多态的存储一个函数对象
 
-`std::function`的实现，在《C++设计新思维》一书中有非常详细的介绍，有兴趣的可以参考这本书。
+`std::function`的实现，在《C++设计新思维》一书中第五章有非常详细的介绍，有兴趣的可以参考这本书。
 
 # std::bind
 
 前面谈到，`std::function`是`Callable Object`的封装，而`std::bind`可以认为是`Callable Object`的Adaptor，它可以用于绑定`Callable Object`的部分参数，从而变成改变函数调用的接口。比如：
 
 ```C++
-using Foo = std::function<void(int)>;
+using Foo = std::function<int(int)>;
 
 int Bar(int a, int b) {
     return  a * b;
@@ -325,3 +327,7 @@ asio::async_read(socket, buffer, std::bind(&DataReceiver::OnReadData, this));
 ## 实现细节
 
 `std::bind`最精妙的地方在于它可以使用`std::placeholder::_1`这样的占位符来实现实参的自动分派，它内部的实现逻辑极其精妙，我曾经单独写过[一篇文章](/2017/01/27/bind-implementation/)简要的分析它的实现逻辑，有兴趣的同学可以参考一下，这里不在赘述。
+
+---
+
+【1】如果成员变量是引用，`const`成员函数里面可以修改引用指向的数据的值。这个问题换成指针可能会好理解一点，`int * const i` 表示你不能修改i的值，而不是不能修改i指向的值。引用一旦绑定就不可能更改，所以成员函数`const`与否对于引用来说意义不大。

@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Vim," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在每个程序员的心里都有一款完美的 IDE，只不过不同的程序员心中对于完美的定义 并不相同，所以从来都没有一款大家都喜欢的 IDE 存在，它们总是少一些你想要的 功能，或者是多了一些你不想要的功能。 解决这种问题的方法之一是配置，这也是为什么备受大家推崇的各种编辑器或者 IDE 都含有大量的可配置选项，通常来说我们可以通过配置选项把编辑器现有的功能配置 成我们最顺手的状态。 但是如果编辑器没有你想要">
+<meta name="keywords" content="Vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利器系列之 —— 编辑利器 Vim 之插件配置">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/10/06/vim-plugin/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="在每个程序员的心里都有一款完美的 IDE，只不过不同的程序员心中对于完美的定义 并不相同，所以从来都没有一款大家都喜欢的 IDE 存在，它们总是少一些你想要的 功能，或者是多了一些你不想要的功能。 解决这种问题的方法之一是配置，这也是为什么备受大家推崇的各种编辑器或者 IDE 都含有大量的可配置选项，通常来说我们可以通过配置选项把编辑器现有的功能配置 成我们最顺手的状态。 但是如果编辑器没有你想要">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.735Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利器系列之 —— 编辑利器 Vim 之插件配置">
+<meta name="twitter:description" content="在每个程序员的心里都有一款完美的 IDE，只不过不同的程序员心中对于完美的定义 并不相同，所以从来都没有一款大家都喜欢的 IDE 存在，它们总是少一些你想要的 功能，或者是多了一些你不想要的功能。 解决这种问题的方法之一是配置，这也是为什么备受大家推崇的各种编辑器或者 IDE 都含有大量的可配置选项，通常来说我们可以通过配置选项把编辑器现有的功能配置 成我们最顺手的状态。 但是如果编辑器没有你想要">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/10/06/vim-plugin/"/>
+
+
+
+
+
+  <title>利器系列之 —— 编辑利器 Vim 之插件配置 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/10/06/vim-plugin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利器系列之 —— 编辑利器 Vim 之插件配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-06T00:00:00+08:00">
+                2015-10-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/10/06/vim-plugin/" class="leancloud_visitors" data-flag-title="利器系列之 —— 编辑利器 Vim 之插件配置">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在每个程序员的心里都有一款完美的 IDE，只不过不同的程序员心中对于完美的定义
+并不相同，所以从来都没有一款大家都喜欢的 IDE 存在，它们总是少一些你想要的
+功能，或者是多了一些你不想要的功能。</p>
+<p>解决这种问题的方法之一是配置，这也是为什么备受大家推崇的各种编辑器或者 IDE
+都含有大量的可配置选项，通常来说我们可以通过配置选项把编辑器现有的功能配置
+成我们最顺手的状态。</p>
+<p>但是如果编辑器没有你想要的功能，配置是无济于事的。增强编辑器的功能，靠的是
+这篇文章中要介绍的 —— 插件。插件的存在是 Vim 和 Emacs 这类的编辑器能够备受
+推崇的原因之一，因为它们让不可能变成可能。</p>
+<p>其实最理想的状态应该是像 <code>Shougo</code> 这类的大神一样，不爽了自己写一个。可惜的
+是大部分人没有这个能力，我们通常是用大神写好的插件。这篇文章介绍的是如何使
+用 Vim 的插件，而不是如何编写自己的插件。</p>
+<a id="more"></a>
+<h1 id="如何找到自己想要的插件"><a href="#如何找到自己想要的插件" class="headerlink" title="如何找到自己想要的插件"></a>如何找到自己想要的插件</h1><p>Vim 的插件很多，所以如何找到一个合适的 Vim 插件也是一件比较头疼的事情。最
+简单的做法是使用别人的 Vim 配置文件，比如我最初使用的配置文件就是<a href="https://github.com/wklken/k-vim" target="_blank" rel="noopener">k-vim</a>
+。这一类的配置文件通常是作者多年以来使用 Vim 过程中积累的经验，他们选用的
+插件也通常是一些最好用的插件。</p>
+<p>另外一种方式就是去介绍 Vim 插件的网站上查找排名最前的那些插件。我最喜欢的
+Vim 插件网站是 <a href="http://vimawesome.com/" target="_blank" rel="noopener">vimawesome</a>。这个网站上的每个插件都会有评分，一般来说最
+靠前的都是大家用的最顺手的。</p>
+<p>当然你也可以去 <code>github</code> 上搜索相关的插件，然后看看哪一个插件的 <code>star</code> 最
+多。</p>
+<h1 id="插件的安装"><a href="#插件的安装" class="headerlink" title="插件的安装"></a>插件的安装</h1><p>通常我们会使用大量的插件，这些插件的管理（安装、删除、升级）非常不便。为了
+解决这个难题，我们需要一个管理插件的插件，这一类型的插件很多，用的比较多的
+有：</p>
+<p> -<a href="https://github.com/VundleVim/Vundle.vim" target="_blank" rel="noopener">Vundle</a></p>
+<p> -<a href="https://github.com/Shougo/neobundle.vim" target="_blank" rel="noopener">Neobundle</a></p>
+<p> -<a href="https://github.com/tpope/vim-pathogen" target="_blank" rel="noopener">Pathogen</a></p>
+<p> -<a href="https://github.com/junegunn/vim-plug" target="_blank" rel="noopener">VimPlug</a></p>
+<p>我一直都是使用 <a href="https://github.com/VundleVim/Vundle.vim" target="_blank" rel="noopener">Vundle</a>，它可以非常方便的管理插件。中间两个我没有使用过在这
+里不做介绍，最后一个是比较新的插件管理器也非常好用，有兴趣的可以去它们的主页上
+查看相关信息。</p>
+<p>Vundle 的安装比较简单，只需要两个简单的步骤即可：</p>
+<h2 id="1-克隆插件代码："><a href="#1-克隆插件代码：" class="headerlink" title="1. 克隆插件代码："></a>1. 克隆插件代码：</h2><pre><code>git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+</code></pre><h2 id="2-在配置文件中插入："><a href="#2-在配置文件中插入：" class="headerlink" title="2. 在配置文件中插入："></a>2. 在配置文件中插入：</h2><pre><code>set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin &apos;gmarik/Vundle.vim&apos;
+
+call vundle#end()
+filetype plugin indent on
+</code></pre><p><code>Vundle</code> 是唯一一个我们需要手动安装的插件，安装完这个插件之后你可以通过它
+帮你自动完成其余插件的安装。比如我想要安装 <code>delimitMate</code> 这插件，你只需要
+做如下的配置：</p>
+<pre><code>call vundle#begin()
+
+Plugin &apos;VundleVim/Vundle.vim&apos;
+Plugin &apos;Raimondi/delimitMate&apos;
+
+call vundle#end()
+</code></pre><p>也就是在 <code>call vundle#begin()</code> 和 <code>call vundle#end()</code> 之间加入你想要配置插
+件的名字。Vundle 支持多种插件源，其中 <code>Raimondi/delimitMate</code> 这中写法表示
+安装 <code>github</code> 上 <code>Raimondi</code> 用户的 <code>delimitMate</code> 插件。详细的语法请参考
+<code>Vundle</code> 在 <code>github</code> 主页中的介绍，或者通过 <code>h vundle</code> 查看帮助文档。</p>
+<h1 id="常用插件推荐"><a href="#常用插件推荐" class="headerlink" title="常用插件推荐"></a>常用插件推荐</h1><p>Vim 好用的插件太多，我一般只用 Vim 做 C/C++ 的开发，所以这里推荐的插件很多
+都是和 C/C++ 相关，如果你用它做其他类型的开发，可以自行寻找相关的插件。</p>
+<p>插件安装之后通常需要一些简单的配置，这里并没有给出这些配置，因为配置通常因
+人而异，不同的人喜欢不同的快捷键，写在这里也会使得文章本身变得复杂。大部分
+的插件的配置方式在项目主页上都会给出，我给出了所有插件的主页链接，所以就不
+再给出配置方法。如果你确实需要参考，可以参考我的<a href="https://github.com/zhaohuaxishi/dotfiles" target="_blank" rel="noopener">代码仓库</a>中的相应配
+置文件。</p>
+<h2 id="界面美化类型插件"><a href="#界面美化类型插件" class="headerlink" title="界面美化类型插件"></a>界面美化类型插件</h2><h3 id="vim-colors-solarized"><a href="#vim-colors-solarized" class="headerlink" title="vim-colors-solarized"></a><a href="https://github.com/altercation/vim-colors-solarized" target="_blank" rel="noopener">vim-colors-solarized</a></h3><p><code>solarized</code> 是一个非常有名的主题，这个插件是它的 <code>Vim</code> 版本。 不过这个主题
+只能用在 GVim 中。如果你在终端中使用 Vim，那么你应该寻找终端主题工具而不是
+<code>Vim</code> 主题插件。<code>xfce</code> 自带的 <code>xfce4-terminal</code> 和 <code>kde</code> 自带的 <code>konsole</code>
+都带有这个主题，<code>Ubuntu 15.04</code> 以后的 <code>gnome-terminal</code> 也带有这个主题，在
+之前的 <code>Ubuntu</code> 版本中想要使用合格主题可以安装
+<a href="https://github.com/Anthony25/gnome-terminal-colors-solarized" target="_blank" rel="noopener">gnome-terminal-colors-solarized</a> 这个插件。通常这个插件需要配合
+<a href="https://github.com/seebi/dircolors-solarized" target="_blank" rel="noopener">dircolors-solarized</a> 这个插件同时使用，这样才能达到最佳的显示效果。</p>
+<h3 id="vim-airline"><a href="#vim-airline" class="headerlink" title="vim-airline"></a><a href="https://github.com/bling/vim-airline" target="_blank" rel="noopener">vim-airline</a></h3><p>这个插件是一个状态栏（statusline）和标签栏（tabline）的一个增强插件，它是
+<code>vim-powerline</code> 的一个后继插件，它使用纯 VimL 编写，不需要用到 <code>Python</code> 所
+以它的速度要快一些，也轻巧一些，这也是称之为 <code>air</code> 的原因。</p>
+<p>这个插件可以说是漂亮的不像实力派，它功能非常强大，同时又有大量的主题存在，
+可配置性非常的高，强烈推荐。</p>
+<h3 id="tmuxline"><a href="#tmuxline" class="headerlink" title="tmuxline"></a><a href="https://github.com/edkolev/tmuxline.vim" target="_blank" rel="noopener">tmuxline</a></h3><p>如果你喜欢把 <code>Vim</code> 和 <code>tmux</code> 配合起来使用，那么你可以考虑安装 <code>tmuxline</code> 这个
+插件，它可以把 <code>tmux</code> 和 <code>Vim</code> 的状态栏设置成统一的主题，让这两者更加完美的融
+合。关于 <code>tmux</code> 的使用，你可以参考我的另一篇博文<a href="/2015/08/15/tmux-tutorial/">分屏利器 Tmux</a></p>
+<h2 id="自动补全插件"><a href="#自动补全插件" class="headerlink" title="自动补全插件"></a>自动补全插件</h2><p>自动补全插件通常分为两种：代码块的插入和输入自动补全。很多人想到的自动补全
+都是第二种，但其实第一种的功能也是强大到没有朋友的。</p>
+<h3 id="代码块的插入"><a href="#代码块的插入" class="headerlink" title="代码块的插入"></a>代码块的插入</h3><p>所谓代码块的插入，其实就是把一些常用的代码块通过简单的几个字符扩展成完整的
+代码，相当于是缩写替换成全名。比如输入</p>
+<pre><code>main
+</code></pre><p>使用扩展，立刻插入：</p>
+<pre><code>int main(int argc, char *argv[])
+{
+    |&lt;- 光标位置
+    return 0;
+}
+</code></pre><p>输入：</p>
+<pre><code>fori
+</code></pre><p>使用扩展，可以插入：</p>
+<pre><code>             光标位置
+                V
+for (int i, i &lt; |; i++) {
+}
+</code></pre><p>这一类的代码，在你是编写任何一种语言的代码时都会存在，而这种插件的存在会大大的
+提升你的编码效率。</p>
+<h4 id="ultisnips"><a href="#ultisnips" class="headerlink" title="ultisnips"></a><a href="https://github.com/SirVer/ultisnips" target="_blank" rel="noopener">ultisnips</a></h4><p>代码块的插入其实又分开为两个插件，<code>引擎</code> 和 <code>代码块描述</code>。<code>引擎</code> 的作用是
+驱动整个代码块扩展，比如你输入 <code>main</code> 之后按下扩展键，它负责找到相应的代码
+块并完成扩展。而 <code>代码块描述</code> 用来说明 <code>main</code> 到底是扩展成</p>
+<pre><code>int main(int argc, char *argv[])
+</code></pre><p>还是：</p>
+<pre><code>int main(void)
+</code></pre><p><a href="https://github.com/SirVer/ultisnips" target="_blank" rel="noopener">ultisnips</a> 就是所谓的 <code>引擎</code>，它是基于 Python 的，所以我们需要首先安装
+<code>Python</code>，在大部分的 <code>Linux</code> 发行版本中，默认自带 <code>Python</code>，其他操作系统可能需
+要自行安装。</p>
+<h4 id="vim-snippets"><a href="#vim-snippets" class="headerlink" title="vim-snippets"></a><a href="https://github.com/honza/vim-snippets" target="_blank" rel="noopener">vim-snippets</a></h4><p>通常我们不会自己编写 <code>引擎</code> 但是我们可以自己编写想要的 <code>代码块描述</code>。当然有一
+些 <code>代码块描述</code> 写的比较好而且非常全面，所以也成了一个常用的插件，这也就免去了
+自己动手写 <code>代码块描述</code> 的麻烦，<a href="https://github.com/honza/vim-snippets" target="_blank" rel="noopener">vim-snippets</a> 就是这种代码块描述插件。</p>
+<p>当然这并不意味着你就只能使用它们的 <code>代码块描述</code>，你完全可以根据自己的喜好
+进行自己的定制和扩展。</p>
+<h2 id="输入补全插件-——-YouCompleteMe"><a href="#输入补全插件-——-YouCompleteMe" class="headerlink" title="输入补全插件 —— YouCompleteMe"></a>输入补全插件 —— <a href="https://github.com/Valloric/YouCompleteMe" target="_blank" rel="noopener">YouCompleteMe</a></h2><p>这一类的插件，几乎所有的 IDE 都有提供，比如你输入 <code>vim-</code> 的时候列出
+vim-<code>colors-solarized</code>，vim-<code>airline</code>，和 vim-<code>snippets</code> 供你选择补全。</p>
+<p>这种插件在 Vim 中比较多，最受欢迎的应该是 <code>YouCompleteMe</code>，这个插件也是强
+大到没有朋友的级别，不过这个插件比较难以安装，因为这个插件非常的庞大，在墙
+内安装它非常的耗时，很多时候你可能会安装到一半的时候突然出错。不过这个插件
+着实强大，不妨多试几次。</p>
+<p>除了 <code>YouCompleteMe</code> 之外还有其他的一些自动补全的插件也比较好用，比如
+<code>neocomplete</code> 插件。这些插件通常可以和前面的 <code>ultisnips</code> 配合使用，具体的
+配置方法你可以参考它们的帮助文档，或者直接 <code>Google</code>。</p>
+<h2 id="兼容插件-——-supertab"><a href="#兼容插件-——-supertab" class="headerlink" title="兼容插件 —— supertab"></a>兼容插件 —— <a href="https://github.com/ervandew/supertab" target="_blank" rel="noopener">supertab</a></h2><p><code>ultisnips</code> 和 <code>neocomplete</code> 都使用 <code>tab</code> 作为触发按键，所以会有冲突，你可
+以通过配置改变其中一个的触发按键，也可以通过 <code>supertab</code> 这个插件，让它们共
+存。<code>YouCompleteMe</code> 的文档说它集成了 <code>supertab</code> 的功能，如果你选择使用它的
+话，可以不用安装这个插件。</p>
+<h2 id="括号匹配"><a href="#括号匹配" class="headerlink" title="括号匹配"></a>括号匹配</h2><p>在 C/C++ 中使用了大量的括号（这里的括号包括单双引号），这些括号通常是必须
+配对的，初学者容易因为错漏这些匹配的括号而导致错误。解决这一类的错误的最佳
+方式通常是成对的输入这些括号，你可以手动完成他们，也可以通过插件自动完成它
+们。</p>
+<h3 id="delimitMate，auto-pairs"><a href="#delimitMate，auto-pairs" class="headerlink" title="delimitMate，auto-pairs"></a><a href="https://github.com/Raimondi/delimitMate" target="_blank" rel="noopener">delimitMate</a>，<a href="https://github.com/jiangmiao/auto-pairs" target="_blank" rel="noopener">auto-pairs</a></h3><p>这个插件可以很轻松的完成括号的匹配输入，通常有它就够用了。它比较轻巧，速度
+很快。另外一个类似的插件 <code>auto-pairs</code> 也可以完成这一操作，不过它的速度要比
+<code>delimitMate</code> 慢一些，不过功能相对强大一些，比如：</p>
+<pre><code>for (int i = 0; i &lt; 10; i++) {|}
+</code></pre><p>使用 <code>delimitMate</code> 完成匹配后输入回车，你可以得到</p>
+<pre><code>for (int i = 0; i &lt; 10; i++) {
+}
+</code></pre><p>而使用 <code>autopair</code> 你可以得到</p>
+<pre><code>for (int i = 0; i &lt; 10; i++) {
+    |
+}
+</code></pre><p>总的来说，后者相对智能一些，不过速度不如前者，选择哪个全看个人洗好。</p>
+<h3 id="rainbow-parentheses"><a href="#rainbow-parentheses" class="headerlink" title="rainbow_parentheses"></a><a href="https://github.com/kien/rainbow_parentheses.vim" target="_blank" rel="noopener">rainbow_parentheses</a></h3><p>括号匹配在数量较少的时候比较容易，一旦嵌套过深，查找对应的另一半会比较困难
+。 Vim 为了解决这个问题提供了 <code>%</code> 这个快捷键，跳转到对应的括号上面，这个按
+键的问题在于你需要先把光标移动到其中一半括号上，而且这个按键本身不是很好输
+入。<code>rainbow_parentheses</code> 这个插件的作用是把匹配的括号通过同一种颜色标出来
+，这样我们可以很容易的通过视觉找到匹配的括号。这在类似于下面这样的代码中还
+是比较实用的。</p>
+<pre><code>if ((c = getchar()))
+</code></pre><p>当然如果你的代码嵌套过深，你首先应该想的是是否该改一改你自己的代码了。</p>
+<h3 id="vim-surround"><a href="#vim-surround" class="headerlink" title="vim-surround"></a><a href="https://github.com/tpope/vim-surround" target="_blank" rel="noopener">vim-surround</a></h3><p>老实说这个插件和括号的匹配本身没有太大的关系，只是功能类似所以放到一块。这
+个插件其实也是一个杀手级的插件，它可以在你指定的内容周围环绕成对的符号。比
+如，你可以快速把</p>
+<pre><code>hello world
+</code></pre><p>变成：</p>
+<pre><code>&quot;hello world&quot;
+</code></pre><p>或者更神奇的：</p>
+<pre><code>&lt;H1&gt;hello world&lt;/H1&gt;
+</code></pre><p>而这一切并不需要你切换到输入模式才能完成。关于它的详细用法可以参考它的帮助
+文档。</p>
+<p>和 <code>vim-surround</code> 配对的另一个插件是 <a href="https://github.com/tpope/vim-repeat" target="_blank" rel="noopener">vim-repeat</a> 有了这个插件你可以重复上
+一次 <code>surround</code> 动作。</p>
+<h2 id="Git-集成-——-fugitive"><a href="#Git-集成-——-fugitive" class="headerlink" title="Git 集成 —— fugitive"></a>Git 集成 —— <a href="https://github.com/tpope/vim-fugitive" target="_blank" rel="noopener">fugitive</a></h2><p>Git 是我用的最多的版本控制工具，Git 和 Vim 这两个看似风马牛不相及的神器同
+样可以通过插件统一起来，这个插件就是 <code>[fugitive][]</code> 有了它你可以在 Vim 中
+可视化的完成大部分 Git 操作，非常的方便。</p>
+<p>不过在 github 的项目主页上没有太多关于它的用法的介绍，建议感兴趣的人查看它
+的 help 文档，里面有详细的功能介绍。</p>
+<h2 id="多行编辑-——-multiple-cursors"><a href="#多行编辑-——-multiple-cursors" class="headerlink" title="多行编辑 —— multiple-cursors"></a>多行编辑 —— <a href="https://github.com/terryma/vim-multiple-cursors" target="_blank" rel="noopener">multiple-cursors</a></h2><p>这个功能不知道是不是从 <code>sublime</code> 中学过来的，我在 <code>sublime</code> 中也见过，算是
+它的王牌功能之一。要在 Vim 中使用这个功能你需要安装 <code>vim-multiple-cursors</code>
+这个插件。这个插件最实用的地方就是你如果想要替换一个变量名，你不需要挨个的
+替换，使用它可以先可视化的选择然后一次全部替换。</p>
+<h2 id="光标的快速移动-——-easymotion"><a href="#光标的快速移动-——-easymotion" class="headerlink" title="光标的快速移动 —— easymotion"></a>光标的快速移动 —— <a href="https://github.com/easymotion/vim-easymotion" target="_blank" rel="noopener">easymotion</a></h2><p><code>hjkl</code> 已经让光标的移动非常的方便了，但是它们毕竟只能移动一个单元格，如果
+你想要移动多个单元格你需要在这些快捷键前面加上移动的数量，比如 <code>10j</code> 向下
+移动 10 行，可是我很少使用这个操作因为我没有这个脑力去计算目标行和当前行之
+间的距离。</p>
+<p>为了解决这个问题，很多人推荐使用相对行号，这样就可以直观的感受到这个距离而
+不用自己计算。这当然是一个不错的选择，只不过有些人不喜欢用行号，因为它占用
+了一部分可用的编辑区域。此外相对行号在调试程序的时候不太方便，毕竟你的编译
+器通常告诉你在哪一行出错，而不是相对当前行在哪一行出了错（当然这些都是个人
+喜好问题，我通常直接通过在命令模式下输入行号跳转到我想要的行号）。</p>
+<p>如果我可以先按下 <code>j</code> 然后选择要跳到哪一行而不是先想好要跳到哪一行再按下
+<code>j</code> 该有多好。<code>vim-easymotion</code> 就是完成这个功能的，你可以先按下方向键然后
+可视化的选择你的目标，一切就是这么 <code>easy</code>。</p>
+<h2 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h2><p>如果你需要开发一个比较庞大的项目，你很容易迷失在大量的文件当中。这一小结主
+要介绍大型项目管理的一些插件</p>
+<h3 id="nerdtree"><a href="#nerdtree" class="headerlink" title="nerdtree"></a><a href="https://github.com/scrooloose/nerdtree" target="_blank" rel="noopener">nerdtree</a></h3><p>这个插件，久负盛名，它给 Vim 提供了方便的目录功能，很多人对它爱不释手，因
+为大部分 IDE 都有这个功能，它可以给你一种很熟悉的感觉。当然它会比普通的目
+录浏览器要强大，因为它提供大量的快捷键，操作起来非常方便。此外它可以很方便
+的完成打开和关闭，如果你有一块比较大的显示器，你可以一直开着它，如果你只用
+笔记本，你也可以关闭它，需要的时候再打开。</p>
+<h3 id="ctrlp"><a href="#ctrlp" class="headerlink" title="ctrlp"></a><a href="https://github.com/kien/ctrlp.vim" target="_blank" rel="noopener">ctrlp</a></h3><p>这是另一个杀手级的插件，目录通常只是方便浏览而已，其实大部分的时候我们真正
+想要的是快速找到并编辑某个文件。这一类的插件比较多，我最喜欢的是 <code>ctrlp</code>，
+这个插件提供了文件查找，buffer 管理，最近使用文件查找等功能，通过扩展还可
+以查找函数，非常的方便。我使用过许多类似的插件，但是这个是这个是我最喜欢的
+，因为它的速度要比其他的插件快很多。</p>
+<p>如果你喜欢捣鼓其他的插件，你可以考虑 <a href="https://github.com/szw/vim-ctrlspace" target="_blank" rel="noopener">ctrlspace</a> 和 <a href="https://github.com/Shougo/unite.vim" target="_blank" rel="noopener">unite</a> 这两个工具
+，它们的功能也比较强大，萝卜白菜，各有所爱。其中 <code>unite</code> 的功能最为强大，
+它有很多 <a href="https://github.com/kien/ctrlp.vim" target="_blank" rel="noopener">ctrlp</a> 没有的功能，没有用过的可以考虑尝试一下。</p>
+<h3 id="ctrlsf"><a href="#ctrlsf" class="headerlink" title="ctrlsf"></a><a href="https://github.com/dyng/ctrlsf.vim" target="_blank" rel="noopener">ctrlsf</a></h3><p>项目的开发，如果工程比较大，你可能会需要做一些简单的重构，比如更改一个变量
+的名字。 如果这个变量只在一个文件中出现，你可以使用后面推荐的
+<a href="https://github.com/terryma/vim-multiple-cursors" target="_blank" rel="noopener">multiple-cursors</a> 这个插件，一次选中所有的变量，然后全部更新。 但是如果
+这个变量出现在不同的文件中（比如头文件和实现文件中都有出现），上面这个工具
+就不够用了。这时候你可以使用 <a href="https://github.com/dyng/ctrlsf.vim" target="_blank" rel="noopener">ctrlsf</a> 这个插件。</p>
+<p>这个插件和 <a href="https://github.com/terryma/vim-multiple-cursors" target="_blank" rel="noopener">multiple-cursors</a> 一样是从 <code>sublime</code> 中学过来的功能，你可以
+查找工程中某个名称出现的所有位置。如果只是单纯的查找，<a href="https://github.com/mileszs/ack.vim" target="_blank" rel="noopener">ack</a> 这个插件也可
+以完成这一工作，<a href="https://github.com/dyng/ctrlsf.vim" target="_blank" rel="noopener">ctrlsf</a> 真正强大的地方在于你可以在结果页面中进行编辑，
+这个功能配合 <a href="https://github.com/terryma/vim-multiple-cursors" target="_blank" rel="noopener">multiple-cursors</a> 可以实现非常强大的重构功能，强烈推荐大家
+使用。</p>
+<h3 id="tagbar"><a href="#tagbar" class="headerlink" title="tagbar"></a><a href="https://github.com/majutsushi/tagbar" target="_blank" rel="noopener">tagbar</a></h3><p>许多的 IDE 会有一块区域列出当前文件中所有函数，Vim 中也可以通过插件实现这
+一功能。我比较喜欢的插件是 <code>tagbar</code>，轻巧但很强大。这个插件依赖 ctags，所
+以你需要在安装插件之前安装这个软件包。</p>
+<h3 id="cscope"><a href="#cscope" class="headerlink" title="cscope"></a><a href="http://cscope.sourceforge.net/" target="_blank" rel="noopener">cscope</a></h3><p>如果你的项目非常的大，代码之间的跳转会变成一件非常的困难的事情，你通常在阅
+读到一个函数的调用的时候想要阅读一个函数定义，或者函数的实现。在项目比较小
+的时候你可以自己查找然后打开定义文件，当项目非常庞大的时候这一切就变得力不
+从心了。你可能会很希望有一个插件，让你直接使用快捷键就可以跳转到该函数的实
+现中去。<code>YouCompleteMe</code> 插件可以配置这个功能，你也可以使用更加强大的
+<code>cscope</code>。</p>
+<p>cscope 不是 Vim 的插件，而是 tag 的生成工具，你可以通过它和 Vim 的集成，让
+它为 Vim 生成 tag，方便 Vim 进行跳转，具体配置参考 <code>cscope</code> 主页给出的方法
+。</p>
+<h2 id="代码注释"><a href="#代码注释" class="headerlink" title="代码注释"></a>代码注释</h2><h3 id="快速注释代码-——-nerdcommenter"><a href="#快速注释代码-——-nerdcommenter" class="headerlink" title="快速注释代码 —— nerdcommenter"></a>快速注释代码 —— <a href="https://github.com/scrooloose/nerdcommenter" target="_blank" rel="noopener">nerdcommenter</a></h3><p>代码的快速注释是一个非常实用的功能，这个功能我通常使用 <code>nerdcommenter</code> 来
+实现。它可以很方便的实现代码的注释和反注释的功能。</p>
+<h3 id="文档化代码注释-——-DoxygenToolkit"><a href="#文档化代码注释-——-DoxygenToolkit" class="headerlink" title="文档化代码注释 —— DoxygenToolkit"></a>文档化代码注释 —— <a href="https://github.com/vim-scripts/DoxygenToolkit.vim" target="_blank" rel="noopener">DoxygenToolkit</a></h3><p>好的代码注释本身就是一份非常好的文档，要把注释转换成书面文档，通常会使用
+<code>doxygen</code>，我们可以通过 <a href="https://github.com/vim-scripts/DoxygenToolkit.vim" target="_blank" rel="noopener">DoxygenToolkit</a> 这个插件很方便的在 Vim 中编写符合
+<code>doxygen</code> 格式的注释文档，然后通过 <code>doxygen</code> 生成相应的文档。</p>
+<h2 id="C-相关的其他插件"><a href="#C-相关的其他插件" class="headerlink" title="C++ 相关的其他插件"></a>C++ 相关的其他插件</h2><h3 id="语法高亮升级-——-vim-cpp-enhanced-highlight"><a href="#语法高亮升级-——-vim-cpp-enhanced-highlight" class="headerlink" title="语法高亮升级 —— vim-cpp-enhanced-highlight"></a>语法高亮升级 —— <a href="https://github.com/octol/vim-cpp-enhanced-highlight" target="_blank" rel="noopener">vim-cpp-enhanced-highlight</a></h3><p>Vim 内置的语法高亮对于 C++ 的支持并不完美。对于标准库它无法高亮显示，
+<a href="https://github.com/octol/vim-cpp-enhanced-highlight" target="_blank" rel="noopener">vim-cpp-enhanced-highlight</a> 这个插件可以增强高亮效果。</p>
+<h3 id="头文件和实现文件之间的跳转-——-vim-fswitch"><a href="#头文件和实现文件之间的跳转-——-vim-fswitch" class="headerlink" title="头文件和实现文件之间的跳转 —— vim-fswitch"></a>头文件和实现文件之间的跳转 —— <a href="https://github.com/derekwyatt/vim-fswitch" target="_blank" rel="noopener">vim-fswitch</a></h3><p>如果我们处于开发的初期，接口的定义并不是特别完善的时候，我们通常是需要在头
+文件和实现文件之间不断的跳转的。你很可能在实现一个接口的时候突然发现需要修
+改它的接口定义，于是需要找到头文件修改定义，又或者你在头文件中修改了接口的
+定义，需要去实现文件中做相应的更新。<a href="https://github.com/derekwyatt/vim-fswitch" target="_blank" rel="noopener">vim-fswitch</a> 这个插件可以帮我们完成
+这一工作。</p>
+<h3 id="代码格式化工具-——-vim-autoformat"><a href="#代码格式化工具-——-vim-autoformat" class="headerlink" title="代码格式化工具 —— vim-autoformat"></a>代码格式化工具 —— <a href="https://github.com/Chiel92/vim-autoformat" target="_blank" rel="noopener">vim-autoformat</a></h3><p>Vim 的代码格式化功能个人觉得只能算是凑合，C++ 代码格式化的选项并不多，为了
+能够更好的格式化 C++ 代码，个人比较倾向于使用 <a href="http://astyle.sourceforge.net/" target="_blank" rel="noopener">astyle</a>。</p>
+<p>如果你需要在 Vim 中使用 <code>astyle</code> 你可以考虑安装 <a href="https://github.com/Chiel92/vim-autoformat" target="_blank" rel="noopener">vim-autoformat</a> 这个插
+件，它可以在 Vim 中集成各种格式化工具包括 <code>astyle</code>。<code>vim-autoformat</code> 插件
+需要 <code>astyle 2.0.5</code> 以上的版本，<code>Ubuntu</code> 中的版本没有达到这个要求，所以你
+需要自己编译安装它。</p>
+<hr>
+<p>Vim 的插件太多，以上只是个人常用的一些而已，你可以自己去寻找自己喜欢的那些
+插件。此外插件好用不要贪杯，多了会让你的 <code>Vim</code> 失去它原本的轻巧和敏捷。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vim/" rel="tag"># Vim</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/03/vim-shortcut/" rel="next" title="利器系列之 —— 编辑利器 Vim 之快捷键配置">
+                <i class="fa fa-chevron-left"></i> 利器系列之 —— 编辑利器 Vim 之快捷键配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/07/gpgpu/" rel="prev" title="英伟达硬件加速编解码器的介绍">
+                英伟达硬件加速编解码器的介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何找到自己想要的插件"><span class="nav-number">1.</span> <span class="nav-text">如何找到自己想要的插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#插件的安装"><span class="nav-number">2.</span> <span class="nav-text">插件的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-克隆插件代码："><span class="nav-number">2.1.</span> <span class="nav-text">1. 克隆插件代码：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-在配置文件中插入："><span class="nav-number">2.2.</span> <span class="nav-text">2. 在配置文件中插入：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用插件推荐"><span class="nav-number">3.</span> <span class="nav-text">常用插件推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#界面美化类型插件"><span class="nav-number">3.1.</span> <span class="nav-text">界面美化类型插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vim-colors-solarized"><span class="nav-number">3.1.1.</span> <span class="nav-text">vim-colors-solarized</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim-airline"><span class="nav-number">3.1.2.</span> <span class="nav-text">vim-airline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tmuxline"><span class="nav-number">3.1.3.</span> <span class="nav-text">tmuxline</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动补全插件"><span class="nav-number">3.2.</span> <span class="nav-text">自动补全插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码块的插入"><span class="nav-number">3.2.1.</span> <span class="nav-text">代码块的插入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ultisnips"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">ultisnips</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim-snippets"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">vim-snippets</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入补全插件-——-YouCompleteMe"><span class="nav-number">3.3.</span> <span class="nav-text">输入补全插件 —— YouCompleteMe</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容插件-——-supertab"><span class="nav-number">3.4.</span> <span class="nav-text">兼容插件 —— supertab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#括号匹配"><span class="nav-number">3.5.</span> <span class="nav-text">括号匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#delimitMate，auto-pairs"><span class="nav-number">3.5.1.</span> <span class="nav-text">delimitMate，auto-pairs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rainbow-parentheses"><span class="nav-number">3.5.2.</span> <span class="nav-text">rainbow_parentheses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim-surround"><span class="nav-number">3.5.3.</span> <span class="nav-text">vim-surround</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git-集成-——-fugitive"><span class="nav-number">3.6.</span> <span class="nav-text">Git 集成 —— fugitive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多行编辑-——-multiple-cursors"><span class="nav-number">3.7.</span> <span class="nav-text">多行编辑 —— multiple-cursors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#光标的快速移动-——-easymotion"><span class="nav-number">3.8.</span> <span class="nav-text">光标的快速移动 —— easymotion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目管理"><span class="nav-number">3.9.</span> <span class="nav-text">项目管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nerdtree"><span class="nav-number">3.9.1.</span> <span class="nav-text">nerdtree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctrlp"><span class="nav-number">3.9.2.</span> <span class="nav-text">ctrlp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctrlsf"><span class="nav-number">3.9.3.</span> <span class="nav-text">ctrlsf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tagbar"><span class="nav-number">3.9.4.</span> <span class="nav-text">tagbar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cscope"><span class="nav-number">3.9.5.</span> <span class="nav-text">cscope</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码注释"><span class="nav-number">3.10.</span> <span class="nav-text">代码注释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#快速注释代码-——-nerdcommenter"><span class="nav-number">3.10.1.</span> <span class="nav-text">快速注释代码 —— nerdcommenter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文档化代码注释-——-DoxygenToolkit"><span class="nav-number">3.10.2.</span> <span class="nav-text">文档化代码注释 —— DoxygenToolkit</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-相关的其他插件"><span class="nav-number">3.11.</span> <span class="nav-text">C++ 相关的其他插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法高亮升级-——-vim-cpp-enhanced-highlight"><span class="nav-number">3.11.1.</span> <span class="nav-text">语法高亮升级 —— vim-cpp-enhanced-highlight</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#头文件和实现文件之间的跳转-——-vim-fswitch"><span class="nav-number">3.11.2.</span> <span class="nav-text">头文件和实现文件之间的跳转 —— vim-fswitch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码格式化工具-——-vim-autoformat"><span class="nav-number">3.11.3.</span> <span class="nav-text">代码格式化工具 —— vim-autoformat</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="netlink,libnl," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="2. Netlink 协议基础   Netlink 协议是基于套接字的进程间通信（IPC）机制，它可用于用户空间进程和内核之间 或者用户空间进程之间的通信。Netlink 协议基于 BSD 套接字并使用 AF_NETLINK 地址簇。 每一个 Netlink 协议都有自己的协议号（比如：NETLINK_ROUTE，NETLINK_NETFILTER， 等等）。它的寻址方案是基于 32 位的端口号（">
+<meta name="keywords" content="netlink,libnl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netlink 库 -- 官方开发者教程中文版第二部分">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/01/23/libnl-translation-part2/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="2. Netlink 协议基础   Netlink 协议是基于套接字的进程间通信（IPC）机制，它可用于用户空间进程和内核之间 或者用户空间进程之间的通信。Netlink 协议基于 BSD 套接字并使用 AF_NETLINK 地址簇。 每一个 Netlink 协议都有自己的协议号（比如：NETLINK_ROUTE，NETLINK_NETFILTER， 等等）。它的寻址方案是基于 32 位的端口号（">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.infradead.org/~tgr/libnl/doc/images//addressing.png">
+<meta property="og:image" content="http://www.infradead.org/~tgr/libnl/doc/images//nlmsghdr.png">
+<meta property="og:image" content="http://www.infradead.org/~tgr/libnl/doc/images//nlmsgerr.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netlink 库 -- 官方开发者教程中文版第二部分">
+<meta name="twitter:description" content="2. Netlink 协议基础   Netlink 协议是基于套接字的进程间通信（IPC）机制，它可用于用户空间进程和内核之间 或者用户空间进程之间的通信。Netlink 协议基于 BSD 套接字并使用 AF_NETLINK 地址簇。 每一个 Netlink 协议都有自己的协议号（比如：NETLINK_ROUTE，NETLINK_NETFILTER， 等等）。它的寻址方案是基于 32 位的端口号（">
+<meta name="twitter:image" content="http://www.infradead.org/~tgr/libnl/doc/images//addressing.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/01/23/libnl-translation-part2/"/>
+
+
+
+
+
+  <title>Netlink 库 -- 官方开发者教程中文版第二部分 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/01/23/libnl-translation-part2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netlink 库 -- 官方开发者教程中文版第二部分</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-23T00:00:00+08:00">
+                2015-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/01/23/libnl-translation-part2/" class="leancloud_visitors" data-flag-title="Netlink 库 -- 官方开发者教程中文版第二部分">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="nlp_fundamentals">2. Netlink 协议基础</h1>
+
+
+<p>Netlink 协议是基于套接字的进程间通信（IPC）机制，它可用于用户空间进程和内核之间
+或者用户空间进程之间的通信。Netlink 协议基于 BSD 套接字并使用 AF_NETLINK 地址簇。
+每一个 Netlink 协议都有自己的协议号（比如：NETLINK_ROUTE，NETLINK_NETFILTER，
+等等）。它的寻址方案是基于 32 位的端口号（之前被称为 PID），这个端口号用来唯一的
+标识每一个对等通信节点。</p>
+<a id="more"></a>
+<h2 id="addressing">2.1. 寻址</h2>
+
+
+<p>Netlink 地址（端口）由一个 32 位的整数组成。端口（port）零保留给内核使用，代表每
+个 Netlink 协议簇中内核部分的套接字。虽然不是强制规定，其他的端口则通常指的是用
+户空间的套接字。</p>
+<p><strong>注意：</strong> 一开始，我们通常都是使用进程标识符（PID）作为本地端口号。这种方式随着
+线程化的 netlink 应用程序的引入而失效，因为这种进程需要多个套接字。因此 libnl
+以进程标识符为基数再加上一个偏移量的来生成唯一的端口号，这种方式可以让一个进程
+使用多个套接字。出于向后兼容方面的考虑，第一个套接字还是以进程标识符作为端口号。</p>
+<p><img src="http://www.infradead.org/~tgr/libnl/doc/images//addressing.png" alt="Netlink 寻址"></p>
+<p>上面这幅图中用户空间有三个应用程序，而内核空间则存在两个套接字。这幅图展示了
+netlink 的常见的应用场景：</p>
+<ul>
+<li><p>用户空间和内核之间通信</p>
+</li>
+<li><p>用户空间之间通信</p>
+</li>
+<li><p>监听内核的多播通知</p>
+</li>
+</ul>
+<h3>用户空间和内核之间的通信</h3>
+
+
+<p>Netlink 最常见的应用场景就是用户空间的应用程序发送请求给内核，然后处理内核返回的
+信息，这个回复信息要么是请求出错的信息，要么就是请求成功的通知信息。</p>
+<pre><code>App1                 App2                    App3
+ |                    |                        |
+ |           request(src=11,dst=0)             |
+ +--------------------+------------------------&gt;
+ |                    |                        |
+ |            reply(src=0,dst=11)              |
+ &lt;--------------------+------------------------+
+ |                    |                        |
+ |                    |                        |
+ |                    |                        |
+ |                    |  request(src=21,dst=0) |
+ |                    +------------------------&gt;
+ |                    |                        |
+ |                    |    reply(src=0,dst=21) |
+ |                    &lt;------------------------+
+ |                    |                        |
+ |                    |                        |
+</code></pre><h3>用户空间之间通信</h3>
+
+
+<p>Netlink 也可以直接作为用户空间应用程序之间的进程间通信机制。这种通信并不限制在两
+个对等通信节点之间，任意一个节点都可以和其他的对等点进行通信。此外因为 Netlink
+支持多播，一条消息可以由多个节点同时接收到。</p>
+<p>为了让套接字对通信双方可见，这两个套接字必须在同一个 netlink 协议簇下创建。</p>
+<pre><code>App2                                    App3
+ |                                       |
+ |          request(src=22,dst=31)       |
+ +---------------------------------------&gt;
+ |                                       |
+ |           reply(src=31,dst=22)        |
+ &lt;---------------------------------------+
+ |                                       |
+ |                                       |
+</code></pre><h3>监听内核的通知信息</h3>
+
+
+<p>这一类 netlink 通信的典型使用者是用户空间那些需要处理特定内核事件的的守护进程。
+这些守护进程通常会订阅内核使用的某个多播组，内核则在某些事件发生的时候通过它来
+通知那部分订阅过该组的进程。</p>
+<pre><code>Kernel                                 App3
+  |                                      |
+  |     notification(src=0,group=foo)    |
+  +--------------------------------------&gt;
+  |                                      |
+  |                                      |
+  |                                      |
+</code></pre><p>相对于直接寻址来说，使用多播是一个更好的方式，因为它有更高的灵活性。我们可以在不
+通知内核的情况下随时更改用户空间的相关组件。</p>
+<h2 id="message_formate">2.2. 消息格式</h2>
+
+
+<p>一个 Netlink 协议通常是基于消息的，消息则通常是由 netlink 消息头部（struct
+nlmsghdr）加上有效载荷组成。虽然有效载荷可以由任何数据组成，但是它通常的格式是一
+个固定大小的协议相关头部后面紧跟一系列的属性。</p>
+<p><strong>Netlink 消息头部（struct nlmsghdr）</strong></p>
+<p><img src="http://www.infradead.org/~tgr/libnl/doc/images//nlmsghdr.png" alt="Netlink 消息头部"></p>
+<p><strong>总长度（32 位）</strong></p>
+<p>消息包括 netlink 消息头部在内的总字节数</p>
+<p><strong>消息类型（16 位）</strong></p>
+<p>消息类型指明了消息的有效载荷的类型。netlink 协议定义了多个标准的消息类型。每个协
+议簇都可能定义了额外的消息类型。详细信息请参考 <a href="#message_type">消息类型</a> 一节。</p>
+<p><strong>消息标志（16 位）</strong></p>
+<p>消息标志可以用来更改消息类型的行为。标准消息标志列表请参见 <a href="#msg_flag">消息标志</a>
+一节。</p>
+<p><strong>序列号（32 位）</strong></p>
+<p>序列号的使用是可选的，它可以用来引用前一条消息。比如一条错误消息中可以引用导致错
+误的那条请求消息。</p>
+<p><strong>端口号</strong></p>
+<p>端口号指明了这条消息需要发往哪个对等节点。如果没有指定端口号，那么这条消息会被投
+递给同一个协议簇中第一个匹配的内核端套接字。</p>
+<h3 id="message_type">2.3. 消息类型</h3>
+
+
+<p>Netlink 在请求消息（requests）、通知消息（notifications）和应答消息（replies）的
+处理上是有区别的。请求消息设有 NLM_F_REQUEST 标志位，它用来向接收方请求某种响应
+。一般来说请求消息都是从用户空间发送到内核的。虽然不是强制规定，但每次发送的请求
+消息序列号都应该是上一个序列号加一。</p>
+<p>由于请求自身的特性，接收方在收到请求消息之后可能会发送另一条 netlink 消息来响应
+这个请求。应答消息的序列号必须和它响应的那条请求消息的序列号一致。</p>
+<p>通知消息则没有那么严谨，它不需要应答，所以序列号通常是被设置成 0 的。</p>
+<pre><code>A                                     B
+|                                     |
+|       GET(seq=1,NLM_F_REQUEST)      |
++-------------------------------------&gt;
+|                                     |
+|               PUT(seq=1)            |
+&lt;-------------------------------------+
+|                                     |
+.                                     .
+.                                     .
+|              NOTIFY(seq=0)          |
+&lt;-------------------------------------+
+|                                     |
+</code></pre><p>消息的类型主要是由消息头部中 16 位的消息类型字段确定的。Netlink 定义了下面这些标
+准的消息类型：</p>
+<ul>
+<li><p>NLMSG_NOOP - 无需任何操作，消息必须被丢弃</p>
+</li>
+<li><p>NLMSG_ERROR - 错误消息或者是 ACK，参考 <a href="#error_msg">错误消息</a> 和 <a href="#acks">ACKs</a> 这两个小节</p>
+</li>
+<li><p>NLMSG_DONE - 分段序列的结束，参考 <a href="#multipart_msg">分段消息</a> 一节</p>
+</li>
+<li><p>NLMSG_OVERRUN - 通知信息越界（错误）[Overrun notification]</p>
+</li>
+</ul>
+<p>每个 netlink 协议都可以自由的定义自己的消息类型。需要注意的是小于
+NLMSG_MIN_TYPE(0x10) 的类型是保留的，所以不能使用。</p>
+<p>通常我们会定义自己的消息类型来实现 RPC 模式。假设你的 netlink 协议的目的是允许你
+配置一个网络设备的某些部分，所以你想要提供各种配置选项的读/写访问。完成这项任务
+典型的 “netlik 解决方案” 是定义两种消息类型 MSG_SETCFG，MSG_GETCFG：</p>
+<pre><code>#define MSG_SETCFG    0x11
+#define MSG_GETCFG    0x12
+</code></pre><p>发送一条 <code>MSG_GETCFG</code> 请求消息通常会收到一条包含当前配置信息的类型为
+<code>MSG_SETCFG</code> 的应答消息。用面向对象的术语来说这叫做“内核在用户空间设置了配置信息
+的本地拷贝”</p>
+<pre><code>A                                     B
+|                                     |
+|   MSG_GETCFG(seq=1,NLM_F_REQUEST)   |
++-------------------------------------&gt;
+|                                     |
+|          MSG_SETCFG(seq=1)          |
+&lt;-------------------------------------+
+|                                     |
+</code></pre><p>配置信息可以通过发送一条 MSG_SETCFG 信息来更改，这条消息会收到一条 ACK 响应信息
+（参考 <a href="#acks">ACKs</a> 一节）或是一条错误信息（参考 <a href="#error_msg">错误消息</a> 一节）。</p>
+<pre><code>A                                           B
+|                                           |
+| MSG_SETCFG(seq=1,NLM_F_REQUEST,NLM_F_ACK) |
++-------------------------------------------&gt;
+|                                           |
+|                 ACK(seq=1)                |
+&lt;-------------------------------------------+
+|                                           |
+|                                           |
+</code></pre><p>此外，内核也可以在配置信息发生改变的时候发送通知信息，这样用户空间应用程序就可以
+使用监听而不是频繁轮询的方式来获取改变信息。通知消息通常是使用目前已有的消息类型
+这就需要应用程序使用不同的套接字处理请求消息和通知消息，当然你也可以使用特殊的消
+息类型来单独表示通知信息。</p>
+<pre><code>A                             B
+|       MSG_SETCFG(seq=0)     |
+&lt;-----------------------------+
+|                             |
+</code></pre><h3 id="multipart_msg">2.3.1 分段式消息</h3>
+
+
+<p>虽然理论上一条 netlink 消息的最大长度是 4GiB，套接字的缓冲区一般不太可能有这么大
+的空间来容纳这么长的消息。所以通常情况下，消息的长度被限制在页的大小（PAGE_SIZE
+）之内，然后通过使用分段机制把大的数据切分成多个消息。分段式消息设有 NLM_F_MULTI
+标志位，接收者需要不断的接收和解析消息直到收到一个消息类型为 NLMSG_DONE 的特殊消
+息为止。</p>
+<p>和分片之后的 ip 包不一样的是分段之后的消息不需要重新组合，不过如果协议需要这么做
+的话，重组当然也是完全合法的。分段式消息经常会被用来发送对象列表或者是对象树，这
+种情况下消息段只是简单的承载几个对象，这也就允许每个消息段被单独处理。</p>
+<pre><code>A                                B
+|                                |
+|    GET(seq=1,NLM_F_REQUEST)    |
++--------------------------------&gt;
+|                                |
+|     PUT(seq=1,NLM_F_MULTI)     |
+&lt;--------------------------------+
+|                                |
+.                                .
+.                                .
+|     PUT(seq=1,NLM_F_MULTI)     |
+&lt;--------------------------------+
+|                                |
+|       NLMSG_DONE(seq=1)        |
+&lt;--------------------------------+
+|                                |
+|                                |
+</code></pre><h3 id="error_msg">2.3.2 错误消息</h3>
+
+
+<p>错误消息可以作为请求消息的响应发送出去，错误消息必须使用标准的消息类型
+NLMSG_ERROR，它的有效载荷是由错误码和原来的请求消息头部组成。</p>
+<p><img src="http://www.infradead.org/~tgr/libnl/doc/images//nlmsgerr.png" alt="错误消息"></p>
+<p>错误消息的序列号必须是导致错误发生的请求消息的序列号。</p>
+<h3 id="acks">2.3.3 ACKs</h3>
+
+<p>发送方可以通过设置 NLM_F_ACK 标志位来要求接收方为处理过的每一个请求消息都发送一
+个 ACK 消息。这种方式通常是用来让发送方在请求被接收方处理之后同步下一步的操作。</p>
+<p>ACK 消息和错误消息使用一样的消息类型（NLMSG_ERROR）和负荷格式，不同的是 ACK 消息
+的错误代码被设置为 0。</p>
+<h3 id="msg_flag">2.3.4 消息标志</h3>
+
+<p>标准的消息标志包括下面这些：</p>
+<pre><code>#define NLM_F_REQUEST     1
+#define NLM_F_MUL     2
+#define NLM_F_ACK     4
+#define NLM_F_ECHO     8
+</code></pre><ul>
+<li><p><code>NLM_F_REQUEST</code> - 这个消息是请求消息，参考 <a href="#message_type">消息类型</a> 一节。</p>
+</li>
+<li><p><code>NLM_F_MULTI</code> - 这个消息是分段式消息，参考 <a href="#multipart_msg">分段式消息</a> 一节。</p>
+</li>
+<li><p><code>NLM_F_ACK</code> - 请求了 ACK 回复，参考 <a href="#acks">ACKs</a> 一节。</p>
+</li>
+<li><p><code>NLM_F_ECHO</code> - 请求回应这个请求消息。</p>
+</li>
+</ul>
+<p><code>NLM_F_ECHO</code> 标志和 <code>NLM_F_ACK</code> 标志类似，它可以和 <code>NLM_F_REQUEST</code> 标志位一起使
+用，使得发送者能够收到作为这条请求消息的响应而产生的通知信息，无论发送者是否订阅
+过相应的多播组。参考 <a href="#multicast_group">多播组</a> 一小节。</p>
+<p>对于 GET 请求还定义了一些额外的通用标志位：</p>
+<pre><code>#define NLM_F_ROOT     0x100
+#define NLM_F_MATCH     0x200
+#define NLM_F_ATOMIC    0x400
+#define NLM_F_DUMP    (NLM_F_ROOT|NLM_F_MATCH)
+</code></pre><ul>
+<li><p><code>NLM_F_ROOT</code> - 返回树的根节点。</p>
+</li>
+<li><p><code>NLM_F_MATCH</code> - 返回所有匹配的节点。</p>
+</li>
+<li><p><code>NLM_F_ATOMIC</code> - 已废弃，以前用来请求一个原子操作</p>
+</li>
+<li><p><code>NLM_F_DUMP</code> - 返回一个含有所有对象的列表（<code>NLM_F_ROOT|NLM_F_MATCH</code>）</p>
+</li>
+</ul>
+<p>这些标志的使用是完全可选的，许多 netlink 协议都只使用 <code>NLM_F_DUMP</code> 标志。这个标
+志通常用来请求接收者发送一个包含所有对象的列表，而这个列表则通常是一系列的消息断
+（参考<a href="#multicast_group">分段式消息</a>一节）。</p>
+<p>还有一些和 NEW 或者是 SET 请求相关的标志。这些标志和 GET 的那些标志是彼此互斥的
+：</p>
+<pre><code>#define NLM_F_REPLACE    0x100
+#define NLM_F_EXCL    0x200
+#define NLM_F_CREATE    0x400
+#define NLM_F_APPEND    0x800
+</code></pre><ul>
+<li><p>NLM_F_REPLACE - 如果对象存在的话，替换它。</p>
+</li>
+<li><p>NLM_F_EXCL - 如果这个对象存在的话，就不用更新它。</p>
+</li>
+<li><p>NLM_F_CREATE - 如果对象不存在的话，创建它。</p>
+</li>
+<li><p>NLM_F_APPEND - 在对象列表的末尾添加新的对象。</p>
+</li>
+</ul>
+<p>这些标志含义在不同的 netlink 协议中可能会有细微的差别。</p>
+<h2 id="seq_num">2.4. 序列号</h2>
+
+
+<p>Netlink 允许通过序列号来关联回复和请求。需要注意的是，这里的序列号和 TCP 这类的
+协议的序列号是不一样的，Netlink 的序列号并不强制使用。序列号唯一的用途就是把一条
+应答消息和相应的请求消息联系起来。更多信息详见 <a href="#message_type">消息类型</a> 一节。</p>
+<p>序列号是以单个套接字为基础来管理的，关于如何使用序列号，请参考第三章中的 <a href="/netlink/2015/01/26/libnl-translation-part3.html#sequence_num">序列号
+</a> 一小节。</p>
+<h2 id="multicast_group">2.5. 多播组</h2>
+
+<p>TODO</p>
+<p>参考 <a href="/netlink/2015/01/26/libnl-translation-part3.html#multi_grp_sub">多播组订阅</a> 一节。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/netlink/" rel="tag"># netlink</a>
+          
+            <a href="/tags/libnl/" rel="tag"># libnl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/20/libnl-translation-part1/" rel="next" title="Netlink 库 -- 官方开发者教程中文版第一部分">
+                <i class="fa fa-chevron-left"></i> Netlink 库 -- 官方开发者教程中文版第一部分
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/01/26/libnl-translation-part3/" rel="prev" title="Netlink 库 -- 官方开发者教程中文版第三部分">
+                Netlink 库 -- 官方开发者教程中文版第三部分 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nlp_fundamentals"><span class="nav-number">1.</span> <span class="nav-text">2. Netlink 协议基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#addressing"><span class="nav-number">1.1.</span> <span class="nav-text">2.1. 寻址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.1.</span> <span class="nav-text">用户空间和内核之间的通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.2.</span> <span class="nav-text">用户空间之间通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.3.</span> <span class="nav-text">监听内核的通知信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#message_formate"><span class="nav-number">1.2.</span> <span class="nav-text">2.2. 消息格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#message_type"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.3. 消息类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multipart_msg"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.3.1 分段式消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#error_msg"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3.2 错误消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#acks"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.3.3 ACKs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#msg_flag"><span class="nav-number">1.2.5.</span> <span class="nav-text">2.3.4 消息标志</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq_num"><span class="nav-number">1.3.</span> <span class="nav-text">2.4. 序列号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multicast_group"><span class="nav-number">1.4.</span> <span class="nav-text">2.5. 多播组</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

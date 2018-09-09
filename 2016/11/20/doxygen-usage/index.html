@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="学而时习之不亦乐乎" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="全文是个人关于注释的观点，很可能有误，不想误人子弟，请慎重考虑其中的任何一个观点 ，欢迎拍砖。 注释不是越多越好刚开始学编程的时候，总是会有一些老鸟程序员告诉我，优秀的程序员都习惯给自己的代码 加上大量的注释，这一点甚至有很多的老师都是这么教的，以至于有很长一段时间我都对这 个观点深信不疑。 第一个让我这个观点产生怀疑的人是“林纳斯·托瓦兹”，有一段时间疯狂的迷恋操作系统的 内核，而我尝试读一些源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Doxygen 生成文档注释">
+<meta property="og:url" content="http://blog.guorongfei.com/2016/11/20/doxygen-usage/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="全文是个人关于注释的观点，很可能有误，不想误人子弟，请慎重考虑其中的任何一个观点 ，欢迎拍砖。 注释不是越多越好刚开始学编程的时候，总是会有一些老鸟程序员告诉我，优秀的程序员都习惯给自己的代码 加上大量的注释，这一点甚至有很多的老师都是这么教的，以至于有很长一段时间我都对这 个观点深信不疑。 第一个让我这个观点产生怀疑的人是“林纳斯·托瓦兹”，有一段时间疯狂的迷恋操作系统的 内核，而我尝试读一些源">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 Doxygen 生成文档注释">
+<meta name="twitter:description" content="全文是个人关于注释的观点，很可能有误，不想误人子弟，请慎重考虑其中的任何一个观点 ，欢迎拍砖。 注释不是越多越好刚开始学编程的时候，总是会有一些老鸟程序员告诉我，优秀的程序员都习惯给自己的代码 加上大量的注释，这一点甚至有很多的老师都是这么教的，以至于有很长一段时间我都对这 个观点深信不疑。 第一个让我这个观点产生怀疑的人是“林纳斯·托瓦兹”，有一段时间疯狂的迷恋操作系统的 内核，而我尝试读一些源">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2016/11/20/doxygen-usage/"/>
+
+
+
+
+
+  <title>使用 Doxygen 生成文档注释 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/11/20/doxygen-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用 Doxygen 生成文档注释</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-20T19:51:32+08:00">
+                2016-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/11/20/doxygen-usage/" class="leancloud_visitors" data-flag-title="使用 Doxygen 生成文档注释">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>全文是个人关于注释的观点，很可能有误，不想误人子弟，请慎重考虑其中的任何一个观点
+，欢迎拍砖。</p>
+<h1 id="注释不是越多越好"><a href="#注释不是越多越好" class="headerlink" title="注释不是越多越好"></a>注释不是越多越好</h1><p>刚开始学编程的时候，总是会有一些老鸟程序员告诉我，优秀的程序员都习惯给自己的代码
+加上大量的注释，这一点甚至有很多的老师都是这么教的，以至于有很长一段时间我都对这
+个观点深信不疑。</p>
+<p>第一个让我这个观点产生怀疑的人是“林纳斯·托瓦兹”，有一段时间疯狂的迷恋操作系统的
+内核，而我尝试读一些源码的时候发现，大神们写的代码其实并不会有太多的注释，但是他
+们的代码依旧很漂亮。</p>
+<p>第二个让我对于注释越多越好的观点产生怀疑的人是C++之父，忘记在他的那一本书中看到
+，注释如果和源码不同步比没有注释更糟糕。</p>
+<p>注释是你的源码的一部分，只要你选择写下一行注释，你就需要担负起维护它的责任。我们
+经常会在重构一段源码的时候忘记给更改的地方的注释加上相应的修改。最后留给源码的阅
+读者无尽的苦恼这段代码怎么就能实现注释里面说的这个功能呢。</p>
+<a id="more"></a>
+<h1 id="代码的可读性远远比注释更重要"><a href="#代码的可读性远远比注释更重要" class="headerlink" title="代码的可读性远远比注释更重要"></a>代码的可读性远远比注释更重要</h1><p>所有的程序员都应该像白居易学习，把你的代码写得简单明了，逻辑清晰。写一段清晰易懂
+的代码，远比写一段晦涩难懂的代码加上一段晦涩难懂的注释要好的多。所以在你打算写下
+一段注释之前先看看你的代码，命名是否规范啊？逻辑是否清晰呢？嵌套层次是否合理呢？
+函数是否够精简呢？</p>
+<p>如果以上的问题你的答案都是“是”，而你依然觉得代码相对难懂，那就加上一些简洁的注释
+吧，同时记得在更新代码的时候，更新你的注释。</p>
+<h1 id="接口的注释"><a href="#接口的注释" class="headerlink" title="接口的注释"></a>接口的注释</h1><p><strong>本文提到的接口指的函数签名，包括普通函数、成员函数等</strong></p>
+<p>以上这些论述只是针对了源码的注释，个人认为接口的注释还是需要尽可能详细的，因为接
+口本身通常都是比较稳定的，此外接口本身能够提供的信息也相对较少，而接口作为模块之
+间交互的协议规范，不应该有任何模棱两可的东西，需要详细、准确。</p>
+<h1 id="接口的文档中应该包括哪些内容"><a href="#接口的文档中应该包括哪些内容" class="headerlink" title="接口的文档中应该包括哪些内容"></a>接口的文档中应该包括哪些内容</h1><p>个人认为以下信息是需要出现接口的文档中的：</p>
+<ul>
+<li>接口的功能。</li>
+<li>接口的前置条件，通常是指输入的参数需要遵循的条件。</li>
+<li>接口的后置条件，通常是指接口的返回值，或者说接口的<code>side effect</code>。</li>
+<li>接口的注意事项，如果有的话，应该说清楚调用该接口需要特别注意的地方。比如会抛些
+什么异常。</li>
+</ul>
+<h1 id="使用-Doxygen-生成-C-代码文档"><a href="#使用-Doxygen-生成-C-代码文档" class="headerlink" title="使用 Doxygen 生成 C++ 代码文档"></a>使用 Doxygen 生成 C++ 代码文档</h1><p>Doxygen可以用来从C++的源码注释中抽取文档，目前可以说是C/C++的文档注释的实际标准
+。它的使用非常简单，只需要你按照特定格式编写注释，便可以通过一条命令生成各种格式
+的文档（html, rtf, latex, xml, man等）。所以关于它的使用我们需要知道两件事情：第
+一，怎么编写注释；第二，怎么生成文档。</p>
+<h2 id="怎么编写注释"><a href="#怎么编写注释" class="headerlink" title="怎么编写注释"></a>怎么编写注释</h2><p>嗯，我不是怀疑你不会使用<code>//</code>或者<code>/**/</code>，我们这里关心的是编写<code>Doxygen</code>能够识别的
+注释。</p>
+<h3 id="注释块"><a href="#注释块" class="headerlink" title="注释块"></a>注释块</h3><p>你可以有多种方式编写一个<code>Doxygen</code>注释块，我只使用其中的 JavaDoc 风格的注释块儿：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * comment text here</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<h3 id="标记（命令）"><a href="#标记（命令）" class="headerlink" title="标记（命令）"></a>标记（命令）</h3><p>在一个注释块中，你除了可以写一些文字之外，还可以使用一些特殊的标记，比如最常用的
+<code>param</code>标记。这种特殊标记，官方称为<code>Special Commands</code>，你可以在<a href="http://www.stack.nl/~dimitri/doxygen/manual/commands.html" target="_blank" rel="noopener">这里</a>
+中查到相关的信息，如果你英文不够好，可以参考这个简单的<a href="http://www.cnblogs.com/benhuan/p/3302114.html" target="_blank" rel="noopener">翻译</a>，只可
+惜这篇翻译烂尾，只有一部分翻译。网上另有有一份《Doxygen 中文手册》可以参考。</p>
+<p>一个标记，你可以有两种书写方式 <code>\param</code> 或者 <code>@param</code> 个人比较喜欢使用后一种，因
+为它和 JavaDoc 的方式一样，比较统一。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param url the media location to play</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Play</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; url)</span></span></span><br></pre></td></tr></table></figure>
+<p><code>Doxygen</code>给我们提供了大量的特殊标记，让我们可以给注释加上语法本身无法传达的一些
+信息。 个人认为这些标记最有效的学习方式是看别人是怎么使用的，目前为止我见过最好
+的注释文档是<code>FFMPEG</code>的<a href="http://ffmpeg.org/" target="_blank" rel="noopener">注释文档</a>，这也是我平常学习的时候参考的最多的一份
+文档。它的在线版Doxygen文档在墙内访问比较慢，建议下载源码自行生成（在源码的根目
+录下执行 <code>doxygen doc/Doxyfile</code>）。下面总结了一些个人认为比较重要的标记。</p>
+<h4 id="brief"><a href="#brief" class="headerlink" title="@brief"></a>@brief</h4><p>标注用来作为简单的功能描述，这个标记其实可以不写。比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Play the media at url.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Play</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; url)</span></span></span><br></pre></td></tr></table></figure>
+<p>可以直接写成</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Play the media at url.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Play</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; url)</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="param"><a href="#param" class="headerlink" title="@param"></a>@param</h4><p>标注参数，比如上文中的例子： 这个命令可以有[in]、[out] 两个属性，表示该参数是输
+入参数还是输出参数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param[out] dest The memory area to copy to.</span></span><br><span class="line"><span class="comment"> * @param[in]  src  The memory area to copy from.</span></span><br><span class="line"><span class="comment"> * @param[in]  n    The number of bytes to copy</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">memcpy</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">const</span> <span class="keyword">void</span> *src, <span class="keyword">size_t</span> n)</span></span>;</span><br></pre></td></tr></table></figure>
+<h4 id="return"><a href="#return" class="headerlink" title="@return"></a>@return</h4><p>标注返回值。返回值是一个接口非常重要的内容，很多人会忽略它的文档说明。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @return true on success, false otherwise</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Play</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; url)</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="throw-throws-exception"><a href="#throw-throws-exception" class="headerlink" title="@throw @throws @exception"></a>@throw @throws @exception</h4><p>异常属于接口的一部分，Java 语言通过异常说明符把这一点内置到了语言当中，C++曾经也
+有异常说明符，但是后来被废弃（因为没有办法高效的实现，可参考《C++编程规范》一书
+的Item75）。无论语言本身是否支持，异常都应该是接口的一部分，没有人愿意调用一个不
+知道会抛什么异常的函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @throw std::out_of_range if idx &gt;= vector.size()</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">bool</span> <span class="built_in">vector</span>::at(<span class="keyword">size_t</span> idx)</span><br></pre></td></tr></table></figure>
+<h4 id="warning"><a href="#warning" class="headerlink" title="@warning"></a>@warning</h4><p>接口容易出错的地方。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @warning application may crash if dest or src is null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">memcpy</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">const</span> <span class="keyword">void</span> *src, <span class="keyword">size_t</span> n)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>使用这个标记标注的文字会以一个红色的标记出现最终的文档中，起到非常好的警告作用。</p>
+<h4 id="note"><a href="#note" class="headerlink" title="@note"></a>@note</h4><p>标注需要特别注意的地方，可以用来标注接口的前置条件：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @note do nothing if url is invalidate</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Play</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; url)</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="deprecated"><a href="#deprecated" class="headerlink" title="@deprecated"></a>@deprecated</h4><p>这个标记对于C/C++来说是非常有用的，因为语言本身没有提供这样的特性，所以文档中的
+说明就显得非常重要了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @deprecated this function is deprecated, since it has the same effect of</span></span><br><span class="line"><span class="comment">   callling SeekTo(from) after Play(url).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Play</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; url, <span class="keyword">size_t</span> from)</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="see-sa"><a href="#see-sa" class="headerlink" title="@see @sa"></a>@see @sa</h4><p>相当于 JavaDoc 的 see also 功能。</p>
+<h4 id="since"><a href="#since" class="headerlink" title="@since"></a>@since</h4><p>标记接口的版本号，Android 中有大量的接口是在不同的版本中逐渐添加进去的，对于库来
+说这个比较比较重要。</p>
+<h3 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h3><p>这些标记如果要纯手写的话胡非常麻烦，通常你都可以在你喜欢的编辑器或者IDE中找到相
+应的插件。比如Vim的插件<code>vim-scripts/DoxygenToolkit.vim</code>，用的工具不重要，重要的
+使用同一种编写风格。</p>
+<h2 id="如何生成文档"><a href="#如何生成文档" class="headerlink" title="如何生成文档"></a>如何生成文档</h2><p>使用特定的格式编写完注释之后，你可以使用<code>doxygen</code>命令生成特定格式的文档（前提是
+你已经安装了Doxygen，它是开源跨平台的，所以你急本上可以在任何一个平台使用它）。
+生成文档分成三个步骤：</p>
+<ol>
+<li>生成配置文件</li>
+<li>修改配置文件</li>
+<li>生成文档</li>
+</ol>
+<h3 id="生成配置文件"><a href="#生成配置文件" class="headerlink" title="生成配置文件"></a>生成配置文件</h3><p>这个步骤很简单：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">doxygen -g &lt;config-file&gt;</span><br></pre></td></tr></table></figure>
+<p>如果你不提供文件名字（config-file），你会得到一个叫做<code>Doxyfile</code>的配置文件。通过
+修改配置文件，你可以控制<code>doxygen</code>的最终输出接口。</p>
+<p>所有的选项都是以键值对的形式配置的，你直接使用你最喜欢的文件编辑器修改
+<code>Doxygenfile</code>即可，当然你可以使用图形界面工具<code>Doxywizard</code>来完成编辑。Doxygen提供
+了非常多的可配置选项，通常大部分的值你直接使用默认值就可以了，下面这里列出了其中
+比较重要的一些配置选项以及它们的含义。</p>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p><code>Doxyfile</code>中的的配置选项非常的多，大部分情况下使用默认值就可以了，每一个配置选项
+中之前会有一段注释，有时间可以通读一遍了解各个选项的作用。这些选项中有一些需要特
+别注意的在<a href="http://www.ibm.com/developerworks/cn/aix/library/au-learningdoxygen/index.html" target="_blank" rel="noopener">学习用doxygen生成源码文档</a>一文中已经提到了这里就不再重复了，这里
+补充几个没有提到的。</p>
+<h4 id="EXAMPLE-PATH"><a href="#EXAMPLE-PATH" class="headerlink" title="EXAMPLE_PATH"></a><code>EXAMPLE_PATH</code></h4><p>例子代码的位置，你可以为你的API提供一些demo例子，指定这个配置会让你的接口描述下
+面多出一栏 Example，Doxygen会自动查找这个接口在demo中出现的位置，给出链接，方便
+用户学习<a href="http://ffmpeg.org/doxygen/3.2/group__lavf__core.html#gac7a91abf2f59648d995894711f070f62" target="_blank" rel="noopener">^1</a>。</p>
+<h4 id="REFERENCED-BY-RELATION-REFERENCES-LINK-SOURCE"><a href="#REFERENCED-BY-RELATION-REFERENCES-LINK-SOURCE" class="headerlink" title="REFERENCED_BY_RELATION REFERENCES_LINK_SOURCE"></a><code>REFERENCED_BY_RELATION</code> <code>REFERENCES_LINK_SOURCE</code></h4><p>如果你想要Doxygen生成的文档能够方便的跳转，把这两个选项设置为<code>YES</code>.</p>
+<p>如果不想自己动手配置这些选项，你可以考虑下载一份FFMPEG的配置选项，在它的基础上去
+掉你不需要的功能就可以了。</p>
+<p>####</p>
+<p>配置文档的输出位置</p>
+<h3 id="生成文档"><a href="#生成文档" class="headerlink" title="生成文档"></a>生成文档</h3><p>修改完成配置文件之后，你就可以使用下面的命令生成文档：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">doxygen /path/to/Doxyfile</span><br></pre></td></tr></table></figure>
+<p>如果你配置了html输出，你最终会得到一个<code>html</code>文件夹（在todo配置的文件夹下面），打
+开里面的 index.html 就可以开始浏览文档了。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://www.stack.nl/~dimitri/doxygen/manual/index.html" target="_blank" rel="noopener">Doxygen Document</a></li>
+<li><a href="http://www.ibm.com/developerworks/cn/aix/library/au-learningdoxygen/index.html" target="_blank" rel="noopener">学习用 doxygen 生成源码文档</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/20/mingw-with-msvc-cpp/" rel="next" title="在 MSVC 中使用 MinGW 编译的 C++ 库的方式">
+                <i class="fa fa-chevron-left"></i> 在 MSVC 中使用 MinGW 编译的 C++ 库的方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/03/vim-ultisnipt-google-c-cpp-header-gurad/" rel="prev" title="使用 vim 的 UltiSnips 插件生成符合 google 规范的头文件保护宏">
+                使用 vim 的 UltiSnips 插件生成符合 google 规范的头文件保护宏 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#注释不是越多越好"><span class="nav-number">1.</span> <span class="nav-text">注释不是越多越好</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码的可读性远远比注释更重要"><span class="nav-number">2.</span> <span class="nav-text">代码的可读性远远比注释更重要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口的注释"><span class="nav-number">3.</span> <span class="nav-text">接口的注释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口的文档中应该包括哪些内容"><span class="nav-number">4.</span> <span class="nav-text">接口的文档中应该包括哪些内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-Doxygen-生成-C-代码文档"><span class="nav-number">5.</span> <span class="nav-text">使用 Doxygen 生成 C++ 代码文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么编写注释"><span class="nav-number">5.1.</span> <span class="nav-text">怎么编写注释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注释块"><span class="nav-number">5.1.1.</span> <span class="nav-text">注释块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标记（命令）"><span class="nav-number">5.1.2.</span> <span class="nav-text">标记（命令）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#brief"><span class="nav-number">5.1.2.1.</span> <span class="nav-text">@brief</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#param"><span class="nav-number">5.1.2.2.</span> <span class="nav-text">@param</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#return"><span class="nav-number">5.1.2.3.</span> <span class="nav-text">@return</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#throw-throws-exception"><span class="nav-number">5.1.2.4.</span> <span class="nav-text">@throw @throws @exception</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#warning"><span class="nav-number">5.1.2.5.</span> <span class="nav-text">@warning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#note"><span class="nav-number">5.1.2.6.</span> <span class="nav-text">@note</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deprecated"><span class="nav-number">5.1.2.7.</span> <span class="nav-text">@deprecated</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#see-sa"><span class="nav-number">5.1.2.8.</span> <span class="nav-text">@see @sa</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#since"><span class="nav-number">5.1.2.9.</span> <span class="nav-text">@since</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具推荐"><span class="nav-number">5.1.3.</span> <span class="nav-text">工具推荐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何生成文档"><span class="nav-number">5.2.</span> <span class="nav-text">如何生成文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成配置文件"><span class="nav-number">5.2.1.</span> <span class="nav-text">生成配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">5.2.2.</span> <span class="nav-text">修改配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#EXAMPLE-PATH"><span class="nav-number">5.2.2.1.</span> <span class="nav-text">EXAMPLE_PATH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REFERENCED-BY-RELATION-REFERENCES-LINK-SOURCE"><span class="nav-number">5.2.2.2.</span> <span class="nav-text">REFERENCED_BY_RELATION REFERENCES_LINK_SOURCE</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成文档"><span class="nav-number">5.2.3.</span> <span class="nav-text">生成文档</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

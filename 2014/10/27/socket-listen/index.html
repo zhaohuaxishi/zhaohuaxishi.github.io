@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux Kernel,socket," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述前两篇文章中，我们已经分析了 socket API 中用来创建 socket 的 socket 函数和用来 绑定地址的 bind 函数。正常到服务器程序在地址绑定之后就会在这个地址上开始监听等 待链接，这一工作可以调用 listen 函数来完成，代码如下： 1listen(server_fd, 10); 这篇文章将要分析上面这条语句在内核中的具体实现流程。">
+<meta name="keywords" content="Linux Kernel,socket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="socket API 实现（三）—— listen 函数">
+<meta property="og:url" content="http://blog.guorongfei.com/2014/10/27/socket-listen/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="概述前两篇文章中，我们已经分析了 socket API 中用来创建 socket 的 socket 函数和用来 绑定地址的 bind 函数。正常到服务器程序在地址绑定之后就会在这个地址上开始监听等 待链接，这一工作可以调用 listen 函数来完成，代码如下： 1listen(server_fd, 10); 这篇文章将要分析上面这条语句在内核中的具体实现流程。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/apilisten.png">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/request_sock_queue.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="socket API 实现（三）—— listen 函数">
+<meta name="twitter:description" content="概述前两篇文章中，我们已经分析了 socket API 中用来创建 socket 的 socket 函数和用来 绑定地址的 bind 函数。正常到服务器程序在地址绑定之后就会在这个地址上开始监听等 待链接，这一工作可以调用 listen 函数来完成，代码如下： 1listen(server_fd, 10); 这篇文章将要分析上面这条语句在内核中的具体实现流程。">
+<meta name="twitter:image" content="http://blog.guorongfei.com/img/posts/apilisten.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2014/10/27/socket-listen/"/>
+
+
+
+
+
+  <title>socket API 实现（三）—— listen 函数 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2014/10/27/socket-listen/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">socket API 实现（三）—— listen 函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-10-27T00:00:00+08:00">
+                2014-10-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2014/10/27/socket-listen/" class="leancloud_visitors" data-flag-title="socket API 实现（三）—— listen 函数">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>前两篇文章中，我们已经分析了 socket API 中用来创建 socket 的 <code>socket</code> 函数和用来
+绑定地址的 <code>bind</code> 函数。正常到服务器程序在地址绑定之后就会在这个地址上开始监听等
+待链接，这一工作可以调用 <code>listen</code> 函数来完成，代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen(server_fd, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<p>这篇文章将要分析上面这条语句在内核中的具体实现流程。</p>
+<a id="more"></a>
+<h1 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h1><p>和前面的文章一样，我们首先看看函数调用关系的图解。带 <code>*</code> 的函数表示是通过函数指
+针引用而不是直接调用</p>
+<p><img src="/img/posts/apilisten.png" alt="listen 系统调用"></p>
+<p><code>listen</code> 函数到逻辑比 <code>socket</code> 和 <code>bind</code> 到函数逻辑要简单许多。
+<code>sockfd_lookup_light</code> 函数在 <code>bind</code> 函数到讲解中提到过，这里不再重复。如果你不是
+了解其中到机制，可以参考我的另外两篇文章 <a href="/2014/10/23/socket-create/" title="socket API 实现（一）—— socket 函数"><strong>socket API 实现（一）—— socket 函数
+</strong></a> 和 <a href="/2014/10/24/socket-bind/" title="socket API 实现（二）—— bind 函数"><strong>socket API 实现（二）—— bind 函数</strong></a>。</p>
+<p>这篇文章将会重点讲解 <code>inet_listen</code> 函数和 socket 中和监听相关的数据结构。</p>
+<h1 id="连接请求队列"><a href="#连接请求队列" class="headerlink" title="连接请求队列"></a>连接请求队列</h1><p>连接请求队列分为半连接队列和全链接队列，这两个队列处于同一个结构体中，也就是
+<code>request_sock_quue</code> <code>inet_connection_sock</code> 结构的 <code>icsk_accept_queue</code> 字段就是这
+个类型，用来存储一个 <code>sock</code> 的连接请求。<code>request_sock_quue</code> 的结构定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">request_sock_queue</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">request_sock</span>	*<span class="title">rskq_accept_head</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">request_sock</span>	*<span class="title">rskq_accept_tail</span>;</span></span><br><span class="line">    <span class="keyword">rwlock_t</span>		syn_wait_lock;</span><br><span class="line">    u8			rskq_defer_accept;</span><br><span class="line">    <span class="comment">/* 3 bytes hole, try to pack */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">listen_sock</span>	*<span class="title">listen_opt</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中前面两个字段用来全连接队列，而最后一个字段用来存储半连接队列。全连接队列是随
+着连接请求不断到来并且被处理之后才逐步建立起来的。半连接队列则在 <code>listen</code> 函数中
+创建，因为 <code>listen</code> 的第二个参数 <code>backlog</code> 指定了同时允许的最大半连接状态的连接
+数，也就确定了半连接队列的长度，比如 <code>listen(fd, 10)</code> 中的 10。</p>
+<p>在 <code>inet_listen</code> 中调用了 <code>reqsk_queue_alloc</code> 函数创建 sock 的半连接队列，也就是
+分配和初始化 <code>listen_sock</code> 结构空间。代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">size_t</span> lopt_size = <span class="keyword">sizeof</span>(struct listen_sock);</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">listen_sock</span> *<span class="title">lopt</span>;</span></span><br><span class="line"></span><br><span class="line">nr_table_entries = <span class="keyword">min_t</span>(u32, nr_table_entries, sysctl_max_syn_backlog);</span><br><span class="line">nr_table_entries = <span class="keyword">max_t</span>(u32, nr_table_entries, <span class="number">8</span>);</span><br><span class="line">nr_table_entries = roundup_pow_of_two(nr_table_entries + <span class="number">1</span>);</span><br><span class="line">lopt_size += nr_table_entries * <span class="keyword">sizeof</span>(struct request_sock *);</span><br><span class="line"><span class="keyword">if</span> (lopt_size &gt; PAGE_SIZE)</span><br><span class="line">    lopt = __vmalloc(lopt_size,</span><br><span class="line">        GFP_KERNEL | __GFP_HIGHMEM | __GFP_ZERO,</span><br><span class="line">        PAGE_KERNEL);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    lopt = kzalloc(lopt_size, GFP_KERNEL);</span><br></pre></td></tr></table></figure>
+<p>这段代码比较的晦涩，主要是因为 <code>listen_sock</code> 结构的定义非常的灵活：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">listen_sock</span> &#123;</span></span><br><span class="line">    ......</span><br><span class="line">    u32			nr_table_entries;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">request_sock</span>	*<span class="title">syn_table</span>[0];</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在结构体定义到末尾有一个零长数组，当我们分配的空间大于 <code>sizeof(struct
+listen_sock)</code> 的时候，<code>syn_table</code> 字段会指向超出结构体大小空间的第一个字节。关于
+零长数组到更多介绍，可以参考我写的另外一片文章 <a href="/2014/09/30/c-language-funny-usage/" title="C 语言的趣味用法"><strong>C 语言的趣味用法</strong></a>。</p>
+<p>在上面到空间分配代码中，<code>lopt_size</code> 首先是 <code>sizeof(struct listen_sock)</code> 因为在
+<code>request_sock_queue</code> 中表示半连接队列的 <code>listen_opt</code> 是一个指针，它到空间我们也
+许要分配。之后 <code>lopt_size += nr_table_entries * sizeof(struct request_sock *);</code>
+表示在 <code>listen_sock</code> 空间之后还有额外的 <code>nr_table_entries * sizeof(struct
+request_sock *)</code> 空间，也就是我们前面提到的 <code>syn_table</code> 指向的空间。</p>
+<p>从这段空间到分配我们可以看出，每一个连接请求都是一个 <code>requset_sock</code> 结构，半连接
+状态的 <code>request_sock</code> 的指针存放在 <code>syn_table</code> 中，这种连接请求最都有
+<code>nr_table_entries</code> 个。它的最大值由下面三个中的最小值决定：参数 <code>backlog</code>，
+<code>sysctl_max_syn_backlog</code> 变量， <code>sock_net(sock-&gt;sk)-&gt;core.sysctl_somaxconn</code>。其
+中 <code>backlog</code> 和 <code>somaxconn</code> 的比较在 <code>sys_listen</code> 中就已经完成并把较小的一个作为
+参数传递给了 <code>reqsk_queue_alloc</code>。剩下两个的比较则在前面的分配代码中完成。</p>
+<p>分配空间之后 <code>sock</code> 的内存空间结构大致如下：</p>
+<p><img src="/img/posts/request_sock_queue.png" alt="request_sock_queue"></p>
+<p><code>reqsk_queue_alloc</code> 函数的主要工作就是分配上图中 <code>listen_sock</code> 的结构空间。</p>
+<h1 id="端口重用"><a href="#端口重用" class="headerlink" title="端口重用"></a>端口重用</h1><p>在 <code>inet_listen_start</code> 中会调用 <code>inet_csk_get_port</code> 函数。这看起来不可思议，因为
+端口绑定的工作是在 <code>bind</code> 函数中进行的，<code>inet_csk_get_port</code> 函数我们在 <a href="/2014/10/24/socket-bind/" title="socket API 实现（二）—— bind 函数"><strong>socket
+API 实现（二）—— bind 函数</strong></a> 一文中已经提过，这里不再解释它的代码。我
+看过的资料大部分都说这里调用 <code>inet_csk_get_port</code> 是为了检查是否绑定了端口，是否
+端口占用等等。个人认为这些说法都有失偏颇。</p>
+<p>其实这里调用 <code>inet_listen_start</code> 主要是有两个作用。第一如果没有绑定端口，那么先
+进行端口绑定，如果绑定了端口则需要更改 <code>inet_bind_bucket</code> 中的 <code>fastreuse</code> 字段
+，把他设置成否定值。这个字段的作用我们在<a href="/2014/10/24/socket-bind/" title="socket API 实现（二）—— bind 函数"><strong>socket API 实现（二）—— bind 函数
+</strong></a> 一文中已经解释过，在 <code>inet_csk_start_listen</code> 中设置了 <code>sock_state</code>
+为 <code>TCP_LISTEN</code> 状态，这就使得端口可重用的第二个判断条件不成立了，也就是说
+<code>fastreuse</code> 字段失效。调用 <code>inet_csk_get_port</code> 函数可以让可重用再次得到修正。以
+下是简化的代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!snum) &#123;</span><br><span class="line">    ......</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ......</span><br><span class="line">    inet_bind_bucket_for_each(tb, node, &amp;head-&gt;chain)</span><br><span class="line">        <span class="keyword">if</span> (ib_net(tb) == net &amp;&amp; tb-&gt;port == snum)</span><br><span class="line">            <span class="keyword">goto</span> tb_found;                                      (<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tb_found:                                                       (<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!hlist_empty(&amp;tb-&gt;owners)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (... &amp;&amp; sk-&gt;sk_state != TCP_LISTEN ) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (inet_csk(sk)-&gt;icsk_af_ops-&gt;bind_conflict(sk, tb)) &#123; (<span class="number">3</span>)</span><br><span class="line">            ......</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!tb &amp;&amp; ...) == <span class="literal">NULL</span>)</span><br><span class="line">    ......</span><br><span class="line"><span class="keyword">if</span> (hlist_empty(&amp;tb-&gt;owners)) &#123;</span><br><span class="line">    ....</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tb-&gt;fastreuse &amp;&amp;</span><br><span class="line">       (!sk-&gt;sk_reuse || sk-&gt;sk_state == TCP_LISTEN))</span><br><span class="line">    tb-&gt;fastreuse = <span class="number">0</span>;                                          (<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<p>如果地址已经绑定，那么最开始的判断 <code>!sum</code> 不成立所以执行 <code>else</code>（1）。因为地址已
+经绑定了所以可以找到 <code>inet_bind_bucket</code> 结构，跳到 <code>tb_found:</code>（2）。以为已经绑
+定地址所以 <code>tb-&gt;owners</code> 不会为空（绑定的时候调用 <code>inet_bind_hash</code> 会把 <code>sk</code> 添加
+到 <code>tb-&gt;owners</code> 中），所以接下来的 <code>if</code> 中会判断是否地址冲突，如果之后自己在
+<code>owners</code> 队列中的话不会冲突（3）的判断为假不会执行。所以最后的流程到（4）设置
+<code>fastreuse</code> 为假。</p>
+<p>所以从上面的代码来看， 在 <code>inet_csk_start_listen</code> 中调用 <code>inet_csk_get_port</code> 主
+要作用有三点：</p>
+<ol>
+<li><p>如果没有绑定端口，先绑定端口</p>
+</li>
+<li><p>如果端口已经绑定检查是否有冲突</p>
+</li>
+<li><p>如果没有冲突把端口可重用的判断标志设置为否</p>
+</li>
+</ol>
+<h1 id="加入监听哈希表"><a href="#加入监听哈希表" class="headerlink" title="加入监听哈希表"></a>加入监听哈希表</h1><p>在 <a href="/2014/10/24/socket-bind/" title="socket API 实现（二）—— bind 函数"><strong>socket API 实现（二）—— bind 函数</strong></a> 一文中我们说过，为了快速的找
+到 sock 结构，内核设置了三个哈希表，这三个哈希表在同一个结构 <code>inet_hashinfo</code> 之
+中。和上一篇文章主题——绑定相关的哈希表是 <code>bhash</code> 字段，而和这篇文章的主题——监听
+相关的哈希表是 <code>listening_hash</code> 函数调用关系图中的最后一个函数 <code>inet_hash</code> 就是
+用来把 <code>sock</code> 加入到 <code>listening_hash</code> 队列中去的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (sk-&gt;sk_state != TCP_LISTEN) &#123;</span><br><span class="line">    __inet_hash_nolisten(sk);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ilb = &amp;hashinfo-&gt;listening_hash[inet_sk_listen_hashfn(sk)];</span><br><span class="line">__sk_nulls_add_node_rcu(sk, &amp;ilb-&gt;head);</span><br></pre></td></tr></table></figure>
+<p>在《追踪 Linux TCP/IP 代码运行》一书的第七章 242 页中分析 <code>__inet_hash_nolisten</code>
+的运行显然牛头不对马嘴。因为此时 <code>sk-&gt;sk_state == TCP_LISTEN</code>。这个函数的作用其
+实是找打该 sock 对应的哈希桶（ilb），然后把这个 sock 链接到这个哈希桶的哈希链中
+。 <code>struct sock</code> 中对应的 <code>sk_nulls_node</code> 字段被用来链接这个哈希链，但是内核的代
+码中说是提供给 <code>udp/udp-lite</code> 协议似乎有点误导的嫌疑。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">*	@skc_nulls_node: main hash linkage <span class="keyword">for</span> UDP/UDP-Lite protocol</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sock_common</span> &#123;</span></span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">hlist_node</span>	<span class="title">skc_node</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">hlist_nulls_node</span> <span class="title">skc_nulls_node</span>;</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sock</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sock_common</span>	__<span class="title">sk_common</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> sk_nulls_node		__sk_common.skc_nulls_node</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>从上面的代码可以看出 <code>sock</code> 的 <code>sk_nulls_node</code> 来自 <code>sock_common</code>，而
+<code>sock_common</code> 对于 <code>skc_nulls_node</code> 的注释说它是提供给 <code>udp/udp-lite</code> 协议使用的
+。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux-Kernel/" rel="tag"># Linux Kernel</a>
+          
+            <a href="/tags/socket/" rel="tag"># socket</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/10/24/socket-bind/" rel="next" title="socket API 实现（二）—— bind 函数">
+                <i class="fa fa-chevron-left"></i> socket API 实现（二）—— bind 函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/10/29/socket-accept/" rel="prev" title="socket API 实现（四）—— accept 函数">
+                socket API 实现（四）—— accept 函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图解"><span class="nav-number">2.</span> <span class="nav-text">图解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#连接请求队列"><span class="nav-number">3.</span> <span class="nav-text">连接请求队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#端口重用"><span class="nav-number">4.</span> <span class="nav-text">端口重用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加入监听哈希表"><span class="nav-number">5.</span> <span class="nav-text">加入监听哈希表</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

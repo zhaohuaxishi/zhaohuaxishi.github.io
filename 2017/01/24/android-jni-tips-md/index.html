@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C/CPP,JNI," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近使用JNI封装项目的接口，遇到一些坑，在这里总结一下。文中提到的各种结构的定义 都是C++的定义和它们对应的C定义有些许不同。">
+<meta name="keywords" content="C&#x2F;CPP,JNI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android JNI 使用总结">
+<meta property="og:url" content="http://blog.guorongfei.com/2017/01/24/android-jni-tips-md/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="最近使用JNI封装项目的接口，遇到一些坑，在这里总结一下。文中提到的各种结构的定义 都是C++的定义和它们对应的C定义有些许不同。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android JNI 使用总结">
+<meta name="twitter:description" content="最近使用JNI封装项目的接口，遇到一些坑，在这里总结一下。文中提到的各种结构的定义 都是C++的定义和它们对应的C定义有些许不同。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2017/01/24/android-jni-tips-md/"/>
+
+
+
+
+
+  <title>Android JNI 使用总结 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2017/01/24/android-jni-tips-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android JNI 使用总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-24T09:30:21+08:00">
+                2017-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/01/24/android-jni-tips-md/" class="leancloud_visitors" data-flag-title="Android JNI 使用总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近使用JNI封装项目的接口，遇到一些坑，在这里总结一下。文中提到的各种结构的定义
+都是C++的定义和它们对应的C定义有些许不同。</p>
+<a id="more"></a>
+<h1 id="获取-JavaVM"><a href="#获取-JavaVM" class="headerlink" title="获取 JavaVM"></a>获取 JavaVM</h1><p><code>JavaVM</code> 是JNI定义的两大核心数据接口之一，理论上你可以为每个进程创建多个
+<code>JavaVM</code>的实例，但是安卓只允许一个。获取这个实例的方式比较简单，你需要在Java代码
+中像下面这样加载动态库：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    System.loadLibrary(<span class="string">"your-native-lib"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在库加载的时候，下面这个函数会被调用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">jint <span class="title">JNI_OnLoad</span><span class="params">(JavaVM* vm, <span class="keyword">void</span>* reserved)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>你可以在这个函数中把参数<code>vm</code>缓存下来，因为每个进程只允许有一个<code>JavaVM</code>的实例，所
+以把它当成全局变量<code>cache</code>下来应该是安全的。</p>
+<h1 id="获取-JNIEnv"><a href="#获取-JNIEnv" class="headerlink" title="获取 JNIEnv"></a>获取 JNIEnv</h1><p>JNI定义的另一个核心的数据结构是JNIEnv，这个数据结构的实例的获取方式分为两种情况
+。</p>
+<h2 id="你的代码是-Java-代码的-native-方法的实现"><a href="#你的代码是-Java-代码的-native-方法的实现" class="headerlink" title="你的代码是 Java 代码的 native 方法的实现"></a>你的代码是 Java 代码的 native 方法的实现</h2><p>比如如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Widget</span> </span>&#123;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">nativeMethod</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>nativeMethod</code>的实现可能是下面这个样子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JNIEXPORT <span class="keyword">void</span> JNICALL</span><br><span class="line">Java_xxxxx_nativeMethod(JNIEnv *env, jobject instance);</span><br></pre></td></tr></table></figure>
+<p>这种情况下，JNI 会把 <code>JNIEnv</code> 当成参数传递到 native 层的 C/C++ 代码，你直接使用
+就可以了。</p>
+<h2 id="如果你想要从-native-层直接调用-Java-代码"><a href="#如果你想要从-native-层直接调用-Java-代码" class="headerlink" title="如果你想要从 native 层直接调用 Java 代码"></a>如果你想要从 native 层直接调用 Java 代码</h2><p>很多时候，你的native代码建立自己的线程（比如建立线程监听），并在合适的时候回调
+Java 代码，我们没有办法像上面那样直接获得 <code>JNIEnv</code>，获取它的实例需要把你的线程
+<code>Attach</code>到<code>JavaVM</code>上去，调用的方法是 <code>JavaVM::AttachCurrentThread</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JNIEnv* env;</span><br><span class="line">GetJVM()-&gt;AttachCurrentThread(&amp;env, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
+<p>这里你需要用到<code>JavaVM</code>的实例，这个实例的获取方式可以参考上一个小节。使用完之后你
+需要调用 <code>JavaVM::DetachCurrentThread</code>函数解绑线程。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GetJVM()-&gt;DetachCurrentThread();</span><br></pre></td></tr></table></figure>
+<p>需要注意的是对于一个已经绑定到<code>JavaVM</code>上的线程调用<code>AttachCurrentThread</code>不会有任
+何影响。如果你的线程已经绑定到了<code>JavaVM</code>上，你还可以通过调用<code>JavaVM::GetEnv</code>获取
+<code>JNIEnv</code>，如果你的线程没有绑定，这个函数返回<code>JNI_EDETACHED</code>。我的习惯是封装一个
+智能指针类自动完成这些操作。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JNIEnvPtr</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    JNIEnvPtr() : env_&#123;<span class="literal">nullptr</span>&#125;, need_detach_&#123;<span class="literal">false</span>&#125; &#123;</span><br><span class="line">        <span class="keyword">if</span> (GetJVM()-&gt;GetEnv((<span class="keyword">void</span>**) &amp;env_, JNI_VERSION_1_6) ==</span><br><span class="line">            JNI_EDETACHED) &#123;</span><br><span class="line">            GetJVM()-&gt;AttachCurrentThread(&amp;env_, <span class="literal">nullptr</span>);</span><br><span class="line">            need_detach_ = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~JNIEnvPtr() &#123;</span><br><span class="line">        <span class="keyword">if</span> (need_detach_) &#123;</span><br><span class="line">            GetJVM()-&gt;DetachCurrentThread();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    JNIEnv* <span class="keyword">operator</span>-&gt;() &#123;</span><br><span class="line">        <span class="keyword">return</span> env_;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    JNIEnvPtr(<span class="keyword">const</span> JNIEnvPtr&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    JNIEnvPtr&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> JNIEnvPtr&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    JNIEnv* env_;</span><br><span class="line">    <span class="keyword">bool</span> need_detach_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个类在构造函数中调用<code>AttachCurrentThread</code>在析构中调用<code>DetachCurrentThread</code>，然
+后重载<code>-&gt;</code>操作符。你可以像下面这样使用这个工具类。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// native 代码需要回调 Java 代码</span></span><br><span class="line"></span><br><span class="line">NativeClass::NativeMethod() &#123;</span><br><span class="line">    JNIEnvPtr env;</span><br><span class="line">    env-&gt;CallVoidMethod(instance, method, args...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="获取-jclass-jmethodID-jfieldID"><a href="#获取-jclass-jmethodID-jfieldID" class="headerlink" title="获取 jclass, jmethodID, jfieldID"></a>获取 jclass, jmethodID, jfieldID</h1><p>如果你想要调用Java层的代码，你需要使用 JNIEnv（如何获取它的实例在上一小节中已经
+提到），比如你想要调用一个无返回值无参数的成员函数，语法大概如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env-&gt;CallVoidMethod(instance, method);</span><br></pre></td></tr></table></figure>
+<p>这里你最少需要两个参数<code>instance</code>和<code>method</code>，因为你要调用一个方法你至少需要有一
+个对象以及一个成员函数名称。关于<code>instance</code>如何获取，我们放在下一个小节，这里主要
+讨论如何获取<code>method</code>。</p>
+<p>在 Java 中所有的方法必然属于某一个类，所以获取 <code>method</code> 之前你需要获取 <code>class</code>，
+它们类型分别为<code>jclass</code>,<code>jmethod</code>。</p>
+<h2 id="获取类的引用"><a href="#获取类的引用" class="headerlink" title="获取类的引用"></a>获取类的引用</h2><p>调用<code>JNIEnv::FindClass</code>可以获取对于的 class 的实例。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jclass clazz = env-&gt;FindClass(<span class="string">"full/name/of/your/class"</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="获取成员函数的引用"><a href="#获取成员函数的引用" class="headerlink" title="获取成员函数的引用"></a>获取成员函数的引用</h2><p>获取一个方法的引用需要调用<code>JNIEnv::GetMethodID</code>方法。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmethodID = env-&gt;GetMethodID(clazz, <span class="string">"method"</span>, <span class="string">"()V"</span>);</span><br></pre></td></tr></table></figure>
+<p>第一个参数是上面获取的类引用，第二个参数是方法名称，第三个参数是方法的签名。关于
+签名的写法，请参考官方文档的<a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/types.html#type_signatures" target="_blank" rel="noopener">Type Signatures</a>一小节</p>
+<p>需要额外注意的地方是，构造函数的函数名称为<code>&lt;init&gt;</code></p>
+<h2 id="获取成员变量的引用"><a href="#获取成员变量的引用" class="headerlink" title="获取成员变量的引用"></a>获取成员变量的引用</h2><p>获取成员变量的引用和获取成员函数的引用是类似的，调用<code>JNIEnv::GetFieldID</code>即可，这
+里不再赘述。</p>
+<h2 id="失效问题"><a href="#失效问题" class="headerlink" title="失效问题"></a>失效问题</h2><p>特别需要注意的地方是，jclass, methodID 和 fieldID 在类 unload 之前都是有效，虽然
+一个类会 unload 的情况非常少见，但是并不是没有可能。所以如果你想要保证你的这些引
+用有效的话，可以通过下面这种方式对你用到的类，方法，成员变量进行缓存：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">nativeInit</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    nativeInit();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在你的 native 方法中获取并缓存你用到的 entity。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Java_xxxx_nativeInit(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    <span class="comment">// 查找并且缓存你需要用到的上述对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然如果你使用 <code>System.loadLibrary</code> 你也可以在 <code>JNI_OnLoad</code> 函数中缓存这些东西。</p>
+<h2 id="辅助工具"><a href="#辅助工具" class="headerlink" title="辅助工具"></a>辅助工具</h2><p>下面这两个宏定义来自 <code>libvlc-android</code> 可以用来方便的获取 jclass，jmetod，jfield</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GET_CLASS(clazz, str, b_globlal)                                    \</span></span><br><span class="line">    <span class="keyword">do</span> &#123;                                                                    \</span><br><span class="line">        (clazz) = env-&gt;FindClass((str));                                    \</span><br><span class="line">        <span class="keyword">if</span> (!(clazz)) &#123;                                                     \</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;                                                      \</span><br><span class="line">        &#125;                                                                   \</span><br><span class="line">        <span class="keyword">if</span> (b_globlal) &#123;                                                    \</span><br><span class="line">            (clazz) = <span class="keyword">reinterpret_cast</span>&lt;jclass&gt;(env-&gt;NewGlobalRef((clazz))); \</span><br><span class="line">            <span class="keyword">if</span> (!(clazz)) &#123;                                                 \</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;                                                  \</span><br><span class="line">            &#125;                                                               \</span><br><span class="line">        &#125;                                                                   \</span><br><span class="line">    &#125; <span class="keyword">while</span> (<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GET_ID(get, id, clazz, str, args)                 \</span></span><br><span class="line">    <span class="keyword">do</span> &#123;                                                  \</span><br><span class="line">        (id) = env-&gt;get((clazz), (str), (args));          \</span><br><span class="line">        <span class="keyword">if</span> (!(id)) &#123;                                      \</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;                                    \</span><br><span class="line">        &#125;                                                 \</span><br><span class="line">    &#125; <span class="keyword">while</span> (<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>使用方式如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET_CLASS(clazz, <span class="string">"full/class/name"</span>, <span class="literal">false</span>); <span class="comment">// 第三个参数后面解释</span></span><br><span class="line">GET_ID(GetMethodID, method, clazz, <span class="string">"method"</span>, <span class="string">"()V"</span>);</span><br><span class="line">GET_ID(GetFieldID, field, clazz, <span class="string">"filed"</span>, <span class="string">"I"</span>);</span><br></pre></td></tr></table></figure>
+<p>此外这些 class, methodID， filedID 是不会变的东西（从逻辑上理解，类名，方法名，
+成员名都不会在运行是更改），你可以缓存你查找好的引用作为全局变量，一方面可以提升
+效率，另一方面也方便使用，因为你不需要每次都重新查找。个人的习惯是写一个结构体的
+单例，在 <code>JNI_OnLoad</code>中查找并缓存这些实体，然后在<code>JNI_OnUnload</code>中清理缓存。</p>
+<h1 id="获取-instance"><a href="#获取-instance" class="headerlink" title="获取 instance"></a>获取 instance</h1><p>前面提到，如果想要在 native 层调用 java 层的函数，你至少一个对象和一个成员方法，
+上一小节讲述了如何获取成员方法，这一小节主要讲述如获取一个Java对象也就是
+instance。获取的它通常是通过一下三种途径：</p>
+<h2 id="native-代码参数"><a href="#native-代码参数" class="headerlink" title="native 代码参数"></a>native 代码参数</h2><p><code>instance</code>的获取和<code>JNIEnv</code>的获取是类似的，如果你的方法是Java代码的native实现，那
+么JNI会自动把调用该对象的实例传递给你。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JNIEXPORT <span class="keyword">void</span> JNICALL</span><br><span class="line">Java_xxxxx_nativeMethod(JNIEnv *env, jobject instance);</span><br></pre></td></tr></table></figure>
+<p>上面函数的第二个参数就是你需要的对象。你可以直接在这个函数中使用这个对象，比如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">JNIEXPORT <span class="keyword">void</span> JNICALL</span><br><span class="line">Java_xxxxx_nativeMethod(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    <span class="keyword">auto</span>&amp; cached_fields = CachedFields::GetInstance();  <span class="comment">// 参考上一小节</span></span><br><span class="line">    env-&gt;CallVoidMethod(instance, cached_fields.methodID)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="CallObjectMethod"><a href="#CallObjectMethod" class="headerlink" title="CallObjectMethod"></a>CallObjectMethod</h2><p>在<code>instance</code>存在的情况下，你也可以调用这个<code>instance</code>返回对象的方法来获取另一个
+<code>instance</code>，比如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jobject obj_ = env-&gt;CallObjectMethod(instance, methodID, args);</span><br></pre></td></tr></table></figure>
+<h2 id="NewObject"><a href="#NewObject" class="headerlink" title="NewObject"></a>NewObject</h2><p>如果你没有这样的 instance 存在，你也可以直接创建一个java对象，调用
+<code>JNIEnv::NewObject</code>即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jobject obj_ = env-&gt;NewObject(fields.clazz, fields.ctrID);</span><br></pre></td></tr></table></figure>
+<p>这个函数需要 jclass 和构造函数的 jmethod（关于如何获取构造函数的引用可以查看上一
+小节）。</p>
+<h1 id="引用的局部性和全局性"><a href="#引用的局部性和全局性" class="headerlink" title="引用的局部性和全局性"></a>引用的局部性和全局性</h1><p>所有传递到native函数中的参数和从JNI函数中返回的对象都是局部引用，比如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">JNIEXPORT <span class="keyword">void</span> JNICALL</span><br><span class="line">Java_xxxxx_nativeMethod(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    jobject obj_ = env-&gt;CallObjectMethod(instance, methodID, args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>instance</code> 和 <code>obj_</code> 都是局部引用，这种引用一旦函数返回就会失效，即使你保存它们
+也不会延长它们的生命周期。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jobject instance_backup;</span><br><span class="line"></span><br><span class="line">JNIEXPORT <span class="keyword">void</span> JNICALL</span><br><span class="line">Java_xxxxx_nativeMethod(JNIEnv *env, jobject instance) &#123;</span><br><span class="line">    instance_backup = instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NativeClass::NativeMethod() &#123;</span><br><span class="line">    JNIEnvPtr env;</span><br><span class="line">    env-&gt;CallVoidMethod(instance_backup, methodID); <span class="comment">// 错误！！！！！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这条规则对于所有的 jobject 的子类（包括 jclas， jstring，jarray）都是适用的，如
+果你想要引用保持有效，你需要调用<code>JNIEnv::NewGlobalRef</code>来获取一个全局的引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jclass localClass = env-&gt;FindClass(&quot;MyClass&quot;);</span><br><span class="line">jclass globalClass = reinterpret_cast&lt;jclass&gt;(env-&gt;NewGlobalRef(localClass));</span><br></pre></td></tr></table></figure>
+<p>在你调用 DeleteGlobalRef 之前，这个引用都会有效。所以如果你想要保存一个局部引用
+，你可以像下面这样组织你的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Widget &#123;</span><br><span class="line">public:</span><br><span class="line">    Widget(jobject instance) &#123;</span><br><span class="line">        JNIEnvPtr env;</span><br><span class="line">        instance_ = env-&gt;NewGlobalRef(instance);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~Widget() &#123;</span><br><span class="line">        JNIEnvPtr env;</span><br><span class="line">        env-&gt;DeleteGlobalRef(instance_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void Function() &#123;</span><br><span class="line">        // 使用 instance_;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    jobject instance_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="全局和局部引用的删除"><a href="#全局和局部引用的删除" class="headerlink" title="全局和局部引用的删除"></a>全局和局部引用的删除</h1><p>全局引用需要你手动调用 <code>DeleteGlobalRef</code> 来删除，但是局部的引用通常不需要。但是
+需要注意的是，如果你使用了 AttachCurrentThread 绑定线程，那么在你调用
+DetachCurrentThread 之前，你的局部引用都不会自动回收，这意味着如果你在一个循环中
+创建了局部引用，你通常需要在循环内部删除掉它，因为系统通常只保证了 16 个局部引用
+的 slot 。如果你需要超过 16 个，你就必须删除一些local引用，或者使用
+EnsureLocalCapacity/PushLocalFrame 为局部引用预留更多的slot。</p>
+<h1 id="成对的使用函数"><a href="#成对的使用函数" class="headerlink" title="成对的使用函数"></a>成对的使用函数</h1><p>JNI中有一些函数是需要成对的使用的，否则会有内存泄露，常用的有以下这些。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const char * GetStringUTFChars(jstring string, jboolean *isCopy);</span><br><span class="line">void ReleaseStringUTFChars(jstring string, const char *utf);</span><br><span class="line"></span><br><span class="line">NativeType *Get&lt;PrimitiveType&gt;ArrayElements(ArrayType array, jboolean *isCopy);</span><br><span class="line">void Release&lt;PrimitiveType&gt;ArrayElements(ArrayType array, NativeType *elems, jint mode);</span><br></pre></td></tr></table></figure>
+<p>前面这一组用来操作字符串，后面这一组用来操作数组。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>本文中的内容主要参考：</p>
+<ol>
+<li><a href="https://developer.android.com/training/articles/perf-jni.html" target="_blank" rel="noopener">JNI Tips</a></li>
+<li><a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/jniTOC.html" target="_blank" rel="noopener">Java Native Interface Specification Contents</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-CPP/" rel="tag"># C/CPP</a>
+          
+            <a href="/tags/JNI/" rel="tag"># JNI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/02/things-todo-2017/" rel="next" title="2017 的业余时间安排">
+                <i class="fa fa-chevron-left"></i> 2017 的业余时间安排
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/25/enbale-shared-from-this-implementaion/" rel="prev" title="enable_shared_from_this 的使用及实现原理">
+                enable_shared_from_this 的使用及实现原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#获取-JavaVM"><span class="nav-number">1.</span> <span class="nav-text">获取 JavaVM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取-JNIEnv"><span class="nav-number">2.</span> <span class="nav-text">获取 JNIEnv</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#你的代码是-Java-代码的-native-方法的实现"><span class="nav-number">2.1.</span> <span class="nav-text">你的代码是 Java 代码的 native 方法的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果你想要从-native-层直接调用-Java-代码"><span class="nav-number">2.2.</span> <span class="nav-text">如果你想要从 native 层直接调用 Java 代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取-jclass-jmethodID-jfieldID"><span class="nav-number">3.</span> <span class="nav-text">获取 jclass, jmethodID, jfieldID</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取类的引用"><span class="nav-number">3.1.</span> <span class="nav-text">获取类的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取成员函数的引用"><span class="nav-number">3.2.</span> <span class="nav-text">获取成员函数的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取成员变量的引用"><span class="nav-number">3.3.</span> <span class="nav-text">获取成员变量的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#失效问题"><span class="nav-number">3.4.</span> <span class="nav-text">失效问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#辅助工具"><span class="nav-number">3.5.</span> <span class="nav-text">辅助工具</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取-instance"><span class="nav-number">4.</span> <span class="nav-text">获取 instance</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#native-代码参数"><span class="nav-number">4.1.</span> <span class="nav-text">native 代码参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CallObjectMethod"><span class="nav-number">4.2.</span> <span class="nav-text">CallObjectMethod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NewObject"><span class="nav-number">4.3.</span> <span class="nav-text">NewObject</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用的局部性和全局性"><span class="nav-number">5.</span> <span class="nav-text">引用的局部性和全局性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全局和局部引用的删除"><span class="nav-number">6.</span> <span class="nav-text">全局和局部引用的删除</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#成对的使用函数"><span class="nav-number">7.</span> <span class="nav-text">成对的使用函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

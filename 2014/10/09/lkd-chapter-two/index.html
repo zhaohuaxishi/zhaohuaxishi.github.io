@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux Kernel,LKD," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述第二章其实是非常简单的一章，主要讲了以下两个方面的内容：  如何获取源码和编译 Linux Kernel 有哪些与众不同的特点  对于第一个问题，个人觉得这本书里面的讲解并不是特别的清晰，我在本文中根据自己摸索 出来的一些经验进行了总结，供大家参考。">
+<meta name="keywords" content="Linux Kernel,LKD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LKD 总结 —— 第二章">
+<meta property="og:url" content="http://blog.guorongfei.com/2014/10/09/lkd-chapter-two/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="概述第二章其实是非常简单的一章，主要讲了以下两个方面的内容：  如何获取源码和编译 Linux Kernel 有哪些与众不同的特点  对于第一个问题，个人觉得这本书里面的讲解并不是特别的清晰，我在本文中根据自己摸索 出来的一些经验进行了总结，供大家参考。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LKD 总结 —— 第二章">
+<meta name="twitter:description" content="概述第二章其实是非常简单的一章，主要讲了以下两个方面的内容：  如何获取源码和编译 Linux Kernel 有哪些与众不同的特点  对于第一个问题，个人觉得这本书里面的讲解并不是特别的清晰，我在本文中根据自己摸索 出来的一些经验进行了总结，供大家参考。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2014/10/09/lkd-chapter-two/"/>
+
+
+
+
+
+  <title>LKD 总结 —— 第二章 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2014/10/09/lkd-chapter-two/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LKD 总结 —— 第二章</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-10-09T00:00:00+08:00">
+                2014-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2014/10/09/lkd-chapter-two/" class="leancloud_visitors" data-flag-title="LKD 总结 —— 第二章">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>第二章其实是非常简单的一章，主要讲了以下两个方面的内容：</p>
+<ul>
+<li>如何获取源码和编译</li>
+<li>Linux Kernel 有哪些与众不同的特点</li>
+</ul>
+<p>对于第一个问题，个人觉得这本书里面的讲解并不是特别的清晰，我在本文中根据自己摸索
+出来的一些经验进行了总结，供大家参考。</p>
+<a id="more"></a>
+<h1 id="如何获取内核的源码和编译内核"><a href="#如何获取内核的源码和编译内核" class="headerlink" title="如何获取内核的源码和编译内核"></a>如何获取内核的源码和编译内核</h1><h2 id="如何获取源码"><a href="#如何获取源码" class="headerlink" title="如何获取源码"></a>如何获取源码</h2><h3 id="获取源码的压缩包（tarball）"><a href="#获取源码的压缩包（tarball）" class="headerlink" title="获取源码的压缩包（tarball）"></a>获取源码的压缩包（tarball）</h3><p>获取源码最直接的方式是访问内核的 <a href="https:/www.kernel.org" title="kernel" target="_blank" rel="noopener"><strong>官方网站</strong></a>，在官网上你可以找到最
+新的内核，以及目前的长期维护版本的最近更新版本的压缩包。</p>
+<p>很多时候我们需要找到一些官网首页上不存在的版本，比如如果你正在看一本关于内核的书
+，而这本书使用的内核版本现在已经停止开发了，而新的内核版本和书上的版本改动较大难
+以理解，这个时候我们可能会需要一个和书本上一模一样的版本。</p>
+<p>内核的网站保存了所有的内核版本，虽然你不能在首页上直接找到它，但是你可以通过以下
+<a href="https://www.kernel.org/pub/linux/kernel/" title="all kernel version" target="_blank" rel="noopener"><strong>链接</strong></a> 找到</p>
+<p>我们在官方网站上下载到的都是压缩包，旧的版本一般分为 bz2 版本和 gz 版本，而目前
+的版本则包括 gz 版本和 xz 版本，建议下载 bz2 或者 xz 版本，因为它们的压缩效果要
+好一些。 bz2 和 gz 版本的解压方式书本上有提到，这里不再重复，如果你下载的是 xz
+版本可以使用下面的方式解压：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unxz linux-x.y.z.tar.xz</span><br><span class="line">tar -xvf linux.x.y.x.tar</span><br></pre></td></tr></table></figure>
+<h3 id="通过-git-获取最新的版本"><a href="#通过-git-获取最新的版本" class="headerlink" title="通过 git 获取最新的版本"></a>通过 git 获取最新的版本</h3><p>前面提到的方式获取到的压缩包比较小，方便下载和拷贝。但是不断的会有新的版本出现，
+如果你不想自己不断的打补丁，那么可能需要不断下载压缩包，以获得最新的稳定版本。</p>
+<p>如果你不想不断的下载新的压缩包，你可以考虑使用 git 获取最新的稳定版本，有更新的
+时候也可以通过<strong>git</strong>[^1]很方便的进行更新。</p>
+<p>如果你想获得最新的稳定版本可以使用下面的命令：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone</span><br><span class="line">git:<span class="comment">//git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git</span></span><br></pre></td></tr></table></figure>
+<p>你将会得到一个全新的目录 linux-stable。如果你想要更新里面的内容以获取最新的内核
+代码，可以通过在 linux-stable 根目录下执行命令来达到目的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<p>git 使得版本控制变得非常的方便，但是由于内核的代码量非常大，如果你的网速不是很理
+想，那么这将会是一个非常漫长的等待过程。因此具体使用上面提到的哪一种做法可能因人
+而异。</p>
+<h2 id="如何编译源代码"><a href="#如何编译源代码" class="headerlink" title="如何编译源代码"></a>如何编译源代码</h2><p>有了源代码之后可以编译它给自己的系统安装全新的内核。在网上的资料中提到的编译安装
+的方式一般步骤如下：</p>
+<ol>
+<li><p>make menuconfig（或者 make config、 make gconfig、 make xconfig）</p>
+</li>
+<li><p>make oldconfig</p>
+</li>
+<li><p>make</p>
+</li>
+<li><p>sudo make modules_install</p>
+</li>
+<li><p>sudo make install</p>
+</li>
+</ol>
+<p>上面提到的方式是编译内核的正常方式，但是对于一般初学者来说并不是最佳的方式。</p>
+<p>第一步的作用是对内核进行配置， Linux Kernel 的可定制性非常的高， 你可以只编译你
+需要的部分得到一个最适合你的机器的内核版本。但是内核的配置其实非常的复杂，无论你
+是使用基于终端的 menuconfig 还是图形界面的 gconfig（gtk+）和 xconfig（qt）你都需
+要在浩如烟海的配置选项中找出你想要的那些选项。对于一般人来说这是不太可能完成的任
+务，一方面配置太多无法找到一一查看，另外就算你有精力一一查看你也不一定能看懂选择
+到底是什么意思（很多选项和硬件相关，没有一定基础基本上搞不明白）。</p>
+<p>为了减少配置的困难，你可以尝试以下三种选择：</p>
+<ol>
+<li><p>make defconfig</p>
+</li>
+<li><p>找到当前 Linux 发行版本的 config 文件，然后使用它作为配置文件编译新的内核</p>
+</li>
+<li><p>make localmodconfig</p>
+</li>
+</ol>
+<p><em>第一种</em>方式是直接根据你的系统架构选择默认的配置，这个配置一般会得到一个精巧的的
+内核版本。但是默认的配置一般式内核维护者给出的配置，因此不一定适合你的电脑，所以
+很有可能你编译得到的新的内核无法正常的启动。不过这个方法对于初学者体验如何编译安
+装内核来说是一个不错的选择。</p>
+<p><em>第二种</em>方式是使用当前 Linux 发行版本的 config 文件作为你的配置。这个配置文件一
+般存在以下三个目录之一：</p>
+<ul>
+<li><p>/boot/ (ubuntu, centos)</p>
+</li>
+<li><p>/proc/ (arch)</p>
+</li>
+<li><p>/usr/src/linux/</p>
+</li>
+</ul>
+<p>找到这些文件之后把它拷贝到你下载的内核根目录下改名为 .config 之后使用 <code>make
+oldcongig</code>。一般来说因为新的内核会加入很多新的配置选择，因此你在 <code>make
+oldconfig</code> 过程中会遇到很多新的选项需要你选择，此时一般使用默认值就可以了（直接
+按 Enter）。</p>
+<p>上面的这种方式一般能得到一个可以运行的的内核。不过出于兼容各种硬件的考虑，发行版
+本的配置一般会包含非常多的模块，所以你得到的内核可能会比较臃肿。</p>
+<p><em>第三种</em>方式其实是第二种方式的一个变种，如果你直接在下载的内核源码根目录下面执行
+<code>make localmodconfig</code>，那么相关的脚本会使用找到当前发行版本的配置文件作为蓝本，
+然后通过 lsmod 命令找到目前使用了哪些模块，之后选择这些模块的相关配置选项，取消
+其他的选项，这样一来你会得到一个较小而且能用的版本。</p>
+<p>这种方式可以说是较为可行的一种方式，不过因为它是根据当前系统正在使用的模块来进行
+选项设置的，所以如果你当前没有用到某一模块，那么你编译的新内核讲不会包含该模块，
+比如你当时没有插入 U 盘那么新的内核可能无法使用 U 盘。 为了解决这个问题你可以首
+先手动使用 <code>lsmod</code> 找到目前系统使用的模块并把输出结构保存下来，然后修改这个输出
+文件，增加你需要的模块（比如 U 盘驱动），最后把你修改过的模块列表作为参数传递给
+<code>make localmodconfig</code>。具体的方式可以参考下面这个<a href="http://unix.stackexchange.com/questions/119876/how-to-build-a-custom-kernel-with-localmodconfig-that-support-hardware-of-multip" title="localmodconfig" target="_blank" rel="noopener"><strong>链接</strong></a></p>
+<p>其他小提示：</p>
+<ol>
+<li><p>并不是所有的内核版本都能在你的电脑上正常的运行起来，所以如果你的电脑不能够
+正常的运行你编译好的内核版本，你可以考虑换一个内核版本试试。</p>
+</li>
+<li><p>不要使用 /usr/src 目录作为你的源码编译目录。</p>
+</li>
+<li><p>编译内核的第一步——配置之前，你可能需要安装一些额外的包才能正常的使用 make
+meneconfig, make gconfig。不同的发行版本一般不一样，你可以在网上查找。（一
+般是 ncurses 的头文件或者 gtk+ 和 qt 的头文件）。</p>
+</li>
+<li><p>一般的发行版本会有一个软件包帮你安装所有需要工具包（比如：ubuntu 的
+kernel-package 和 centos 的 kernel-devel）。</p>
+</li>
+<li><p>使用 make -jn 会比 直接 make 快很多，n 一般是 CPU 核心数的两倍。</p>
+</li>
+</ol>
+<p>最后推荐一本关于内核的书籍 <a href="http://www.kroah.com/lkn/" title="linux in a nutshell" target="_blank" rel="noopener"><strong>《Linux Kernel in a Nutshell》</strong></a>，中文名字叫
+做《Linux 内核技术手册》。这本书英文版网上可以免费下载，书很薄读起来非常的轻松。
+这本书涉及到内核编译的方方面面，虽然已经比较老了，但是仍然是一本值得一读的书。</p>
+<h1 id="Linux-内核的特性"><a href="#Linux-内核的特性" class="headerlink" title="Linux 内核的特性"></a>Linux 内核的特性</h1><p>Linux 内核作为一个庞大的软件项目（据说有 1000+ 万行），没有一点自己的个性说不过
+去。那么 Linux 内核到底包括哪些比较另类（相对于我们写的用户空间程序来说）特点呢
+？</p>
+<ul>
+<li>不使用 C 函数库，当然也就不会包含标准的 C 头文件</li>
+<li>用 GNU C 编写而成</li>
+<li>缺少内存保护机制</li>
+<li>很难进行浮点运行</li>
+<li>每个进程都有一个固定大小的内核栈</li>
+<li>需要着重考虑同步和并发问题</li>
+<li>可移植性对内核非常重要</li>
+</ul>
+<p>这些特点书本上有非常详细的讲解，这里不再重复。值得一提的是第二点，大部分软件开发
+都希望迎合标准（使用 ANSI C 或者 C89、C99 标准）而 Linux 内核却使用 GNU C 编写，
+我想这或多或少和 GNU 与 Linux 之间的深厚渊源有点关系。 由于 Linux 内核是使用 GNU
+C 编写，里面使用了大量标准 C 中不存在的用法，除了书上提到的那些以外我在阅读源码
+的时候也多少遇到过一些，我把它们整理在了 <a href="/2014/09/30/c-language-funny-usage/" title="C 语言的趣味用法"><strong>《C 语言的趣味用法》</strong></a>这篇博
+文之中，有兴趣的可以看看。</p>
+<hr>
+<p>[^1]: git 是一种新型的版本控制器，关于 git 的更多介绍可以访的 <a href="http://git-scm.com/" title="git" target="_blank" rel="noopener"><strong>官网</strong></a>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux-Kernel/" rel="tag"># Linux Kernel</a>
+          
+            <a href="/tags/LKD/" rel="tag"># LKD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/09/30/c-language-funny-usage/" rel="next" title="C 语言的趣味用法">
+                <i class="fa fa-chevron-left"></i> C 语言的趣味用法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/10/22/socket-filesystem/" rel="prev" title="socket API 实现（零）—— 文件系统注册">
+                socket API 实现（零）—— 文件系统注册 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何获取内核的源码和编译内核"><span class="nav-number">2.</span> <span class="nav-text">如何获取内核的源码和编译内核</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何获取源码"><span class="nav-number">2.1.</span> <span class="nav-text">如何获取源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取源码的压缩包（tarball）"><span class="nav-number">2.1.1.</span> <span class="nav-text">获取源码的压缩包（tarball）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过-git-获取最新的版本"><span class="nav-number">2.1.2.</span> <span class="nav-text">通过 git 获取最新的版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何编译源代码"><span class="nav-number">2.2.</span> <span class="nav-text">如何编译源代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-内核的特性"><span class="nav-number">3.</span> <span class="nav-text">Linux 内核的特性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

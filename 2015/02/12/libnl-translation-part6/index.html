@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="netlink,libnl," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="6. 属性  如果可能的话，无论什么时候你都应该把 netlink 消息的有效载荷编码成 netlink 属 性。使用属性可以使得日后对任何 netlink 协议进行扩展的时候都不会破坏它的二进制 兼容性。比如：假设你的设备现在可能使用一个 32 位的计数器来统计数据，但是几年后设 备改成维护一个 64 位的计数器来记录更快的网络硬件。如果你的协议使用了属性，那么过 度到 64 位计数器是一个非常">
+<meta name="keywords" content="netlink,libnl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netlink 库 -- 官方开发者教程中文版第六部分">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/02/12/libnl-translation-part6/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="6. 属性  如果可能的话，无论什么时候你都应该把 netlink 消息的有效载荷编码成 netlink 属 性。使用属性可以使得日后对任何 netlink 协议进行扩展的时候都不会破坏它的二进制 兼容性。比如：假设你的设备现在可能使用一个 32 位的计数器来统计数据，但是几年后设 备改成维护一个 64 位的计数器来记录更快的网络硬件。如果你的协议使用了属性，那么过 度到 64 位计数器是一个非常">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.infradead.org/~tgr/libnl/doc/images//attribute_hdr.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netlink 库 -- 官方开发者教程中文版第六部分">
+<meta name="twitter:description" content="6. 属性  如果可能的话，无论什么时候你都应该把 netlink 消息的有效载荷编码成 netlink 属 性。使用属性可以使得日后对任何 netlink 协议进行扩展的时候都不会破坏它的二进制 兼容性。比如：假设你的设备现在可能使用一个 32 位的计数器来统计数据，但是几年后设 备改成维护一个 64 位的计数器来记录更快的网络硬件。如果你的协议使用了属性，那么过 度到 64 位计数器是一个非常">
+<meta name="twitter:image" content="http://www.infradead.org/~tgr/libnl/doc/images//attribute_hdr.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/02/12/libnl-translation-part6/"/>
+
+
+
+
+
+  <title>Netlink 库 -- 官方开发者教程中文版第六部分 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/02/12/libnl-translation-part6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netlink 库 -- 官方开发者教程中文版第六部分</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-02-12T00:00:00+08:00">
+                2015-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/02/12/libnl-translation-part6/" class="leancloud_visitors" data-flag-title="Netlink 库 -- 官方开发者教程中文版第六部分">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="attributes">6. 属性</h1>
+
+<p>如果可能的话，无论什么时候你都应该把 <code>netlink</code> 消息的有效载荷编码成 <code>netlink</code> 属
+性。使用属性可以使得日后对任何 <code>netlink</code> 协议进行扩展的时候都不会破坏它的二进制
+兼容性。比如：假设你的设备现在可能使用一个 32 位的计数器来统计数据，但是几年后设
+备改成维护一个 64 位的计数器来记录更快的网络硬件。如果你的协议使用了属性，那么过
+度到 64 位计数器是一个非常简单的事情，你只是需要发送一个新的属性来包含这个 64 位
+的变量，与此同时仍然提供旧的 32 位的计数器。如果你的协议没有使用属性的话，你将无
+法在不祸及已有的协议使用者的前提下转化这个数据类型。</p>
+<p>属性嵌套的概念也允许你的协议的子系统实现和维护自己的属性模式。假如现在引入了新一
+代的网络设备，而它需要设置一系列的协议设计之初没有考虑到的新的配置选项。通过使用
+属性，新一代的设备可以定义一个新的属性然后用自己的子属性结构来填充这个属性，这些
+子属性可以扩展甚至是完全废弃原来的属性。</p>
+<p>所以，请<em>始终</em>使用属性，即便是在你几乎可以肯定你的消息格式永远都不会改变的情况下
+也是如此。</p>
+<a id="more"></a>
+<h2 id="attr_formate">6.1 属性格式</h2>
+
+<p><code>netlink</code> 属性允许你往 <code>neltink</code> 消息中添加任意数量的任意长度数据段。关于属性在
+消息中的存放位置请参考 <a href="/netlink/2015/01/31/libnl-translation-part5.html#parse_msg_attr">【core_msg_attr】</a> 一节。</p>
+<p><code>nlmsg_attrdata()</code> 函数返回的属性数据的格式如下：</p>
+<pre><code> &lt;----------- nla_total_size(payload) -----------&gt;
+ &lt;---------- nla_size(payload) -----------&gt;
++-----------------+- - -+- - - - - - - - - +- - -+-----------------+- - -
+|  struct nlattr  | Pad |     Payload      | Pad |  struct nlattr  |
++-----------------+- - -+- - - - - - - - - +- - -+-----------------+- - -
+ &lt;---- NLA_HDRLEN -----&gt; &lt;--- NLA_ALIGN(len) ---&gt; &lt;---- NLA_HDRLEN ---
+</code></pre><p>每一个属性都应该在 <code>NLA_ALIGNTO</code> （4 字节）倍数的偏移量上开始。如果你想知道属性
+的末尾是否需要进行填充，你可以使用 <code>nla_padlen()</code> 函数，它返回需要添加的填充的字
+节数。</p>
+<p> <img src="http://www.infradead.org/~tgr/libnl/doc/images//attribute_hdr.png" alt="属性格式"></p>
+<p>每一个属性都是和一个类型及长度字段一起编码，这两个字节都是 16 个字节，它们存储在
+属性的有效载荷前面的属性头部中（struct nlattr）。属性的长度是用来计算下一个属性
+的偏移量的。</p>
+<h2 id="parse_attr">6.2 属性解析</h2>
+
+<h3 id="core_attr_parse_split">把属性流分割成属性集</h3>
+
+<p>库中存在一个手动分割属性流的接口，虽然大部分的应用程序都会使用 <code>nlmsg_parse()</code>
+家族的函数之一（参考 <a href="#core_attr_parse_easy">core_attr_parse_easy</a>）来完成这项工作。</p>
+<p>在<a href="#attr_formate">【属性格式】</a> 一节中提到，属性段中包含了不定数量的属性序列。
+<code>nlmsg_attrdata()</code> 函数返回的指针指向第一个属性的头部。任何后续的属性都可以通过
+在前一个属性头部上调用 <code>nla_next()</code> 来获得。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/attr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">struct nlattr *<span class="title">nla_next</span><span class="params">(<span class="keyword">const</span> struct nlattr *attr, <span class="keyword">int</span> *remaining)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这个函数的使用场景和 <code>nlmsg_next()</code> 函数是一样的，所以 <code>nla_next()</code> 函数也会从属
+性流的剩余字节数中减去前一个属性的大小。</p>
+<p>和消息一样，属性中并没有包含接下来是否还有其他属性的指示器。唯一可以用来判别的是
+属性流的剩余字节数。<code>nla_ok()</code> 函数可以用来判断剩余字节数中是否还存在其他的属性
+。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/attr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nla_ok</span><span class="params">(<span class="keyword">const</span> struct nlattr *attr, <span class="keyword">int</span> remaining)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>nla_ok()</code> 和 <code>nla_next()</code> 函数的惯常用法如下：</p>
+<p><strong>nla_ok()/nla_next()用法</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/attr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlattr</span> *<span class="title">hdr</span> = <span class="title">nlmsg_attrdata</span>(<span class="title">msg</span>, 0);</span></span><br><span class="line"><span class="keyword">int</span> remaining = nlmsg_attlen(msg, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(nla_ok(hdr, remaining)) &#123;</span><br><span class="line">	<span class="comment">/* 在此解析属性 */</span></span><br><span class="line"></span><br><span class="line">	hdr = nla_next(hdr, &amp;remaining);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong><code>nla_ok()</code> 只有在剩余字节数中包含包括属性有效载荷在内的完整属性的时候
+才会返回 <code>true</code></p>
+<h3>访问属性的头部和属性的有效载荷</h3>
+
+<p>无论是使用分割属性流的方式还是还是使用其他接口，只要找出来一个属性你就可以访问它
+的载荷和头部。</p>
+<pre><code>                 &lt;- nla_len(hdr) -&gt;
+    +-----------------+- - -+- - - - - - - - - +- - -+
+    |  struct nlattr  | Pad |     Payload      | Pad |
+    +-----------------+- - -+- - - - - - - - - +- - -+
+nla_data(hdr) ---------------^
+</code></pre><p><code>nla_len()</code> 函数和 <code>nla_type()</code> 函数可以用来访问属性的头部。<code>nla_len()</code> 会返回不
+包括填充字节在内的载荷的长度。<code>nla_type()</code> 函数则会返回属性的类型。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/attr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nla_len</span><span class="params">(<span class="keyword">const</span> struct nlattr *hdr)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nla_type</span><span class="params">(<span class="keyword">const</span> struct nlattr *hdr)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>nla_data()</code> 函数会返回指向属性有效载荷的指针。需要注意的是因为 <code>NLA_ALIGENTO</code>
+是 4 个字节所以直接转型或解引用任何大于 32 位的数据类型的指针都是不安全的做法，
+这依赖于应用程序所运行的平台。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/attr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">nla_data</span><span class="params">(struct nlattr *hdr)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> 千万不要断定载荷的大小是你期望的大小，<em>务必</em>自己检查载荷的长度的来确
+认它满足你的要求</p>
+<h3 id="core_attr_validation">属性检验</h3>
+
+<p>当接收到一个 <code>netlink</code> 属性的时候，接收者对属性应该是什么样子有自己的期望。这种
+期望必须被定义出来以保证发送方满足我们的期望。出于这个目的，库中提供了一个属性验
+证的接口，它必须在访问任何的载荷之前使用。</p>
+<p>任何提供属性验证的函数都是基于 <code>struct nla_policy</code> 结构体的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nla_policy</span> &#123;</span></span><br><span class="line">	<span class="keyword">uint16_t</span>	type;</span><br><span class="line">	<span class="keyword">uint16_t</span> 	minlen;</span><br><span class="line">	<span class="keyword">uint16_t</span> 	maxlen;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>type</code> 字段指定了属性的数据类型，比如：<code>NLA_U32</code>、<code>NLA_STRING</code>、<code>NLA_FLAG</code>，它的
+默认值是 <code>NLA_UNSPEC</code>。<code>minlen</code> 字段定义了合法属性的最小的有效载荷长度。<code>minlen</code>
+的值对于大部分诸如整型、标志这类的基本数据类型来说都是隐含的。<code>maxlen</code> 字段则定
+义了合法属性的最大有效载荷长度。</p>
+<p><strong>注意：</strong> 当我们把结构体编码到一个属性中去的时候，指定最大的有效载荷长度并非明
+智之举因为这不利于日后扩展该结构体。而在 <code>neltink</code> 协议中一项常见任务就是扩展协
+议而不会破坏它的向后兼容性</p>
+<p><code>nla_validate()</code> 是使用 <code>struct nla_policy</code> 结构体的函数之一。这个函数接收一个
+<code>struct nla_policy</code> 数组并使用属性类型作为下标访问数组。如果一个属性类型越界的话
+这个属性会被当做是合法的属性。这个为了使旧的应用程序在无法识别新引入的属性的情况
+下能正常工作而特意进行的处理。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/attr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nla_validate</span><span class="params">(struct nlattr *head, <span class="keyword">int</span> len, <span class="keyword">int</span> maxtype, struct nla_policy *policy)</span></span></span><br></pre></td></tr></table></figure>
+<p>如果属性合法 <code>nla_policy()</code> 函数返回 0，否则它返回一个和错误相关的错误码。</p>
+<p>大部分应用程序不会直接使用 <code>nla_validate()</code> 而是使用 <code>nla_parse()</code> 函数。这个函
+数以同样的方式验证属性，但是在验证的同时它还会解析属性。
+[core_attr_parse_easy][attr_parse_eray] 一节中有更多的信息以及一个例子程序。</p>
+<p>验证属性的详细步骤如下：</p>
+<pre><code>1. 如果属性类型是 0 或者大于最大的属性值，返回 0。
+
+2. 如果属性的有效载荷长度小于 minlen，返回 -NLE_ERANGE。
+
+3. 如果定义了 maxlen 而有效载荷长度超过了这个值， 返回 -NLE_ERANGE。
+
+4. 检验数据类型相关的规则，参考属性数据类型一节。
+
+5. 如果上面的全部条件都满足的话返回 0。
+</code></pre><h3 id="core_attr_parse_easy">解析属性的便捷方式</h3>
+
+<p>大部分的应用程序不会想要按照<a href="#core_attr_parse_split">core_attr_parse_split</a> 中提到的方式自己分割属性流
+。一种更加便捷的方式是使用 <code>nla_parse()</code> 函数。</p>
+<pre><code>#include &lt;netlink/attr.h&gt;
+
+int nla_parse(struct nlattr **attrs, int maxtype, struct nlattr *head,
+    int len, struct nla_policy *policy);
+</code></pre><p><code>nla_parse()</code> 函数会迭代一条属性流，按照 <a href="#core_attr_validation">core_attr_validation</a>
+中提到的方式验证每一个属性，如果所有的属性都通过了验证的话，指向每一个属性的指针
+会被存放在属性数组的 <code>attrs[nla_type(attr)]</code> 位置中。</p>
+<p>除了 <code>nla_parse()</code> 函数之外你也可以使用 <code>nlmsg_parse()</code> 函数把解析消息和解析消息
+的属性的工作在一个步骤中完成。关于如何使用这些函数请参考
+<a href="#core_attr_parse_easy">core_attr_parse_easy</a> 一节。</p>
+<h3>例子</h3>
+
+<p>下面的例子展示了如何解析一个通过 <code>neltink</code> 协议发送的不包含协议头部的 <code>neltink</code>
+消息。但是这个例子强制使用了属性规则（policy），<code>MY_ATTR_FOO</code> 必须是 32 位的整数
+而 <code>MY_ATTR_BAR</code> 必须是一个最多包含 16 个字符的字符串。</p>
+<pre><code>#include &lt;netlink/msg.h&gt;
+#include &lt;netlink/attr.h&gt;
+
+enum {
+    MY_ATTR_FOO = 1,
+    MY_ATTR_BAR,
+    __MY_ATTR_MAX,
+};
+
+
+#define MY_ATTR_MAX (__MY_ATTR_MAX - 1)
+
+
+static struct nla_policy my_policy[MY_ATTR_MAX+1] = {
+    [MY_ATTR_FOO] = { .type = NLA_U32 },
+    [MY_ATTR_BAR] = { .type = NLA_STRING,
+              .maxlen = 16 },
+};
+
+
+void parse_msg(struct nlmsghdr *nlh)
+{
+    struct nlattr *attrs[MY_ATTR_MAX+1];
+
+    if (nlmsg_parse(nlh, 0, attrs, MY_ATTR_MAX, my_policy) &lt; 0)
+        /* 出错处理 */
+
+    if (attrs[MY_ATTR_FOO]) {
+        /* 消息中存在 MY_ATTR_FOO 类型的属性 */
+        printf(&quot;value: %u\n&quot;, nla_get_u32(attrs[MY_ATTR_FOO]));
+    }
+}
+</code></pre><h3>定位单个属性</h3>
+
+<p>如果一个应用程序只在乎单个属性，那么它可以使用 <code>nla_find()</code> 函数和
+<code>nlmsg_find_attr()</code> 函数。这些函数会迭代所有的属性，找到一个符合条件的属性然后发
+挥这个属性头部的指针。</p>
+<pre><code>#include &lt;netlink/attr.h&gt;
+
+struct nlattr *nla_find(struct nlattr *head, int len, int attrtype);
+
+
+
+
+#include &lt;netlink/msg.h&gt;
+
+struct nlattr *nlmsg_find_attr(struct nlmsghdr * hdr, int hdrlen, int attrtype);
+</code></pre><p><strong>注意：</strong> <code>nla_find()</code> 和 <code>nlmsg_find_attr()</code> 不会搜索嵌套的属性，参考
+<a href="#nested_attr">嵌套属性</a> 一节</p>
+<h3>迭代属性流</h3>
+
+<p>有些时候为属性流中的每一个属性都设置一个唯一的属性类型并不太合理。比如一个列表可
+以通过一系列的属性来传输，即便每一个属性的属性类型是都是递增的，使用
+<code>nlmsg_parse()</code> 或者 <code>nla_parse()</code> 函数填充一个数组的做法也是不合理的<a href="文中并没有说明不合理的理由，我的理解是列表数的数量是不固定的，不适合使用数组。【译者注】">^1</a>。</p>
+<p>因此库中提供了迭代属性流的方法：</p>
+<pre><code>#include &lt;netlink/attr.h&gt;
+
+nla_for_each_attr(attr, head, len, remaining)
+</code></pre><p><code>nla_for_each_attr()</code> 是一个宏，你可以在代码块之前使用：</p>
+<pre><code>#include &lt;netlink/attr.h&gt;
+
+struct nlattr *nla;
+int rem;
+
+nla_for_each_attr(nla, attrstream, streamlen, rem) {
+    /* 验证并解析属性 */
+
+}
+
+if (rem &gt; 0)
+    /* 没有解析的数据 */
+</code></pre><h2 id="attr_construct">6.3. 属性的构造</h2>
+
+<p>往 <code>neltink</code> 消息中添加属性的接口是建立在普通的消息构建接口之上的。这里假设消息
+的头部和实际的 <code>netlink</code> 协议的头部已经添加到消息中了。</p>
+<pre><code>struct nlattr * nla_reserve(struct nl_msg *msg, int attrtype, int len);
+</code></pre><p><code>nla_reserve()</code> 函数在消息的末尾添加一个属性头部并且为属性载荷预留 <code>len</code> 字节的
+空间。这个函数会返回消息中的属性载荷段的指针。为了保证下一个属性正确的对齐，这个
+函数还会在添加的属性的末尾进行必要填充。</p>
+<pre><code>int nla_put(struct nl_msg *msg, int attrtype, int attrlen, const void *data);
+</code></pre><p><code>nla_put()</code> 函数以 <code>nla_reserve()</code> 函数为基础，只不过它还接收一个指向包含属性载荷
+的缓冲区的指针。这个函数会自动把数据从缓冲区拷贝到消息中去。</p>
+<p><strong>例子</strong></p>
+<pre><code>struct my_attr_sturct {
+    uint32_t a;
+    uint32_t b;
+};
+
+int my_put(struct nl_msg *msg)
+{
+    struct my_attr_sturct obj = {
+        .a = 10,
+        .b = 20,
+    };
+
+    return nla_put(msg, ATTR_MY_STRUCT, sizeof(obj), &amp;obj);
+}
+</code></pre><p>关于数据类型相关的属性构造请查看 <a href="#attr_datatype">属性数据类型</a> 一节。</p>
+<h2>基于异常的属性构造</h2>
+
+<p>和内核 API 类似，这个库提供了基于异常的接口。这些宏的行为和他们对应的方法是一致的，
+不同之处在出错时这些宏会跳转到 <code>nla_put_failure</code> 位置。</p>
+<p><strong>例子</strong>[^2]</p>
+<pre><code>#inlcude &lt;netlink/msg.h&gt;
+#include &lt;netlink/attr.h&gt;
+
+void construct_attrs(struct nl_msg *msg)
+{
+    NLA_PUT_STRING(msg, MY_ATTR_FOO1, &quot;some text&quot;);
+    NLA_PUT_U32(msg, MY_ATTR_FOO2, 0x1010);
+    NLA_PUT_FLAG(msg, MY_ATTR_FOO3, 1);
+
+    return 0;
+
+nla_put_failure:
+    /* NLA_PUT 系列的宏会在出错的时候跳转到这个位置 */
+    return EMSGSIZE;
+}
+</code></pre><p>关于数据类型相关的异常处理变种请查看 <a href="#attr_datatype">属性数据类型</a> 一节。</p>
+<h2 id="attr_datatype">6.4. 属性数据类型</h2>
+
+<p>为了简化属性的访问和验证库中定义了许多基本数据类型。属性的数据类型并没有编码在
+属性中，所以发送方和接收方对于哪一个属性属于何种数据类型要有一致的定义。</p>
+<table rules="all" width="100%" frame="border" cellspacing="0" cellpadding="4">
+    <col width="16%">
+    <col width="83%">
+    <thead>
+        <tr>
+            <th align="left" valign="top"> 类型             </th>
+            <th align="left" valign="top"> 描述</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td align="left" valign="top"><p class="table"><code>NLA_UNSPEC</code></p></td>
+            <td align="left" valign="top"><p class="table">不确定的属性</p></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top"><p class="table"><code>NLA_U{8|16|32}</code></p></td>
+            <td align="left" valign="top"><p class="table">整型</p></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top"><p class="table"><code>NLA_STRING</code></p></td>
+            <td align="left" valign="top"><p class="table">字符串</p></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top"><p class="table"><code>NLA_FLAG</code></p></td>
+            <td align="left" valign="top"><p class="table">标志</p></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top"><p class="table"><code>NLA_NESTED</code></p></td>
+            <td align="left" valign="top"><p class="table">嵌套属性</p></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p>这些数据类型除了能够简化属性访问之外，最大的优势在于对于每个属性会基于一个 <code>policy</code>
+自动进行合法性检验。这种检验会通过检查载荷的最小长度（对某些数据类型也会进行载荷
+最大长度的检验）来保证访问载荷的安全性。</p>
+<h3>6.4.1. 整型属性</h3>
+
+<p>使用得最多的数据类型是整型。整型有四种不同的大小：</p>
+<pre><code>NLA_U8         8  位的整数
+NLA_U16     16 位的整数
+NLA_U32     32 位的整数
+NLA_U64     64 位的整数
+</code></pre><p>注意由于对齐需求的存在，使用 <code>NLA_U8</code> 和 <code>NLA_U16</code> 规格的整型起不到节省 <code>nelink</code>
+消息空间的作用，使用它们只是为了限制属性值的范围。</p>
+<p><strong>解析整型属性</strong></p>
+<pre><code>#include &lt;neltink/attr.h&gt;
+
+uint8_t nla_get_u8(struct nlattr *hdr);
+uint16_t nla_get_u16(struct nlattr *hdr);
+uint32_t nla_get_u32(struct nlattr *hdr);
+uint64_t nla_get_u64(struct nlattr *hdr);
+</code></pre><p>例子：</p>
+<pre><code>if (attrs[MY_ATTR_FOO])
+    uint32_t val = nla_get_u32(attrs[MY_ATTR_FOO]);
+</code></pre><p><strong>构建整型属性</strong></p>
+<pre><code>#include &lt;neltink/attr.h&gt;
+
+int nla_put_u8(struct nl_msg *msg, int attrtype, uint8_t value);
+int nla_put_u16(struct nl_msg *msg, int attrtype, uint16_t value);
+int nla_put_u32(struct nl_msg *msg, int attrtype, uint32_t value);
+int nla_put_u64(struct nl_msg *msg, int attrtype, uint64_t value);
+</code></pre><p>基于异常的对应函数：</p>
+<pre><code>NLA_PUT_U8(msg, attrtype, value);
+NLA_PUT_U16(msg, attrtype, value);
+NLA_PUT_U32(msg, attrtype, value);
+NLA_PUT_U64(msg, attrtype, value);
+</code></pre><p><strong>验证</strong></p>
+<p>如果你在在填充一个 <code>struct nl_policy</code> 数组的时候使用 <code>NLA_U8</code>、<code>NLA_U16</code>、<code>NLA_U32</code>
+或者 <code>NLA_U64</code> 来定义整数类型，<code>libnl</code> 库会保证这些 <code>policy</code> 使用正确的的最小载荷
+长度。</p>
+<p>验证并不区分有符号和无符号整数，唯一的决定因素是数据的大小。如果应用程序需要保证
+数据在某个特定的范围的话，它需要自己完成这一项检验。</p>
+<pre><code>static struct nla_policy my_policy[ATTR_MAX+1]={
+    [ATTR_FOO]={.type=NLA_U32},
+    [ATTR_BAR]={.type=NLA_U8},
+};
+</code></pre><p>上面这段代码等价于：</p>
+<pre><code>static struct nla_policy my_policy[ATTR_MAX+1]={
+    [ATTR_FOO]={.minlen=sizeof(uint32_t)},
+    [ATTR_BAR]={.minlen=sizeof(uint8_t)},
+};
+</code></pre><h3>6.4.2. 字符串属性</h3>
+
+<p>字符串类型用来标识一个以 <code>NUL</code> 结尾的不定长字符序列。它不是用来标识二进制数据流。</p>
+<p>字符串属性的有效载荷可以通过调用 <code>nla_get_string()</code> 函数来获得。<code>nla_strdup()</code>
+函数会对属性载荷调用 <code>strdup()</code> 函数并返回新分配的字符串。</p>
+<pre><code>#inlcude &lt;neltink/attr.h&gt;
+
+char *nla_get_string(struct nlattr *hdr);
+char *nla_strdup(struct nlattr *hdr);
+</code></pre><p>字符串属性是通过 <code>nla_put_string()</code> 或者对应的 <code>NLA_PUT_STRING()</code> 宏分配的。属性
+的长度是 <code>strlen() + 1</code>，因为末尾的 <code>NUL</code> 字符也会包括在内。</p>
+<pre><code>int nla_put_string(struct msg, int attrtype, const char *data);
+NLA_PUT_STRING(msg, attrtype, data);
+</code></pre><p>为了验证字符串属性，你可以在定义 <code>struct nla_policy</code> 时使用 <code>NLA_STRING</code> 类型。
+这个类型意味着载荷的最短长度是 1 字节，并且会检查 <code>NUL</code> 字符的存在。此外你可以
+使用 <code>maxlen</code> 字段来定义字符序列的最大长度（包括末尾的 <code>NUL</code> 字符）。</p>
+<pre><code>static struct nla_policy my_policy[] = {
+    [ATTR_FOO] = {
+        .type = NLA_STRING,
+        .maxlen = IFNAMSIZ,
+    },
+};
+</code></pre><h3>6.4.3 标志属性</h3>
+
+<p>标志属性代表一个布尔数据类型。如果属性存在则表示值为真，不存在则表示值为假。所以
+标志属性的载荷长度永远都是 <code>0</code>。</p>
+<pre><code>int nla_get_flag(struct nlattr *hdr);
+int nla_put_flag(struct nl_msg, int attrtype);
+</code></pre><p>为了方便验证，库中也定义了 <code>NLA_FLAG</code> 属性。它表示 <code>maxlen</code> 为 <code>0</code> 也就保证了最大
+的载荷长度是 <code>0</code>。</p>
+<p><strong>例子</strong></p>
+<pre><code>/* nla_put_flag() 在消息中添加一个长度为 0 的属性。*/
+nla_put_flag(msg, ATTR_FOO);
+
+/* 没有对应的接收方法，因为属性的存在与否代表了属性的值 */
+if (attrs[ATTR_FOO])
+    /* 标志存在 */
+</code></pre><h3 id="nested_attr">6.4.4 嵌套属性</h3>
+
+<p>在 <a href="#attributes">属性</a> 一节中已经提到，属性可以嵌套以表达属性之间的复杂树形结构。属性
+嵌套也通常也用来表示一个子系统在消息中的子段。嵌套属性通常还会用来传输对象的列表。</p>
+<p>当进行属性嵌套的时候，嵌套的属性作为父属性（容器属性-container）的有效载荷而存在。</p>
+<p><strong>注意：</strong> 当使用 <code>nlmsg_validate()</code>、<code>nlmsg_parse()</code>、<code>nla_validate()</code> 或者
+<code>nla_parse()</code> 函数来验证属性的时候，它们只会验证第一层的属性。这些函数都不会递归
+的验证属性。所以你必须对每一层的嵌套属性显式的调用 <code>nla_validate()</code> 或者
+<code>nla_parse_nested()</code></p>
+<p>当定义一个嵌套属性的 <code>struct policy</code> 结构的时候你应该使用 <code>NLA_NESTED</code> 类型。它
+不会强制使用任何最小载荷长度，除非你自己提供了这个字段。这是因为某些 <code>neltink</code>
+协议允许空的容器属性。</p>
+<pre><code>static struct nla_policy my_policy[] = {
+    [ATTR_FOO] = {.type = NLA_NESTED},
+};
+</code></pre><p><strong>嵌套属性的解析</strong></p>
+<p><code>nla_parse_nested()</code> 函数可以用来解析嵌套属性。它的行为和 <code>nla_parse()</code> 函数是
+一致的，只不过它接收一个 <code>struct nlattr</code> 作为参数并且会使用这个属性的有效载荷作为
+属性流进行解析。</p>
+<pre><code>if (attrs[ATTR_OPTS]) {
+    struct nlattr *nested[NESTED_MAX+1];
+    struct nla_policy nested_policy[] = {
+        [NESTED_FOO] = {.type = NLA_U32},
+    };
+
+    if (nla_parse_nested(nested, NESTED_MAX, attrs[ATTR_OPTS], nested_policy) &lt; 0)
+        /* 错误*/
+
+    if (nested[NESTED_FOO])
+        uint32_t val = nla_get_u32(nested[NESTED_FOO]);
+}
+</code></pre><p><strong>嵌套属性的构造</strong></p>
+<p>属性的嵌套是通过在代码前后分别调用 <code>nla_nest_start()</code> 和 <code>nla_nest_end()</code> 来完成的。
+<code>nla_nest_start()</code> 函数会在消息中添加一个没有实际载荷的属性头部，在此之后添加的
+数据都会成为容器属性的载荷部分直到调用 <code>nla_nest_end()</code> 为止，它的调用“关闭”了
+容器属性并校正它的载荷长度以包含所有的数据长度。</p>
+<pre><code>int put_opts(struct nl_msg *msg)
+{
+    struct nlattr *opts;
+
+    if (!(opts = nla_nest_start(msg, ATTR_OPTS)))
+        goto nla_put_failure;
+
+    NLA_PUT_U32(msg, NESTED_FOO, 123);
+    NLA_PUT_STRING(msg, NESTED_BAR, &quot;some text&quot;);
+
+    nla_nest_end(msg, opts);
+    return 0;
+
+nla_put_failure:
+    nla_nest_cancle(msg, opts);
+    return -EMSGSIZE;
+}
+</code></pre><h3>6.4.5 不定属性</h3>
+
+<p>这是默认的属性类型，它在没有合适的基本数据类型的时候使用。它用来表示任意长度任意
+类型数据。</p>
+<p>库中存在一个特殊的接口允许基于 <code>netlink</code> 属性分配抽象的地址对象，这个对象包含某种
+形式的网络地址。请参考 <a href="/netlink/2015/02/15/libnl-translation-part9.html#abstract_addr">地址分配</a> 一节以便获取更多的信息。</p>
+<p>关于如何基于 <code>neltink</code> 属性分配抽象数据对象的更多信息请查看
+<a href="/netlink/2015/02/15/libnl-translation-part9.html#abstract_data">抽象数据分配</a> 一节。</p>
+<p>这种类型的属性可以使用 <code>nla_get()</code> 和 <code>nla_put()</code> 函数来获取和构造属性。请查看
+<a href="#attr_construct">属性构造</a> 一节中的例子。</p>
+<h2 id="attr_examples">6.5. 示例程序</h2>
+
+<h3>6.5.1. 使用属性构造 <code>netlink</code> 消息</h3>
+
+<pre><code>struct nl_msg *build_msg(int ifindex, struct nl_addr *lladdr, int mtu)
+{
+    struct nl_msg *msg;
+    struct nlattr *info, *vlan;
+    struct ifinfomsg ifi = {
+        .ifi_family = AF_INET,
+        .ifi_index = ifindex,
+    };
+
+    /* 使用默认大小分配一条消息 */
+    if (!(msg = nlmsg_alloc_simple(RTM_SETLINK, 0)))
+        return NULL;
+
+    /* 添加协议相关的头部 (struct ifinfomsg)*/
+    if (nlmsg_append(msg, &amp;ifi, sizeof(ifi), NLMSG_ALIGNTO) &lt; 0)
+        goto nla_put_failure
+
+    /* 使用一个 32 位整型的属性来承载 MTU */
+    NLA_PUT_U32(msg, IFLA_MTU, mtu);
+
+    /* 使用一个不定类型属性来承载链路层地址 */
+    NLA_PUT_ADDR(msg, IFLA_ADDRESS, lladdr);
+
+    /* 添加一个容器属性以便使用嵌套属性来承载链路信息 */
+    if (!(info = nla_nest_start(msg, IFLA_LINKINFO)))
+        goto nla_put_failure;
+
+    /* 往容器属性中添加一个字符串属性 */
+    NLA_PUT_STRING(msg, IFLA_INFO_KIND, &quot;vlan&quot;);
+
+    /*
+     * 在打开的容器属性中再添加一个容器用来携带
+     * vlan 相关的属性
+     */
+    if (!(vlan = nla_nest_start(msg, IFLA_INFO_DATA)))
+        goto nla_put_failure;
+
+    /* 在此添加和 vlan 相关的信息... */
+
+    /* 完成 vlan 相关信息的填充并关闭第二个容器. */
+    nla_nest_end(msg, vlan);
+
+    /* 完成 link 信息属性的嵌套并关闭第一个容器. */
+    nla_nest_end(msg, info);
+
+    return msg;
+
+nla_put_failure:
+    nlmsg_free(msg);
+    return NULL;
+}
+</code></pre><h3>6.5.2 解析包含属性的 <code>netlink</code> 消息</h3>
+
+<pre><code>int parse_message(struct nlmsghdr *hdr)
+{
+    /*
+     * policy 定义了两个属性: 一个 32 位整数和一个用来进行属性
+     * 嵌套的容器属性。
+     */
+    struct nla_policy attr_policy[] = {
+        [ATTR_FOO] = { .type = NLA_U32 },
+        [ATTR_BAR] = { .type = NLA_NESTED },
+    };
+    struct nlattr *attrs[ATTR_MAX+1];
+    int err;
+
+    /*
+     * nlmsg_parse() 函数会保证消息的有效载荷至少足够容纳协议头部
+     * (struct my_hdr), 验证消息中包含的所有属性然后把属性的头部指针
+     * 按照属性类型存储在 attrs[] 数组中。
+     */
+    if ((err = nlmsg_parse(hdr, sizeof(struct my_hdr), attrs, ATTR_MAX,
+                   attr_policy)) &lt; 0)
+        goto errout;
+
+    if (attrs[ATTR_FOO]) {
+        /*
+         * 你现在可以安全的直接访问属性载荷而不用进行任何的检查
+         * 因为 nlmsg_parse() 函数会保证 policy 得到满足
+         */
+        uint32_t foo = nla_get_u32(attrs[ATTR_FOO]);
+    }
+
+    if (attrs[ATTR_BAR]) {
+        struct *nested[NESTED_MAX+1];
+
+        /*
+         * 嵌套在容器中的属性可以和顶层属性一样解析。
+         */
+        err = nla_parse_nested(nested, NESTED_MAX, attrs[ATTR_BAR],
+                       nested_policy);
+        if (err &lt; 0)
+            goto errout;
+
+        // 在此处理嵌套属性。
+    }
+
+    err = 0;
+errout:
+    return err;
+}
+</code></pre><p>   [^2]: 原文中的例子里面 <code>MY_ATTR_FOO2</code> 写成了 <code>MY_ATTR_FOO1</code> 个人认为是笔误。【译者注】</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/netlink/" rel="tag"># netlink</a>
+          
+            <a href="/tags/libnl/" rel="tag"># libnl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/31/libnl-translation-part5/" rel="next" title="Netlink 库 -- 官方开发者教程中文版第五部分">
+                <i class="fa fa-chevron-left"></i> Netlink 库 -- 官方开发者教程中文版第五部分
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/02/15/libnl-translation-part7/" rel="prev" title="Netlink 库 -- 官方开发者教程中文版第七部分">
+                Netlink 库 -- 官方开发者教程中文版第七部分 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#attributes"><span class="nav-number">1.</span> <span class="nav-text">6. 属性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#attr_formate"><span class="nav-number">1.1.</span> <span class="nav-text">6.1 属性格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parse_attr"><span class="nav-number">1.2.</span> <span class="nav-text">6.2 属性解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#core_attr_parse_split"><span class="nav-number">1.2.1.</span> <span class="nav-text">把属性流分割成属性集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.2.</span> <span class="nav-text">访问属性的头部和属性的有效载荷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#core_attr_validation"><span class="nav-number">1.2.3.</span> <span class="nav-text">属性检验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#core_attr_parse_easy"><span class="nav-number">1.2.4.</span> <span class="nav-text">解析属性的便捷方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.5.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.6.</span> <span class="nav-text">定位单个属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.7.</span> <span class="nav-text">迭代属性流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attr_construct"><span class="nav-number">1.3.</span> <span class="nav-text">6.3. 属性的构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.4.</span> <span class="nav-text">基于异常的属性构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attr_datatype"><span class="nav-number">1.5.</span> <span class="nav-text">6.4. 属性数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.1.</span> <span class="nav-text">6.4.1. 整型属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.2.</span> <span class="nav-text">6.4.2. 字符串属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.3.</span> <span class="nav-text">6.4.3 标志属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nested_attr"><span class="nav-number">1.5.4.</span> <span class="nav-text">6.4.4 嵌套属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.5.</span> <span class="nav-text">6.4.5 不定属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attr_examples"><span class="nav-number">1.6.</span> <span class="nav-text">6.5. 示例程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.5.1. 使用属性构造 netlink 消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.5.2 解析包含属性的 netlink 消息</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

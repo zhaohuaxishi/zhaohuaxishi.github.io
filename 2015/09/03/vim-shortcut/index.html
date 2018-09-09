@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Vim," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="无论我多爱 Vim，不容否认的一点是它的快捷键对于现在的大部分人来说比较诡异， 这其中的有很深的历史渊源。这篇文章将会重点介绍 Vim 的快捷键的由来以及个 人偏好的一些快捷键设置。">
+<meta name="keywords" content="Vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利器系列之 —— 编辑利器 Vim 之快捷键配置">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/09/03/vim-shortcut/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="无论我多爱 Vim，不容否认的一点是它的快捷键对于现在的大部分人来说比较诡异， 这其中的有很深的历史渊源。这篇文章将会重点介绍 Vim 的快捷键的由来以及个 人偏好的一些快捷键设置。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/adm3a.svg">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利器系列之 —— 编辑利器 Vim 之快捷键配置">
+<meta name="twitter:description" content="无论我多爱 Vim，不容否认的一点是它的快捷键对于现在的大部分人来说比较诡异， 这其中的有很深的历史渊源。这篇文章将会重点介绍 Vim 的快捷键的由来以及个 人偏好的一些快捷键设置。">
+<meta name="twitter:image" content="http://blog.guorongfei.com/img/posts/adm3a.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/09/03/vim-shortcut/"/>
+
+
+
+
+
+  <title>利器系列之 —— 编辑利器 Vim 之快捷键配置 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/09/03/vim-shortcut/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利器系列之 —— 编辑利器 Vim 之快捷键配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-09-03T00:00:00+08:00">
+                2015-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/09/03/vim-shortcut/" class="leancloud_visitors" data-flag-title="利器系列之 —— 编辑利器 Vim 之快捷键配置">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>无论我多爱 Vim，不容否认的一点是它的快捷键对于现在的大部分人来说比较诡异，
+这其中的有很深的历史渊源。这篇文章将会重点介绍 <code>Vim</code> 的快捷键的由来以及个
+人偏好的一些快捷键设置。</p>
+<a id="more"></a>
+<h1 id="诡异的快捷键"><a href="#诡异的快捷键" class="headerlink" title="诡异的快捷键"></a>诡异的快捷键</h1><p>看似诡异的 Vim 快捷键其实并不诡异，这一切的一切要从 <code>Bill Joy</code> 和那台
+<code>ADM-3A</code> 说起。所有学计算机的人，或者说所有用电脑的人都应该记住 <code>Bill Joy</code>
+这个人，因为他主导开发了 <code>BSD Unix</code> 系统。这个系统是整个操作系统发展史上的
+一座丰碑，它给我们提供了虚拟内存、网络套接字、<code>ex</code>、<code>C shell</code> 还有 <code>Vi</code> 等
+等强悍的功能，而这些东西大部分都是 <code>Bill Joy</code> 写的。虽然　<code>BSD</code> 已经停止开
+发，但是它的后代还在不断的发挥余热，苹果的操作系统的内核 Darwin 就是基于
+BSD 的。</p>
+<p><code>Bill Joy</code> 的作品太多，这里要说的是它的神作 <code>Vi</code>，这个后来发展成为 <code>Vim</code>
+传世神器。Vim 的快捷键之所以这么诡异就是拜它所赐，当年 <code>Bill Joy</code> 编写
+<code>Vi</code> 的时候年代还比较久远，那时候他们用的不是普通的键盘而是终端机，当时
+<code>Bill Joy</code> 使用的终端机叫做 <code>ADM-3A</code>，它的键盘的按键分布和我们现在的普通键
+盘的按键分布大有不同，我在 <code>wikipedia</code> 上找到一张它的键盘分布图如下：</p>
+<p>  <img src="/img/posts/adm3a.svg" alt="adm3a"></p>
+<p>看完这张图你大概会明白为什么 <code>Vim</code> 使用 <code>hjkl</code> 作为方向键；为什么把如此常
+用的回到普通模式功能绑定在现在很难输入的 <code>Esc</code> 按键上；为什么大部分的常用
+键都绑定为单字符快捷键而命令输入快捷键要绑定在 <code>:</code> 这个需要按住 <code>shift</code> 才
+能输入的按键上面；为什么用来绑定快捷键的 <code>mapleader</code> 会是 <code>\</code> 这个按键，毕
+竟快捷键是为了输入快捷，但是 <code>\</code> 这个字符在大部分的键盘上输入都比较慢。</p>
+<h1 id="快捷键的修改"><a href="#快捷键的修改" class="headerlink" title="快捷键的修改"></a>快捷键的修改</h1><p><code>Vim</code> 源自 <code>Vi</code>，它沿用了后者的快捷键，而这些快捷键中有一些目前显得太过于
+别扭了。幸运的是 <code>Vim</code> 是一个高度可配置的编辑，你可以随意的更改它的快捷键
+，也可以创建自己喜欢的快捷键。</p>
+<h2 id="递归绑定和非递归绑定"><a href="#递归绑定和非递归绑定" class="headerlink" title="递归绑定和非递归绑定"></a>递归绑定和非递归绑定</h2><p><code>Vim</code> 的快捷键绑定分为递归和非递归两种，比如：</p>
+<pre><code>&quot; 非递归方式
+noremap &lt;space&gt; :
+noremap : /
+
+&quot; 递归方式
+map &lt;space&gt; :
+map : /
+</code></pre><p>第一个绑定最终的结果是输入空格会变成命令模式 <code>:</code>，输入 <code>:</code> 则会变成搜索按
+键 <code>/</code>。第二个绑定最终的结果是输入空格最终变成搜索按键，而你没有办法再输入
+<code>:</code> 进入命令模式（千万不要做这种配置，这里只是举了一个不恰当的例子）。</p>
+<h2 id="绑定模式"><a href="#绑定模式" class="headerlink" title="绑定模式"></a>绑定模式</h2><p><code>Vim</code> 的快捷键绑定比较复杂，因为它可以基于不同的模式绑定不同的快捷键，而
+<code>Vim</code> 包含六类的 <code>mapping</code> 模式，下面这段话摘自 <code>Vim</code> 的帮助文档：</p>
+<blockquote>
+<p>There are six sets of mappings</p>
+<ul>
+<li>For <em>Normal mode</em>: When typing commands.</li>
+<li>For <em>Visual mode</em>: When typing commands while the Visual area is
+highlighted.</li>
+<li>For <em>Select mode</em>: like Visual mode but typing text replaces the
+selection.</li>
+<li>For <em>Operator-pending mode</em>: When an operator is pending (after “d”,
+“y”, “c”, etc.).  See below: |omap-info|.</li>
+<li>For <em>Insert mode</em>.  These are also used in Replace mode.</li>
+<li>For <em>Command-line mode</em>: When entering a “:” or “/“ command.</li>
+</ul>
+</blockquote>
+<p>其中用的比较多的是 <code>Normal</code>, <code>Insert</code>, <code>Command-line</code> 这三种，这篇文章中主
+要讲解的也是这几种模式的快捷键配置。这几种按键绑定模式的用法如下：</p>
+<pre><code>inoremap jk &lt;Esc&gt;
+nnoremap &lt;space&gt; :
+cnoremap &lt;C-a&gt; &lt;Home&gt;
+</code></pre><p>这些绑定最前面的字符 <code>[inc]</code> 表示不同的模式。如果你没有指明你使用的是哪一种
+模式，比如你直接使用</p>
+<pre><code>noremap &lt;space&gt; :
+</code></pre><p>那么它表示同时绑定到 <code>normal</code>, <code>visual</code>, <code>operator-pending</code> 三种模式。</p>
+<h1 id="常用的快捷键绑定"><a href="#常用的快捷键绑定" class="headerlink" title="常用的快捷键绑定"></a>常用的快捷键绑定</h1><h2 id="避免输入-Esc"><a href="#避免输入-Esc" class="headerlink" title="避免输入 Esc"></a>避免输入 Esc</h2><p>在 <code>ADM-3A</code> 中 <code>Esc</code> 这个按键在目前的 <code>Tab</code> 键的位置，输入起来非常方便，但
+是现在的键盘中这个按键输入起来非常的不方便，为了避免把手指移动到左上角，你
+可以使用下面几种方式。</p>
+<ol>
+<li><p>在你的系统中 <code>Caps Lock</code> 映射到 <code>Esc</code> 中。这个方式我不是很推荐，因为我
+更喜欢把 <code>Caps Lock</code> 映射到 <code>Ctrl</code> 按键。</p>
+</li>
+<li><p>在输入普通模式命令之前先输入 <code>Alt</code>，因为大部分的终端编辑器会在输入
+<code>Alt</code> 之后产生一个 <code>Esc</code> 按键，所以你输入 <code>Alt-o</code> 就可以直接在输入模式
+中在当前行下面新建一行开始编辑。</p>
+</li>
+<li><p>绑定其他按键到 <code>Esc</code> 上，比如我把 <code>jk</code> 绑定为 <code>Esc</code>。</p>
+<p> inoremap jk <esc></esc></p>
+<p>经过这个绑定，我可以直接在 <code>insert mode</code> 下输入 <code>jk</code> 退出编辑模式。</p>
+</li>
+</ol>
+<h2 id="替换"><a href="#替换" class="headerlink" title="替换 :"></a>替换 <code>:</code></h2><p><code>Vim</code> 的命令输入快捷键 <code>:</code> 需要输入两个字符（你需要先按住 SHIFT），对于一
+个常用的快捷键来说，速度太慢了一点。我习惯把 <space> 绑定为 <code>:</code> 这样，我可
+以直接输入空格进入命令模式。</space></p>
+<pre><code>noremap &lt;space&gt; :
+</code></pre><h2 id="快速切换到行首行尾"><a href="#快速切换到行首行尾" class="headerlink" title="快速切换到行首行尾"></a>快速切换到行首行尾</h2><p><code>Vim</code> 切换到行首和行尾的快捷键分别是 <code>^</code> 和 <code>$</code>，这两个字符在正则表达式中
+也代表着同样的含义。这两个按键虽然比较容易记住（只要你了解一些基本的正则
+表达式知识），但是它们比较难以输入，为了能够快速的切换到行首行尾，我给这
+两个功能绑定了新的快捷键。</p>
+<pre><code>noremap H ^
+noremap L $
+</code></pre><p>使用大写的 <code>H</code> 切换到行尾，小写的 <code>L</code> 切换到行末。这两个按键原本绑定为快速
+切换到页首和页尾，不过这两个功能我不是用的很多所以我把它们重新绑定到了行首
+和行尾上面。</p>
+<p>此外要提醒的一点是你可以使用 <code>0</code> 这个快捷键把切换到行首，还有就是如果你只
+是想要在行首和行尾插入字符，直接使用 <code>I</code> 和 <code>A</code> 就可以完成任务，没有必要使
+用这两个快捷键定位到行首尾之后再进行插入操作。</p>
+<h2 id="大小写转换"><a href="#大小写转换" class="headerlink" title="大小写转换"></a>大小写转换</h2><p>我在系统设置中把 <code>Caps Lock</code> 按键映射到了 <code>Ctrl</code> 按键上，也就是说我的键盘
+上目前没有大小写转换功能。在日常编程中，有些时候我们还是需要输入比较多的大
+写字符，比如在 <code>C</code> 语言的宏定义大部分都使用大写字符。</p>
+<p>在 <code>Vim</code> 中我比较常用的做法是先输入小写字符然后通过 <code>gUw</code> 按键转换成大小字
+符。个人觉得 <code>Vim</code> 的大小写切换功能的快捷键绑定的不是特别直观。它使用 <code>gu</code>
+表示转换成小写，<code>gU</code> 表示转换成大写；这和一般的 <code>u</code> 表示大写 <code>l</code> 表示小写
+比起来直观性上相差较远且更不容易操作（gUw 其实要按四个按键）。我把大小写切
+换功能的快捷键做了重新绑定。</p>
+<pre><code>nnoremap gu gU
+nnoremap gl gu
+</code></pre><p>这样你可以使用 <code>guw</code> 把当前的单词转换成大写，<code>glw</code> 把这个单词转换成小写。</p>
+<h2 id="更便捷的文字输入"><a href="#更便捷的文字输入" class="headerlink" title="更便捷的文字输入"></a>更便捷的文字输入</h2><p><code>Vim</code> 的大部分的快捷键是使用可输入字符序列组成的，比如 <code>hjkl</code> 用来移动光标
+。这种方式的一个好处是快捷键可以非常方便的输入，因为这些字符大部分都位于键
+盘的核心输入区域。</p>
+<p>这种方式最大的问题在于这些快捷键是可输入的字符，我们无法在把它们作为快捷键
+的同时又把它们输入到文本中去。这个问题的解决方式有两种，第一是使用不同的模
+式处理文本，比如 <code>Vim</code> 在普通模式下这些字符被映射成为快捷键而在输入模式下
+这些快捷键失效变成可输入字符。第二种解决方案就是使用组合键，比如 <code>Emacs</code>
+使用 <code>C-f</code>，<code>C-b</code> 移动光标，因为组合键不是可输入的字符，前面提到的问题也就
+不存在了。</p>
+<p><code>Vim</code> 的方式让快捷键变得更加的便捷，但是你需要不停的切换模式。比如我想要在
+编辑模式下移动光标的位置，我只能使用角落里的方向键或者更传统的做法，切换回
+到普通模式移动光标到合适的位置再进入编辑模式开始编辑。</p>
+<p>这是一种不太方便的操作方式，为了可以在编辑状态快速的移动鼠标，我借鉴了
+<code>Emacs</code> 的做法，定义一些组合键来完成这些事情从而避免不断的切换模式。</p>
+<pre><code>inoremap &lt;C-k&gt; &lt;Up&gt;
+inoremap &lt;C-j&gt; &lt;Down&gt;
+inoremap &lt;C-a&gt; &lt;Home&gt;
+inoremap &lt;C-e&gt; &lt;End&gt;
+</code></pre><p>这里定义了 <code>C-[kj]</code> 而没有 <code>C-[hl]</code> 因为 <code>C-k</code> 在输入模式下原本绑定为输
+入一些特殊的字符，而 <code>C-j</code> 原本是插入新行。这两个功能我用的不是多，前者使
+用本身就少，后者可以用 <code>A-o</code> 和 <code>Enter</code> 来实现。</p>
+<p>相对来说，<code>C-h</code> 的删除功能我用的较多，而 <code>C-l</code> 这个键和很多插件都有定义到
+，所以我没有绑定，如果你找到了更好的解决方式千万记得告诉我。</p>
+<h2 id="更便捷的命令输入"><a href="#更便捷的命令输入" class="headerlink" title="更便捷的命令输入"></a>更便捷的命令输入</h2><p>和前面提到的一点类似，命令行的输入我同样绑定了一些快捷键，方便快速的输入命
+令行。</p>
+<pre><code>cnoremap &lt;C-j&gt; &lt;t_kd&gt;
+cnoremap &lt;C-k&gt; &lt;t_ku&gt;
+cnoremap &lt;C-a&gt; &lt;Home&gt;
+cnoremap &lt;C-e&gt; &lt;End&gt;
+</code></pre><p>上面这个绑定，使用 <code>C-j</code> 切换到下一条命令，使用 <code>C-k</code> 切换到上一条命令。使
+用 <code>C-a</code> 切换到命令行首，<code>C-e</code> 切换到命令行尾就像普通的 <code>shell</code> 一样。</p>
+<h2 id="超级用户权限编辑"><a href="#超级用户权限编辑" class="headerlink" title="超级用户权限编辑"></a>超级用户权限编辑</h2><p><code>Vim</code> 在编辑系统配置文件时经常会使用到，你也许也碰到过对一个文件编辑完成之
+后才发现自己没有权限写这个文件。这个时候你只能使用 <code>q!</code> 丢弃编辑内容然后重
+新以 <code>sudo</code> 权限编辑文件。</p>
+<p>幸运的是，就连这么蛋疼的问题，<code>Vim</code> 也有解决的办法，你可以使用如下命令：</p>
+<pre><code>w !sudo tee &gt;/dev/null %
+</code></pre><p>我个人不是特别了解这个命令的具体工作原理，但是它确实有用。为了避免输入这么
+一大段的命令，我把它绑定到了 <code>sw</code> 这个命令上</p>
+<pre><code>cmap sw w !sudo tee &gt;/dev/null %
+</code></pre><p><code>sw</code> 原本是 <code>swap</code> 文件的写操作快捷键，不过因为我不是 <code>swap</code> 文件，所以我
+把它重新绑定到前面这个快捷命令上去。</p>
+<h1 id="mapleader"><a href="#mapleader" class="headerlink" title="mapleader"></a>mapleader</h1><p>关于 <code>Vim</code> 快捷键配置最后一个需要解释的概念是 <code>mapleader</code>，这是一个特殊的
+字符，默认是 <code>\</code>。</p>
+<p><code>Vim</code> 的大部分的快捷键都是可输入的字符序列，但是可输入的字符本身就不多，而
+且 <code>Vim</code> 已经占用了很多。这就导致在单层空间里面能够提供给我们使用的字符严
+重不足，我们绑定的快捷键很有可能和原本的快捷键产生冲突而覆盖它们的快捷键最
+终导致快捷键失效，<code>Vim</code> 的各种插件绑定的快捷键让这种情况更加严重。为了解决
+这种单层空间的快捷键冲突，你可以使用 <code>mapleader</code> 增加名字空间来解决这种冲
+突，比如：</p>
+<pre><code>map &lt;Leader&gt;j &lt;Plug&gt;(easymotion-j)
+map &lt;Leader&gt;k &lt;Plug&gt;(easymotion-k)
+</code></pre><p>在 <code>&lt;leader&gt;</code> 这层空间中，把 <code>jk</code> 绑定为 <code>easymotion</code> 相关的插件，从而避免
+和原本的 <code>jk</code> 快捷键产生冲突。通过这样的绑定之后你可以通过 <code>\j</code> 来触发
+<code>easymotion</code> 相关的功能。</p>
+<p>当然在目前的键盘中 <code>\</code> 键比较偏僻，而 <code>mapleader</code> 在快捷键绑定用的很多，所
+以我把这个按键做了更改，把它改成触手可及（原谅我的词语滥用）的 <code>;</code></p>
+<pre><code>let mapleader=&quot;;&quot;
+</code></pre><p>此外你不可以使用 <code>&lt;leader&gt;&lt;leader&gt;</code>或者 <code>&lt;leader&gt;&lt;leader&gt;&lt;leader&gt;...</code>
+形成更深层次的空间，不过这给记忆带来太大的难度，不推荐使用。</p>
+<hr>
+<p>通过前面的这些例子你大概已经知道了如何去绑定自己喜欢的快捷键了，<code>Vim</code> 的可
+配置性太高，我不可能在这里写下所有的快捷键配置，如果你觉得自己的快捷键用的
+不顺手或者说你想要寻求新的快捷键功能，尽管定义自己喜欢的快捷键就好了。</p>
+<p>下一篇文章将会重点介绍 <code>Vim</code> 的杀手级功能 —— 插件。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vim/" rel="tag"># Vim</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/31/vim-basic/" rel="next" title="利器系列之 —— 编辑利器 Vim 之基础配置">
+                <i class="fa fa-chevron-left"></i> 利器系列之 —— 编辑利器 Vim 之基础配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/06/vim-plugin/" rel="prev" title="利器系列之 —— 编辑利器 Vim 之插件配置">
+                利器系列之 —— 编辑利器 Vim 之插件配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#诡异的快捷键"><span class="nav-number">1.</span> <span class="nav-text">诡异的快捷键</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#快捷键的修改"><span class="nav-number">2.</span> <span class="nav-text">快捷键的修改</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#递归绑定和非递归绑定"><span class="nav-number">2.1.</span> <span class="nav-text">递归绑定和非递归绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绑定模式"><span class="nav-number">2.2.</span> <span class="nav-text">绑定模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用的快捷键绑定"><span class="nav-number">3.</span> <span class="nav-text">常用的快捷键绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#避免输入-Esc"><span class="nav-number">3.1.</span> <span class="nav-text">避免输入 Esc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#替换"><span class="nav-number">3.2.</span> <span class="nav-text">替换 :</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速切换到行首行尾"><span class="nav-number">3.3.</span> <span class="nav-text">快速切换到行首行尾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#大小写转换"><span class="nav-number">3.4.</span> <span class="nav-text">大小写转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更便捷的文字输入"><span class="nav-number">3.5.</span> <span class="nav-text">更便捷的文字输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更便捷的命令输入"><span class="nav-number">3.6.</span> <span class="nav-text">更便捷的命令输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#超级用户权限编辑"><span class="nav-number">3.7.</span> <span class="nav-text">超级用户权限编辑</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mapleader"><span class="nav-number">4.</span> <span class="nav-text">mapleader</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

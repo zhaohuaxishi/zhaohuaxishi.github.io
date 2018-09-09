@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="markdown,github pages,jekyll," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="2015-4-27 更新查看 Liquid 文档发现它有一个默认过滤器 join，这和本文编写的过滤器插件名字有冲突 所以把插件中的 join 更名为 join_chinese。误导之处，海涵。 问题使用 github pages 搭建一个免费的个人博客是一项非常流行的技术，它有着安全， 免费，无流量限制等特点。 github pages 中的文章一般是使用 Markdown 编写的，github">
+<meta name="keywords" content="markdown,github pages,jekyll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决 jekyll 中文换行变成空格的问题">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/04/25/how-to-fix-the-markdown-newline-blank-problem/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="2015-4-27 更新查看 Liquid 文档发现它有一个默认过滤器 join，这和本文编写的过滤器插件名字有冲突 所以把插件中的 join 更名为 join_chinese。误导之处，海涵。 问题使用 github pages 搭建一个免费的个人博客是一项非常流行的技术，它有着安全， 免费，无流量限制等特点。 github pages 中的文章一般是使用 Markdown 编写的，github">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/whitespaces.png">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/no_whitespaces.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解决 jekyll 中文换行变成空格的问题">
+<meta name="twitter:description" content="2015-4-27 更新查看 Liquid 文档发现它有一个默认过滤器 join，这和本文编写的过滤器插件名字有冲突 所以把插件中的 join 更名为 join_chinese。误导之处，海涵。 问题使用 github pages 搭建一个免费的个人博客是一项非常流行的技术，它有着安全， 免费，无流量限制等特点。 github pages 中的文章一般是使用 Markdown 编写的，github">
+<meta name="twitter:image" content="http://blog.guorongfei.com/img/posts/whitespaces.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/04/25/how-to-fix-the-markdown-newline-blank-problem/"/>
+
+
+
+
+
+  <title>解决 jekyll 中文换行变成空格的问题 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/04/25/how-to-fix-the-markdown-newline-blank-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">解决 jekyll 中文换行变成空格的问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-25T00:00:00+08:00">
+                2015-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/04/25/how-to-fix-the-markdown-newline-blank-problem/" class="leancloud_visitors" data-flag-title="解决 jekyll 中文换行变成空格的问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="2015-4-27-更新"><a href="#2015-4-27-更新" class="headerlink" title="2015-4-27 更新"></a>2015-4-27 更新</h1><p>查看 <code>Liquid</code> <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank" rel="noopener">文档</a>发现它有一个默认过滤器 <code>join</code>，这和本文编写的过滤器插件名字有冲突
+所以把插件中的 <code>join</code> 更名为 <code>join_chinese</code>。误导之处，海涵。</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>使用 <code>github pages</code> 搭建一个免费的个人博客是一项非常流行的技术，它有着安全，
+免费，无流量限制等特点。</p>
+<p><code>github pages</code> 中的文章一般是使用 <code>Markdown</code> 编写的，<code>github pages</code> 会使用
+<code>jekyll</code> 把 <code>Markdown</code> 编写的文章转换成 <code>html</code> 文档从而形成一个静态的博客网站。</p>
+<p>在我正儿八经的用 <code>markdown</code> 写完一篇文章之前一切都很完美，但是当我开始打开
+浏览器查看自己写的文章的时候，却发现了一个非常蛋疼的问题——文章的段落中间总是会
+不时出现多余的空格，如下图：</p>
+<a id="more"></a>
+<p>  <img src="/img/posts/whitespaces.png" alt="段落中间的空白"></p>
+<p>这个问题的出现其实并不是 <code>github pages</code> 的引起的，它是由 <code>Markdown</code> 和 <code>HTML</code>
+共同造成的。</p>
+<h1 id="markdown-保留段落中的换行符"><a href="#markdown-保留段落中的换行符" class="headerlink" title="markdown 保留段落中的换行符"></a>markdown 保留段落中的换行符</h1><p>在把 <code>.md</code> 文档装换成 <code>.html</code> 文档的过程中，<code>Markdown</code> 会保留段落中间的换行符。
+为了说明这一点，我们建立下面这个测试文档 <code>test.md</code></p>
+<pre><code>这是同一个段落的第一行
+这是同一个段落的第二行
+</code></pre><p>使用<code>markdown</code>命令把它转换成<code>html</code>文档</p>
+<pre><code>markdown test.md &gt; test.html
+</code></pre><p>最终得到的 <code>test.html</code> 的内容如下：</p>
+<pre><code>&lt;p&gt;这是同一个段落的第一行
+这是同一个段落的第二行&lt;/p&gt;
+</code></pre><p>如果你用 <code>cat -E test.html</code> 命令查看该文档，会得到以下结果，其中的 <code>$</code> 符号
+表示换行。</p>
+<pre><code>&lt;p&gt;这是同一个段落的第一段$
+这是同一个段落的第二段&lt;/p&gt;$
+</code></pre><h1 id="HTML-会把换行符转换成空格"><a href="#HTML-会把换行符转换成空格" class="headerlink" title="HTML 会把换行符转换成空格"></a>HTML 会把换行符转换成空格</h1><p>浏览器在显示最终的 <code>.html</code> 文档的时候会把换行显示成空格，这是一个历史遗留问题。
+因为 <code>HTML</code> 的语言规范中就是这么规定的。</p>
+<blockquote>
+<p>An HTML user agent should treat end of line in any of its variations
+as a word space in all contexts except preformatted text</p>
+</blockquote>
+<p>之所以这么规定是因为对于英文来说这是非常重要的一点。比如：</p>
+<pre><code>&lt;p&gt; This is a same
+paragraph&lt;/p&gt;
+</code></pre><p>最终的显示效果是</p>
+<pre><code>This is a same paragraph
+</code></pre><p>在英文单词中间加入空格是必须的，因为单词需要通过空格来分界。然而在中文中间加入
+空格却是一件非常别扭的事情。他将会导致</p>
+<pre><code>&lt;p&gt; 这是同一个
+段落&lt;/p&gt;
+</code></pre><p>被显示成</p>
+<pre><code>这是同一个 段落
+</code></pre><p>这也就是你在 <code>github pages</code> 中用 <code>Markdown</code> 写的文章最终显示在浏览器上的时候
+段落中间会时不时的出现空格的原因——<code>Markdown</code>保留换行符而 <code>HTML</code> 把换行转换成
+空白符。</p>
+<h1 id="如何解决这个问题"><a href="#如何解决这个问题" class="headerlink" title="如何解决这个问题"></a>如何解决这个问题</h1><p>从上面的分析来看，解决这个问题可以四种思路：</p>
+<ul>
+<li><p>在编写 <code>.md</code> 文档的时候不要换行，也就是说一个段落只写一行。这样一来就不会有
+换行符的存在，问题也就不会出现。当然这种方式太过于笨拙，相信不会有人想要
+使用它，因为 <code>Markdown</code> 设计的理念就是让你的文档易读，易写，这种方式和
+<code>Markdown</code> 理念背道而驰。</p>
+<p>这种方式的另外一个缺陷就是如果你使用的编辑器本身会在超过一定长度的时候自动
+换行的话，而你又没有办法更改设置的话，你很难做到不换行。</p>
+</li>
+<li><p>修改 <code>Markdown</code> 实现，让它在生成 <code>HTML</code> 的时候去掉段落中间的换行。但是这个
+难度太大，而且如果有 <code>Markdown</code> 更新的话，你就得重新修改，很不方便。</p>
+</li>
+<li><p>第三种解决方案是在浏览器中进行处理。也就是让浏览器不要把换行转换成空白符，
+可选的方式是在 <code>&lt;html&gt;</code> 标签中加入 <code>lang</code> 属性 <code>&lt;html lang=zh&gt;</code>。另外一种
+方式是通过设置 <code>CSS3</code> 的 <code>text-spacing</code> 属性，<code>none</code> 表示不用转换。</p>
+<p>但是这两种方式都不一定有效。因为可能有浏览器不支持,而且 <code>lang</code> 属性的设置
+可能会影响默认字体的选择，最终甚至会增加空白字符，因为如果默认字体中的空白
+字符可能很宽[^1]。</p>
+<p>我试过给 <code>&lt;html&gt;</code> 添加 <code>lang</code> 属性，但是并没有解决问题。</p>
+</li>
+<li><p>最后一个思路是在 <code>Markdown</code> 转换过后的 <code>HTML</code> 文件上做文章，把多余的换行符
+清除掉。这也是这篇文章中主要想要介绍的方式。</p>
+</li>
+</ul>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p><code>github pages</code> 使用 <code>jekyll</code> 来生成 <code>html</code> 文档，所以最好的方式是直接从
+<code>jekyll</code> 入手解决问题。[解决 Markdown 转 HTML 中文换行变空格的问题][refblog]
+一文中提到可以直接修改，<code>jekyll</code> 的 <code>markdown</code> 转换器，这种方式连作者自己都
+不推荐。该文中还提到了另一种方式就是使用 <code>jekyll</code> 的 <code>plugin</code> 机制，这也是
+这篇文章中要介绍的方式。可惜的是这篇文章中提到的 <code>post_filter.rb</code> 插件目前已经
+不存在了，所以文章介绍的方式无法使用。我们只能自己重新编写插件。</p>
+<p><code>jekyll</code> 的插件分为四种，在[官方文档][jekyll]中有详细的介绍。插件是使用 <code>ruby</code>
+语言编写的，我原来没有 <code>ruby</code> 编程经验，所以这里写的插件可能不太规范。关于如何
+编写插件可以参考[Getting Started with Jekyll Plugins][plugin_how_to]一文。</p>
+<p>我们需要使用到的插件类型是 <code>Liquid filters</code>，它的基本框架如下：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Jekyll</span></span></span><br><span class="line">    <span class="class"><span class="keyword">module</span> <span class="title">JoinChineseFilter</span></span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">join_chinese</span><span class="params">(htmltxt)</span></span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Liquid::Template.register_filter(Jekyll::JoinChineseFilter)</span><br></pre></td></tr></table></figure>
+<p>这样我们可以通过 <code>content</code> 获得 <code>html</code> 文本后使用 <code>pipeline</code> 传递给我们编写的
+<code>join_chinese</code> 进行处理（去掉多余的换行）,
+ `{{content | join_chinese}}` </p>
+<p><code>join_chinese</code> 最简单的实现方式可能是把所有的 <code>\n</code> 都去掉（如果只是想要简单的
+去掉所有的行的话，根本不用使用插件，<code>Liquid</code> 自带的 <code>strip_newlines</code> 过滤器
+就可以实现这一点了[^2]）</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">join_chinese</span><span class="params">(htmltxt)</span></span></span><br><span class="line">    htmltxt.gsub(<span class="regexp">/\n/</span>, <span class="string">''</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>这样的一个问题就是我们在 <code>&lt;pre&gt;&lt;/pre&gt;</code> 标签中写的 <code>\n</code> 也会变替换掉。最直接的
+结果就是你引用的代码将会变得一团糟。</p>
+<p>其实我们想要去掉的是文本中的换行符，而不是所有的换行符。但是如何才能得到文本
+内容并且去掉换行符呢？我最初想要用正则表达式，但是功力不够没能够得到我想要的
+结果。最后找到一个非常有用的东西 <code>nokogiri</code>。</p>
+<p><code>nokogiri</code> 可以把 <code>html</code> 转换成一个结构对象，相当于是 <code>javascript</code> 中的 <code>DOM</code>
+对象。有了这个对象之后问题就容易解决的多了。<code>nokogiri</code> 的 API 比较的简单。
+它的官方网站上提供了一个简单的[教程][noko_tutorial]。</p>
+<p>最终插件代码如下：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">'nokogiri'</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'open-uri'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Jekyll</span></span></span><br><span class="line">	<span class="class"><span class="keyword">module</span> <span class="title">JoinChineseFilter</span></span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">join_chinese</span><span class="params">(htmltxt)</span></span></span><br><span class="line">			<span class="comment"># 生成结构对象</span></span><br><span class="line">			html_doc = Nokogiri::HTML(htmltxt)</span><br><span class="line"></span><br><span class="line">			<span class="comment"># 去掉多余的换行</span></span><br><span class="line">			remove_newline(html_doc.xpath(<span class="string">"//body"</span>))</span><br><span class="line">			html_doc.to_html</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">		private</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">remove_newline</span><span class="params">(root)</span></span></span><br><span class="line">			root.children.each <span class="keyword">do</span> <span class="params">|child|</span></span><br><span class="line">				<span class="comment"># 跳过 pre 和 code</span></span><br><span class="line">				<span class="keyword">next</span> <span class="keyword">if</span> child.name == <span class="string">'pre'</span></span><br><span class="line">				<span class="keyword">next</span> <span class="keyword">if</span> child.name == <span class="string">'code'</span></span><br><span class="line"></span><br><span class="line">				<span class="comment"># 如果不是 text 文本节点，递归</span></span><br><span class="line">				<span class="keyword">if</span> !child.text?</span><br><span class="line">					remove_newline(child)</span><br><span class="line">				<span class="keyword">else</span></span><br><span class="line">					<span class="comment"># 如果不是空白文本节点，去掉换行符</span></span><br><span class="line">					<span class="keyword">next</span> <span class="keyword">if</span> child.blank?</span><br><span class="line">					child.content = child.text.gsub(<span class="regexp">/\n/</span>, <span class="string">''</span>)</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h1 id="注册插件"><a href="#注册插件" class="headerlink" title="注册插件"></a>注册插件</h1><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Liquid::Template.register_filter(Jekyll::JoinChineseFilter)</span><br></pre></td></tr></table></figure>
+<p>把上面这段代码保存为 <code>joinchinese.rb</code> 放在 <code>_plugins</code> 目录下面，在
+<code>jekyll serve</code> 启动的时候会自动加载这个插件。然后在我们的 <code>_layout</code> 中的各个
+<code>layout</code> 中使用  `{{content | join_chinese}}` 
+最终便可以得到去掉了冗余的空白符的 <code>html</code> 文件。效果图如下：</p>
+<p>  <img src="/img/posts/no_whitespaces.png" alt="去掉空白"></p>
+<h1 id="最后一个难题"><a href="#最后一个难题" class="headerlink" title="最后一个难题"></a>最后一个难题</h1><p>问题总算是解决了，很遗憾的是 <code>github pages</code> 中的所有页面都是通过 <code>--safe</code> 选项
+生成，所以你没有办法使用插件，也就是说上面的插件没有办法在 <code>github pages</code> 中
+使用。</p>
+<p>那是不是意味着我们这些努力都白费了呢？当然不是，问题的答案总是伴随着问题一起
+诞生的。解决这个问题的方式是你在本地生成页面，然后把生成好的页面 <code>push</code> 到
+<code>github</code> 上，同时使用 <code>.nojekyll</code> 文件让 <code>github page</code> 不再调用 <code>jekyll</code>
+生成页面。</p>
+<p>这种方法主要有两种实现方式，第一种是使用两个不同的 <code>repo</code> 一个放你的源文件
+另一个放你生成的页面。第二种是通过一个 <code>gh-pages</code> 的分支来完成这一工作。
+第一种方式相对来说简单一些，容易上手，而第二种方式更加优雅一些，不过需要有
+一定的 <code>git</code> 基础知识。你可以参考下面这些文章</p>
+<ul>
+<li><p>[使用两个 <code>repo</code>][two_ropo]</p>
+</li>
+<li><p>[使用 <code>gh-pages</code> 分支][two_branch]</p>
+</li>
+</ul>
+<hr>
+<p>  [^1]: <a href="http://stackoverflow.com/questions/8550112/prevent-browser-converting-n-between-lines-into-space-for-chinese-characters/8551033#8551033" target="_blank" rel="noopener">Prevent browser converting ‘\n’ between lines into space (for Chinese characters)</a></p>
+<p>  [^2]: <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank" rel="noopener">Liquid for Designers</a>
+  [refblog]: <a href="http://chenyufei.info/blog/2011-12-23/fix-chinese-newline-becomes-space-in-browser-problem/" target="_blank" rel="noopener">http://chenyufei.info/blog/2011-12-23/fix-chinese-newline-becomes-space-in-browser-problem/</a>
+  [jekyll]: <a href="http://jekyllrb.com/docs/plugins/" target="_blank" rel="noopener">http://jekyllrb.com/docs/plugins/</a>
+  [plugin_how_to]: <a href="http://tech.pro/tutorial/1299/getting-started-with-jekyll-plugins" target="_blank" rel="noopener">http://tech.pro/tutorial/1299/getting-started-with-jekyll-plugins</a>
+  [noko_tutorial]: <a href="http://www.nokogiri.org" target="_blank" rel="noopener">www.nokogiri.org</a>
+  [two_branch]: <a href="http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html" target="_blank" rel="noopener">http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html</a>
+  [two_ropo]: <a href="http://charliepark.org/jekyll-with-plugins/" target="_blank" rel="noopener">http://charliepark.org/jekyll-with-plugins/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/markdown/" rel="tag"># markdown</a>
+          
+            <a href="/tags/github-pages/" rel="tag"># github pages</a>
+          
+            <a href="/tags/jekyll/" rel="tag"># jekyll</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/28/use-pointer-or-reference-as-argument/" rel="next" title="关于 C++ 参数使用指针还是引用的总结">
+                <i class="fa fa-chevron-left"></i> 关于 C++ 参数使用指针还是引用的总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/15/tmux-tutorial/" rel="prev" title="利器系列之 —— 分屏利器 Tmux">
+                利器系列之 —— 分屏利器 Tmux <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2015-4-27-更新"><span class="nav-number">1.</span> <span class="nav-text">2015-4-27 更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#markdown-保留段落中的换行符"><span class="nav-number">3.</span> <span class="nav-text">markdown 保留段落中的换行符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTML-会把换行符转换成空格"><span class="nav-number">4.</span> <span class="nav-text">HTML 会把换行符转换成空格</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何解决这个问题"><span class="nav-number">5.</span> <span class="nav-text">如何解决这个问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">6.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注册插件"><span class="nav-number">7.</span> <span class="nav-text">注册插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后一个难题"><span class="nav-number">8.</span> <span class="nav-text">最后一个难题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

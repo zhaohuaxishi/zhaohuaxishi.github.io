@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Emacs," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介Emacs 和 Vim 并称 Linux 下的两大编辑神器（不是 IDE，只是编辑器）。一般人认为这两 个编辑器的门槛太高，不容易学，使得很多人都只能敬仰却没有勇气使用它们。其实个人并 不认同这样的看法，Emacs 和 Vim 基本的操作其实并不复杂，而且它们各自都带有非常好 的入门教程。Emacs 在启动页面上会有一个非常通俗易懂的教程（tutorial），如果你关闭 的启动页面，你可以在菜">
+<meta name="keywords" content="Emacs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Emacs C、C++、Python 编程的简单配置">
+<meta property="og:url" content="http://blog.guorongfei.com/2014/09/16/emacs-c-cpp-python-config/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="简介Emacs 和 Vim 并称 Linux 下的两大编辑神器（不是 IDE，只是编辑器）。一般人认为这两 个编辑器的门槛太高，不容易学，使得很多人都只能敬仰却没有勇气使用它们。其实个人并 不认同这样的看法，Emacs 和 Vim 基本的操作其实并不复杂，而且它们各自都带有非常好 的入门教程。Emacs 在启动页面上会有一个非常通俗易懂的教程（tutorial），如果你关闭 的启动页面，你可以在菜">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Emacs C、C++、Python 编程的简单配置">
+<meta name="twitter:description" content="简介Emacs 和 Vim 并称 Linux 下的两大编辑神器（不是 IDE，只是编辑器）。一般人认为这两 个编辑器的门槛太高，不容易学，使得很多人都只能敬仰却没有勇气使用它们。其实个人并 不认同这样的看法，Emacs 和 Vim 基本的操作其实并不复杂，而且它们各自都带有非常好 的入门教程。Emacs 在启动页面上会有一个非常通俗易懂的教程（tutorial），如果你关闭 的启动页面，你可以在菜">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2014/09/16/emacs-c-cpp-python-config/"/>
+
+
+
+
+
+  <title>Emacs C、C++、Python 编程的简单配置 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2014/09/16/emacs-c-cpp-python-config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Emacs C、C++、Python 编程的简单配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-09-16T00:00:00+08:00">
+                2014-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2014/09/16/emacs-c-cpp-python-config/" class="leancloud_visitors" data-flag-title="Emacs C、C++、Python 编程的简单配置">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Emacs 和 Vim 并称 Linux 下的两大编辑神器（不是 IDE，只是编辑器）。一般人认为这两
+个编辑器的门槛太高，不容易学，使得很多人都只能敬仰却没有勇气使用它们。其实个人并
+不认同这样的看法，Emacs 和 Vim 基本的操作其实并不复杂，而且它们各自都带有非常好
+的入门教程。Emacs 在启动页面上会有一个非常通俗易懂的教程（tutorial），如果你关闭
+的启动页面，你可以在菜单栏的 Help 下找到这个教程，如果你关闭的菜单栏可以使用 M-x
+（也就是 Alt + x）执行命令 menu-bar-mode 显示菜单栏。个人觉得这份教程对于初学者
+的价值比任何其他资料都更高，如果你没有使用过 Emacs 或者说你还不是很熟悉它的话，
+建议你先阅读这份文档。</p>
+<a id="more"></a>
+<p>Emacs 和 Vim 都有非常高的可定制性，你可以通过配置文件和插件对它们进行高度的定制
+，使得这个编辑器使用起来非常的称手（有它该有的功能，最主要是不该有的功能它没有）
+。这大概也是它们比一般的 IDE 更受欢迎的主要原因吧。</p>
+<p>当然凡事都有它的利弊，好的东西总是有点代价，那就是配置其实还是挺花时间的。我使用
+Emacs 的时间其实不是很长，一路走来可以说是跌跌撞撞，目前也只能算是相对熟悉这个编
+辑器而已。写这篇文章不是为了炫耀自己的配置有多厉害，而是希望能够总结自己的一些经
+验，分享给大家，以减轻初学者在配置 Emacs 时的痛苦。本文如果有疏漏、错误的地方欢
+迎大家指正出来。</p>
+<h1 id="配置目标"><a href="#配置目标" class="headerlink" title="配置目标"></a>配置目标</h1><p>由于本人主要使用 Emacs 做 c、c++ 的开发，所以本文的配置目标主要是把 Emacs 配置成
+一个适合 c 和 c++ 的开发工具。另外我也在闲暇之余学一点 Python，所以这里的配置也
+会涉及到 Python 的相关配置。</p>
+<p>不过就编程而言，其中有很大一部分的配置对于各种语言的开发都是一样的，涉及到具体语
+言的配置其实并不多。所以如果你想要 Emacs 做其他项目的开发，本文中的配置可能仍然
+对你会有一些帮助。</p>
+<p>本文的配置是基于 Emacs 24 进行的，如果你目前安装的版本低于这个版本建议你升级到该
+版本。因为 Emacs 24 自带了包管理器 package，有了它安装和配置插件的难度可以大大的
+降低。</p>
+<h1 id="配置文件及其结构"><a href="#配置文件及其结构" class="headerlink" title="配置文件及其结构"></a>配置文件及其结构</h1><p>在讲解具体的配置之前，我想先说一下配置文件和它的格式。所谓的配置文件官方名称叫做
+初始化文件（initialization file，或者 init file），这个文件如果存在的话，Emacs
+在启动的时候会加载并解析它。Emacs 会查找以下三个文件： ‘~/.emacs’, ‘~/.emacs.el’
+, 或者‘~/.emacs.d/init.el’，其中 ’～‘ 表示你的 home 目录。所以你可以使用这三者之
+一作为你的配置文件，相对来说第一个用的多一些。</p>
+<p>结构主要是说你的配置文件按照怎么样一种布局书写，Emacs 本身并不要求你的配置文件按
+照一定的结构来组织，但是一个良好的配置文件结构可以使得你的配置一目了然，同时也非
+常方便你日后的查阅和修改（你一定会经常改动它，因为你会爱上 Emacs 的配置）。这就
+像是任何一种语言都会有的编程规范，编译器不会要求你使用何种规范，但是好的规范可以
+让人非常容易的读懂代码。记住编程首先是写给人看，然后才是写给机器看（这句话出自《
+代码大全》）。</p>
+<p>我按照下面的方式组织我的配置文件，你可以不用这种方式，但是你需要有自己固定的方式
+。</p>
+<ol>
+<li>文档注释</li>
+<li>插件无关的公共设置（Emacs 自带的一些设置）</li>
+<li>公共插件配置（和语言无关的插件配置）</li>
+<li>特殊配置（如针对单个语言的具体插件配置）</li>
+<li>按键绑定（把它放在最后面是因为按键绑定可能会涉及到相关插件）</li>
+</ol>
+<h1 id="配置内容"><a href="#配置内容" class="headerlink" title="配置内容"></a>配置内容</h1><p>下面我们开始说具体的配置内容，我们将会按照上面提到的结构逐点展开。完整的配置文件
+可以从 <a href="https://github.com/zhaohuaxishi/emacsbackup" target="_blank" rel="noopener">这里</a>下载.</p>
+<h2 id="插件无关的公共设置"><a href="#插件无关的公共设置" class="headerlink" title="插件无关的公共设置"></a>插件无关的公共设置</h2><h3 id="在-mode-line-上显示行列号"><a href="#在-mode-line-上显示行列号" class="headerlink" title="在 mode line 上显示行列号"></a>在 mode line 上显示行列号</h3><p>首先要说明一下什么是 mode line，一个刚刚启动的 Emacs 界面可以大致分成一下几个区
+域。最上面是菜单栏，下面紧挨着工具栏（为了得到较大的编辑区域，上面这两块一般会被
+隐藏起来）。在最底部是一个 echo 区域（echo area，才疏学浅实在不知道如何翻译 echo
+为好），这个区域用来显示输出信息，同时也用来输入信息，比如执行 Emacs 命令。夹在
+中间的大块区域在 Emacs 中被称为窗口（window），这里的窗口和图形界面里面的窗口不
+一样，在 Emacs 中图形界面的窗口一般称为框架（frame）。我们所谓的 mode line 就是
+一个窗口最下面突起的那一行。</p>
+<p>把以下语句添加到配置文件中可以在 mode line 中显示行列号</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; 在 mode line 上显示行列号</span></span><br><span class="line">(<span class="name">setq</span> column-number-mode <span class="number">1</span>)</span><br><span class="line">(<span class="name">setq</span> line-number-mode <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>你也可以使用 linum-mode 在 buffer 的左边列出没一行的行号。你可以通过 M-x
+linum-mode 来暂时打开和关闭行号显示，也可以把 (global-linum-mode) 加入到你的配置
+文件中，默认的显示行号。</p>
+<h3 id="去掉滚动条、菜单栏和工具栏"><a href="#去掉滚动条、菜单栏和工具栏" class="headerlink" title="去掉滚动条、菜单栏和工具栏"></a>去掉滚动条、菜单栏和工具栏</h3><p>大部分时候我们希望能够得到较大的编辑区域，Emacs 提供了相关的配置使得你可以最大化
+你的编辑区域，你可以通过以下代码（写到配置文件里面）来去掉滚动条、菜单栏、工具栏
+。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">;; 取消滚动栏，工具栏</span><br><span class="line">(tool-bar-mode <span class="number">0</span>)</span><br><span class="line">(menu-bar-mode <span class="number">0</span>)</span><br><span class="line">(scroll-bar-mode <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>这个配置一般会有两种形式，你也许还会看到下面这种形式（tool-bar-mode nil）。在
+Emacs 24 中使用 nil 好像不能达到上面的效果，但是其他的一些配置使用 nil 又可以，
+我不知道是什么原因，但为了统一风格，我一律使用 0 表示否定值。</p>
+<h3 id="关闭-Emacs-的起始欢迎页面"><a href="#关闭-Emacs-的起始欢迎页面" class="headerlink" title="关闭 Emacs 的起始欢迎页面"></a>关闭 Emacs 的起始欢迎页面</h3><p>Emacs 的起始欢迎页面对于初学者来说帮助比较大，可以了解各方面的信息，包括官方的教
+程。但是对大部分人来说它有点碍事，也影响美观。下面的语句可以关闭它。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;; 关闭emacs启动时的页面</span><br><span class="line">(setq inhibit-startup-message <span class="number">1</span>)</span><br><span class="line">(setq gnus-inhibit-startup-message <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="以-y-n代表-yes-no"><a href="#以-y-n代表-yes-no" class="headerlink" title="以 y/n代表 yes/no"></a>以 y/n代表 yes/no</h3><p>Emacs 经常需要我们确认一些信息，比如你在没有保存文件的情况下关闭 Emacs，它会要你
+确认是否保存文件，这个时候你需要输入 yes 来表示确定。这很繁琐，你可以使用下面的
+语句改变这种交互方式，把 yes、no 改成 y、n，这样可以很方便的输入。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">;; 以 y/n代表 yes/no</span><br><span class="line">(fset 'yes-or-no-p 'y-or-n-p)</span><br></pre></td></tr></table></figure>
+<h3 id="备份设置"><a href="#备份设置" class="headerlink" title="备份设置"></a>备份设置</h3><p>使用 Emacs 编辑文件，经常会发现多出一些以 ~ 结尾的文件，如果你是完美主义者或者你
+有轻微强迫症（我就是），这是很难忍受的，我原来经常会去删除这些文件，直到后来找到
+了更好的解决方式。在 Emacs 中你可以设置你自己的备份策略，包括备份几份数据，备份
+到哪里等等。下面是我的备份策略设置：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">;;; 设置备份策略</span><br><span class="line">(setq make-backup-files t)</span><br><span class="line">(setq kept-old-versions <span class="number">2</span>)</span><br><span class="line">(setq kept-<span class="keyword">new</span>-versions <span class="number">2</span>)</span><br><span class="line">(setq <span class="keyword">delete</span>-old-versions t)</span><br><span class="line">(setq backup-directory-alist '(("" . "~/.emacsbackup")))</span><br></pre></td></tr></table></figure>
+<p>如果你完全不想备份可以直接把 make-backup-files 设置为 0，不过备份文件在很多时候
+还是非常有用的，所以我并不建议你那样做。如果你不想备份文件出现在你的工作目录下，
+你可以设置一个目录专门存放你的备份文件，然后使用 backup-directory-alist 这个变量
+设置你的目录，比如我就把它设置在自己的 home 目录下的一个隐藏文件夹（.emacsbackup
+）下面。</p>
+<p>以上配置中间的三条语句是指明你的备份策略，保存最老的 2 份数据和最新的 2 份数据，
+删除其余的备份。你可以自己改变其中的值，以保存你想要的份数。</p>
+<h2 id="公共插件配置"><a href="#公共插件配置" class="headerlink" title="公共插件配置"></a>公共插件配置</h2><p>Emacs 的插件数不胜数，你想要的各种功能都可以通过相关的插件来完成，这里介绍一些我
+平常使用较多的插件。主要包括一下这些插件：</p>
+<ul>
+<li>package: 包管理插件</li>
+<li>autopair: 括号的自动匹配</li>
+<li>yasnippet: 代码块扩展</li>
+<li>auto-complete: 代码智能补全</li>
+<li>evil: 给 emacs 加入 vim 的功能</li>
+<li>desktop: 保存工作环境</li>
+<li>ido: 快速的查找文件、切换 buffer</li>
+<li><p>smex: 快速的输入 emacs 命令</p>
+</li>
+<li><p>gtags: 代码跳转，源码阅读神器</p>
+</li>
+<li>fill-column-indicator: 用于提示每行的代码字符限制</li>
+<li><p>doxymacs: 写注释非常方便</p>
+</li>
+<li><p>jedi: 唯一需要的 python 插件。功能应有尽有</p>
+</li>
+</ul>
+<p>其中第一部分的插件是一些公用的插件，和具体的编程语言无关，第二部分的插件我主要用
+在 c、cpp 开发中，第三部分的插件主要用在 Python 开发中。这里主要介绍第一部分的插
+件。</p>
+<h3 id="包管理插件-——-package"><a href="#包管理插件-——-package" class="headerlink" title="包管理插件 —— package"></a>包管理插件 —— package</h3><p>第一个要隆重介绍的插件是 package，这个插件是 Emacs 24 自带的插件，主要用来方便的
+管理各种插件。介绍它之前需要先介绍一下 ELPA 这个概念，ELPA 是 Emacs Lisp Package
+Archive 的缩写，它相当于是一个插件（也就是 Lisp Package）仓库，里面有各种各样的
+打包好了的 Emacs Lisp 代码（插件用 Emacs Lisp 语言编写，Emacs Lisp 是 Lisp 语言
+的变种，级别应该相当于是 Scheme 语言，我们编写的配置文档其实也是 Emacs Lisp 语言
+编写）。</p>
+<p>我们知道 Emacs 的可定制性和扩展性都非常的高，这也就使得 Emacs 的插件不计其数，安
+装和管理这些插件变得非常的繁杂。为了解决这个问题，就出现了 ELPA，把插件统一起来
+。但是它只是一个仓库，我们需要一种便捷方式从仓库中下载和更新我们的插件。而这种便
+捷的操作依然是通过插件完成，也就是这里提到的 package 插件，它内置在 Emacs 24 中
+。如果你使用的不是 Emacs 24，建议你先升级到 24 版本。</p>
+<p>因为 package 是一个内置的插件，所以你不需要安装，要使用它你只需要告诉它仓库（
+ELPA）的位置即可。ELPA 有比较多，目前大家使用较多的是 MELPA，里面的插件非常丰富
+，我们这里提到的插件都可以在上面找到。下面是 package 的设置：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">;; 设置 package system，这里使用 MELPA，里面的包可以说是应有尽有</span><br><span class="line">(require 'package)</span><br><span class="line">(add-to-list 'package-archives</span><br><span class="line">             '("melpa" . "http://melpa.milkbox.net/packages/") t)</span><br><span class="line">(package-initialize)</span><br></pre></td></tr></table></figure>
+<p>注意不要漏掉了最后的 (package-initialize)。设置好了之后，我们可以通过执行
+list-packages  命令（通过 M-x 然后输入指令）来查看所有的包，在查找到你想要的包之
+后在改行输入 i 标记你要安装这个包，然后输入 x 执行你的安装指令，这样这个插件就会
+自动安装到你的 Emacs 中去了（在 ~/.emacs.d/elpa/ 目录下面）。如果有包需要更新，
+在你执行 list-package 命令之后在 echo 区域会有提示，此时直接输入 U 然后输入 x 可
+以更新这些包。当然你也可以很方便的删除你安装的包，方式是在你想要删除的包上面输入
+d 然后输入 x 执行它。</p>
+<p>很方便吧，后面提到的插件都是通过这种方式来进行安装，以后不再重复。</p>
+<h3 id="括号自动匹配-——-autopair"><a href="#括号自动匹配-——-autopair" class="headerlink" title="括号自动匹配 —— autopair"></a>括号自动匹配 —— <a href="https://github.com/capitaomorte/autopair" target="_blank" rel="noopener">autopair</a></h3><p>在编写大部分程序的时候我们都需要括号匹配，所以很多适合我们输入 ‘(‘ 的适合非常希
+望能 Emacs 自动补全 ‘)’ 并且把光标停到两者中间。可是 Emacs 并默认没有提供这个功
+能，它包含一个自带的模式 electric-pair-mode 可以完成这个工作，你可以使用 M-x 来
+开启它也可以把它加入到你的配置文件中去。我尝试过使用 electric-pair-mode 但是感觉
+不如 autopair 好用，最后还是选择了 autopair。</p>
+<p>通过 package 安装之后你可以通过 M-x autopair-mode 来开启这个模式，也可以把他加入
+到你的配置文件中默认开启它，或者针对某种主模式开启。对于 Emacs 的大多是插件，都
+可以有这三种方式来使用它：</p>
+<ul>
+<li><p>通过命令行，在需要的时候使用，比如:</p>
+<p>  M-x autopaire-mode</p>
+</li>
+<li><p>通过配置文件，默认使用，比如把以下语句写入到配置文件中：</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(autopair-global-mode)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过配置文件，对特殊的主模式下使用，比如：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(add-hook 'c-mode-common-hook 'autopair-mode)</span><br></pre></td></tr></table></figure>
+<p>上面提到的三种方式对于大部分的插件都是通用的，不过不同的代码还是会有不同的使用方
+式，重复它们其实没有太大的意义，最佳的方式是 google 一下，查找到这个插件的主页（
+一般在 github 上），然后通过看上面的官方使用文档确定如何进行下一步的配置。我在每
+个插件的名字上加了官网链接，方便大家参考查阅。</p>
+<h3 id="代码扩展神器-yasnippet-和代码补全神器-auto-complete"><a href="#代码扩展神器-yasnippet-和代码补全神器-auto-complete" class="headerlink" title="代码扩展神器 yasnippet 和代码补全神器 auto-complete"></a>代码扩展神器 <a href="https://github.com/capitaomorte/yasnippet" target="_blank" rel="noopener">yasnippet</a> 和代码补全神器 <a href="http://cx4a.org/software/auto-complete/manual.html" target="_blank" rel="noopener">auto-complete</a></h3><p>这两款插件可以说是编程必备的。其中 yasnippet 是用来做代码扩展的，比如你在编写 .c
+文件时输入 io 然后按下扩展键，它会自动扩展成 #include &lt;stdio.h&gt;，输入 d 然后按下
+扩展键之后会自动补全成 #define，非常的便捷。而 auto-complete 则是用来做代码补全
+的，比如你在 .c 文件中定义了一个函数 <code>my_function</code>、和一个变量 <code>my_name</code>，在其他
+位置输入 my 的时候它会把 <code>my_function</code> 和 <code>my_name</code> 列出来供你选择，这个功能基本
+上的 IDE 都有提供，相信大家并不陌生。</p>
+<p>这两款插件可以说殊途同归，虽然它们使用的原理不一样，但是它们最后都大大提高了代码
+输入的速度。前者主要通过预先定义好用于扩展的 snippet，而后者好像主要是通过对
+buffer 中的数据进行分词来提供补全的来源。</p>
+<p>不过这两款插件同时使用了 TAB 键， yasnippt 用它来作为扩展键，而 auto-complete 用
+来是作为提示触发键和选择键。为了解决这个冲突，我试过两种方法：第一，关闭
+auto-complete 的自动提示，这样当你按下 TAB 的时候如果有相关的 yasnippt 代码扩展
+，会先进行 yasnippt 扩展，然后是 auto-complete 补全提示。第二种方式就是更改其中
+之一的促发按键，我目前使用的就是这样中方法。下面是我的相关设置:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">;; yasnippet setting</span><br><span class="line">(yas-global-mode <span class="number">1</span>)</span><br><span class="line">(define-key yas-minor-mode-<span class="built_in">map</span> (kbd <span class="string">"&lt;tab&gt;"</span>) nil)</span><br><span class="line">(define-key yas-minor-mode-<span class="built_in">map</span> (kbd <span class="string">"TAB"</span>) nil)</span><br><span class="line"></span><br><span class="line">;; 设置 f2 为 yas 扩展快捷键</span><br><span class="line">(define-key yas-minor-mode-map (kbd "&lt;f2&gt;") 'yas-expand)</span><br><span class="line"></span><br><span class="line">;; <span class="keyword">auto</span>-complete</span><br><span class="line">(ac-config-<span class="keyword">default</span>)</span><br></pre></td></tr></table></figure>
+<p>这里主要是把 yasnippt 的扩展键去掉，然后把他重新绑定到 f2 上（按键绑定的设置我一
+般放在了配置文件的最末尾，写在这里是为了方便讲解）。</p>
+<h3 id="Vim-和-Emacs-的融合-——-EVIL"><a href="#Vim-和-Emacs-的融合-——-EVIL" class="headerlink" title="Vim 和 Emacs 的融合 —— EVIL"></a>Vim 和 Emacs 的融合 —— <a href="https://gitorious.org/evil/pages/Home" target="_blank" rel="noopener">EVIL</a></h3><p>Evil，可以说插件正如其名，功能强大到邪恶的地步。在 Linux 领域有一场旷日持久的编
+辑之战，使用号称“编辑器之神”的 Vim 的 V 党和使用号称“神的编辑器”的 Emacs 的 E 党
+吵的不可开交，只为了争夺最好用的编辑器的虚名。我是一个实用主义者，我虽然使用
+Emacs，但是我承认 Vim 一样非常强大，它的 normal mode 用来查看文档要比 Emacs 好用
+的多，Vim 可以通过 hjkl 来移动光标，而 Emacs 需要按 C-p C-n C-f C-b 这些组合键。
+但是 Vim 的编辑能力确实相对没有 Emacs 强， Vim 在输入的时候无法使用 hjkl 来定位
+光标，而 Emacs 的按键仍然可用。</p>
+<p>因此最好的方式就是把两者的精华融合在一起，得到世上最强大的编辑器 “Emacsim”，这也
+就是这里要介绍的 Evil。<strong>E</strong>xtensible <strong>Vi</strong> <strong>L</strong>ayer for Emacs，它是 Emacs 的
+一个 Vi 扩展层，使得我们在 Emacs 上可以使用 Vim 的强大功能，比如它的选择功能和方
+便的文本阅读功能等等。</p>
+<p>不过这两大神器的融合难免有一些不和谐的地方，比如按键上的冲突是在所难免的，好在
+Evil 提供了重置按键的功能。下面是我收集的一些按键重绑定。这些按键的重新绑定可以
+使得两者的融合更加的融洽，你可以根据自己的需求进行按键从绑定。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">;; evil 把 emcas 和 vim 的精华糅合在一起</span><br><span class="line">(evil-mode <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">;; normal mode 下可以使用 <span class="string">",,"</span> 来切换 buffer，取消 q 按键绑定</span><br><span class="line">(define-key evil-normal-state-map (kbd ",,") 'evil-buffer)</span><br><span class="line">(define-key evil-normal-state-<span class="built_in">map</span> (kbd <span class="string">"q"</span>) nil)</span><br><span class="line"></span><br><span class="line">;; 输入模式下取消下面这些按键绑定，使得在输入的时候可以高效的移动光标</span><br><span class="line">(define-key evil-insert-state-<span class="built_in">map</span> (kbd <span class="string">"C-e"</span>) nil)</span><br><span class="line">(define-key evil-insert-state-<span class="built_in">map</span> (kbd <span class="string">"C-d"</span>) nil)</span><br><span class="line">(define-key evil-insert-state-<span class="built_in">map</span> (kbd <span class="string">"C-k"</span>) nil)</span><br><span class="line">(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)</span><br><span class="line"></span><br><span class="line">;; 其他绑定</span><br><span class="line">(define-key evil-motion-state-<span class="built_in">map</span> (kbd <span class="string">"C-e"</span>) nil)</span><br><span class="line">(define-key evil-visual-state-map (kbd "C-c") 'evil-exit-visual-state)</span><br></pre></td></tr></table></figure>
+<p>因为 Vim 使用的是多模式编辑，Evil 也自然是多模式的，在不同的模式之间切换的时候，
+默认会在 Emacs 的 mode line 上标记目前的模式，不过默认的方式太不显眼不是很容易识
+别。我们希望 Emacs 可以很显眼的提示让我们目前是什么模式，Emacs 提供了设置每个模
+式颜色的功能。下面这段代码来自 Emacs wiki，它可以使得不同的模式有不同的颜色显示
+：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">;; change mode-line color by evil state</span><br><span class="line">(lexical-let ((default-color (cons (face-background 'mode-line)</span><br><span class="line">                                   (face-foreground 'mode-line))))</span><br><span class="line">  (add-hook 'post-command-hook</span><br><span class="line">            (lambda ()</span><br><span class="line">              (let ((color (cond ((minibufferp) <span class="keyword">default</span>-color)</span><br><span class="line">                                 ((evil-insert-state-p) '("#e80000" . "#ffffff"))</span><br><span class="line">                                 ((evil-emacs-state-p)  '("#444488" . "#ffffff"))</span><br><span class="line">                                 ((buffer-modified-p)   '("#006fa0" . "#ffffff"))</span><br><span class="line">                                 (t <span class="keyword">default</span>-color))))</span><br><span class="line">                (set-face-background 'mode-line (car color))</span><br><span class="line">                (set-face-foreground 'mode-line (cdr color))))))</span><br></pre></td></tr></table></figure>
+<p>这种方式在终端开启 Emacs（emacs -nw）的效果非常的好，但是使用 x-window 的话效果
+不佳，如果你基本上都使用 x-window 启动 Emacs，那么你可以考虑使用 powerline 插件
+。它原本是 Vim 的一个插件，目前有 Emacs 的版本，当然随着 Evil 的到来自然会有
+powerline-evil 插件，安装 powerline 的时候会自动安装 powerline-evil。使用这个插
+件之后 Evil 下的不同模式显示就近乎完美了。</p>
+<h3 id="保存工作环境-desktop-和-session"><a href="#保存工作环境-desktop-和-session" class="headerlink" title="保存工作环境 desktop 和 session"></a>保存工作环境 desktop 和 session</h3><p>每次关闭 Emacs 之后我们打开的 buffer 都会随之关闭，很多时候我们需要保存我们的工
+作环境，下次打开 Emacs 的时候希望原来打开的 buffer 依然存在。这个时候我们可以借
+助 desktop 这个插件，它是一个内置插件，不需要安装只需要打开相应的模式即可，在关
+闭 Emacs 的时候 desktop 会保存你开启的 buffer，这样下次打开工作环境还在，就好像
+没有关闭过一样。</p>
+<p>另一个类似的插件是 session，它可以 File 菜单下增加子菜单，记录我们最近访问的的文
+件，就像大部分 IDE 提供的功能一样。不过因为我大部分时间关闭 menu-bar 而且使用了
+desktop，这个插件的作用对我来说几乎为零，很少使用。</p>
+<h3 id="健步如飞的输入-——-ido、smex"><a href="#健步如飞的输入-——-ido、smex" class="headerlink" title="健步如飞的输入 —— ido、smex"></a>健步如飞的输入 —— ido、smex</h3><p>这两个插件也是重量级的，我非常喜欢。Emacs 的输入大部分时候都可以通过 TAB 键来补
+全，但是没有一个直观的界面显示，这两个插件相当于是输入指令时的 auto-complete，它
+可以大大减少输入的工作量。</p>
+<p>ido 可以用来快速的查看文件和切换 buffer，当我们使用 ido 来打开文件的时候，我们可
+以看到一个递进的文件层次结构，起初显示最顶层的目录和文件，当我们进入一个文件夹之
+后显示该目录下的子项目。同样在切换 buffer 的时候，有了 ido 可以直观的看到有哪些
+buffer，在你输入想要切换的 buffer 名称的时候 ido 也同时帮你进行筛选。此外 ido 本
+身有记忆功能，可以让你快速的定位到上一次打开的文件夹。</p>
+<p>ido 使得查找文件和切换 buffer 的任务变得异常的轻松，smex 则使得输入 Emacs 命令变
+得非常便捷。smex 提供一个非常类似于 ido 的界面。在你输入命令的时候直观的给出后选
+项，在输入的同时不断的筛选，同时也记录你最近使用过的命令，使得你可以很方便的输入
+命令（其实大于大多数人来说，常用的命令也就那么几条，有了 smex，基本上不用输入多
+少个字符就可以找到你想要的命令，因为它有记忆功能）。</p>
+<h3 id="纯文本编辑利器-——-org"><a href="#纯文本编辑利器-——-org" class="headerlink" title="纯文本编辑利器 —— org"></a>纯文本编辑利器 —— org</h3><p>org mode 的强大并不是三言两语可以说清楚，它的官方文档就有好几百页。我本人并不是
+很熟练的掌握它这里也不做过多的介绍，有兴趣的可以去看看它的官方网站，上面有官方文
+档。</p>
+<p>org 主要可以用来编写文档，它可以提供层次化的结构，使得你写作的时候可以条理清晰，
+此外 org mode 实现了 GTD （好像是 Get Things Done 的缩写），它可以让你列出自己的
+计划，给出你的完成时间，计划时间，提供一份日程表，让你对自己的生活进行很好的规划
+。它还可以很方便的插入表格，转换成各种文件格式。也有专门用来写博客的 org2blog 插
+件让你可以通过 Emacs 的 org 模式编写博客。</p>
+<p>我对 org 并不是很熟，在这里只是简单的介绍和推荐，如果你想要更升入的了解它的功能
+可以去看它的官方文档。</p>
+<h3 id="其他插件"><a href="#其他插件" class="headerlink" title="其他插件"></a>其他插件</h3><p>其他还有一些插件也很给力，比如 auto-complete-clang 可以在 auto-complete 的基础上
+，通过 clang 作为后端提供库函数的补全。ECB（Emacs Code Browser），可以让你像使用
+IDE 一样使用 Emacs，它提供了文件的各种视图。你可以查看项目的目录结构、目录下的源
+文件、源文件中的函数列表等等。</p>
+<p>这些插件虽然很强大，但是会让 Emacs 变的很慢，一定意义上来说反而降低了 Emacs 的效
+率，所以这里不做过多的介绍，如果你有兴趣，可以去它们的官网上查看具体的使用方式。</p>
+<h2 id="单个语言的特殊配置和GUI的特殊配置"><a href="#单个语言的特殊配置和GUI的特殊配置" class="headerlink" title="单个语言的特殊配置和GUI的特殊配置"></a>单个语言的特殊配置和GUI的特殊配置</h2><p>前面的配置都是一些通用的配置，并不限于某个语言。下面的配置则更多的是对于单个语言
+的特殊配置。</p>
+<h3 id="c、cpp-插件配置"><a href="#c、cpp-插件配置" class="headerlink" title="c、cpp 插件配置"></a>c、cpp 插件配置</h3><h4 id="行字符数限制-——-fill-colum-indicator"><a href="#行字符数限制-——-fill-colum-indicator" class="headerlink" title="行字符数限制 —— fill-colum-indicator"></a>行字符数限制 —— <a href="https://github.com/alpaker/Fill-Column-Indicator" target="_blank" rel="noopener">fill-colum-indicator</a></h4><p>c、cpp 的一个编程规范就是每一行的字符不要超过 80 个字节，而我们在编程的时候不可
+能去记住没一行目前有多少字节，我们需要一个直观的提示，这也就是
+fill-colum-indicator 的作用。它会在屏幕的右边规定个字节的地方给出一条竖线，使得
+你可以很直观的看到自己的代码是否超过了这个界限。你可以设置它指示的位置，颜色和竖
+线的宽度。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(setq fci-rule-column <span class="number">80</span>) ;; <span class="number">80</span> 个字节处画竖线</span><br><span class="line">(setq fci-rule-color <span class="string">"orange"</span>) ;; 竖线为黄色</span><br><span class="line">(setq fci-rule-width <span class="number">2</span>) ;; 竖线宽度为 <span class="number">2</span> 个像素</span><br><span class="line">(fci-mode <span class="number">1</span>) ;; 开启 fci 模式</span><br></pre></td></tr></table></figure>
+<h4 id="代码跳转-——-gtags"><a href="#代码跳转-——-gtags" class="headerlink" title="代码跳转 —— gtags"></a>代码跳转 —— <a href="http://www.gnu.org/software/global/globaldoc_toc.html#Emacs-editor" target="_blank" rel="noopener">gtags</a></h4><p>在编写或者阅读较大型的项目的时候，我们通常希望可以在函数的定义和实现中进行跳转，
+这个功能大部分 IDE 都有提供Emacs 也可以实现它。Emacs 中实现代码跳转的方式很多，
+比如 etags、cscope 等等，我个人比较习惯的使用的是gtags，它以 GNU GLOBAL 为依托，
+所以在使用 gtags 之前你必须先安装 global。在官网的的源码包里有 gtags.el 这个插件
+（在 MELPA 中有一个 ggtags 是 gtags 插件的扩展，个人觉得还不如这个原生的好用），
+如果你编译安装 global，那么在 /usr/local/share/ 目录下面会有 gtags.el 这个文件，
+你可以把这个目录加到你的 load-path 中去，也可以自己建立一个文件夹（比如：
+~/.emacs.d/plugins/），把源码包中的 gtags.el 放到该文件夹下之后把你建立的文件夹
+添加到 load-path 中。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(setq load-path (cons <span class="string">"~/.emacs.d/plugins/"</span> load-path))</span><br><span class="line">(autoload 'gtags-mode "gtags" "" t)</span><br></pre></td></tr></table></figure>
+<p>目前我用它来阅读 Linux Kernel 的代码，个人感觉还是非常好用的，所以推荐给大家。</p>
+<h4 id="方便而美观的代码注释-——-doxymacs"><a href="#方便而美观的代码注释-——-doxymacs" class="headerlink" title="方便而美观的代码注释 —— doxymacs"></a>方便而美观的代码注释 —— <a href="http://doxymacs.sourceforge.net/" target="_blank" rel="noopener">doxymacs</a></h4><p>Emacs 本身的注释功能已经非常强大了，比如使用 M-; 可以插入注释，在注释里面使用
+M-j 可以形成多行注释。如果你想要一个更加强大的注释插件，那么可以使用 doxymacs，
+它可以用来插入整个文档的注释，函数的的注释，多行注释，单行注释等等。它还可以进行
+注释的语法高亮，非常的好用。</p>
+<p>不过 doxymacs 也需要编译安装，在 package 里面没办法直接安装这个插件。编译安装
+doxymacs 相对来说复杂一些。具体的方式可以参考官方文档的。</p>
+<h4 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h4><p>为了让上面这些配置只对 c、cpp 有效，我们可以定义一个函数，在函数里面写入我们的配
+置，然后把这个函数挂到 c 和 cpp 的 mode 上面：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">(defun my-c-mode-hook()</span><br><span class="line"><span class="string">"This is the function of c mode hook"</span></span><br><span class="line"></span><br><span class="line">;; <span class="built_in">set</span> fci-mode argument</span><br><span class="line">(setq fci-rule-column <span class="number">80</span>)</span><br><span class="line">(setq fci-rule-color <span class="string">"orange"</span>)</span><br><span class="line">(setq fci-rule-width <span class="number">2</span>)</span><br><span class="line">(fci-mode <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">;; gtags mode <span class="keyword">and</span> doxymacs</span><br><span class="line">(setq load-path (cons <span class="string">"~/.emacs.d/plugins/"</span> load-path))</span><br><span class="line">(autoload 'gtags-mode "gtags" "" t)</span><br><span class="line"></span><br><span class="line">;; open gtags mode</span><br><span class="line">(gtags-mode <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">;; doxymacs mode</span><br><span class="line">(doxymacs-mode <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">;; 回车换行自动缩进</span><br><span class="line">(setq-<span class="keyword">default</span> indent-tabs-mode nil)</span><br><span class="line">(global-set-key (kbd "RET") 'newline-and-indent)</span><br><span class="line"></span><br><span class="line">;; 缩进风格设置</span><br><span class="line">(setq c-default-style '((java-mode . "java")</span><br><span class="line">                                     (awk-mode . <span class="string">"awk"</span>)</span><br><span class="line">                                     (other . <span class="string">"linux"</span>)))</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>函数定义好了之后，通过 hook 把它挂到 c-common-hook 上面。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(add-hook 'c-mode-common-hook 'my-c-mode-hook)</span><br></pre></td></tr></table></figure>
+<h3 id="Python-插件配置"><a href="#Python-插件配置" class="headerlink" title="Python 插件配置"></a>Python 插件配置</h3><p>Python 的配置除了前面提到的 fill-colum-indicator 之外（Python 一般要求每行不超过
+79 个字符，而 c、cpp 则一般是 80 个字符，所以虽然这个插件通用，我还是分开写它们
+的配置）我只推荐一个插件——<a href="http://tkf.github.io/emacs-jedi/latest/" target="_blank" rel="noopener">jedi</a>。这个插件功能非常的强大，它可以用来实现
+代码补全，代码跳转， docstring 的查看等等。</p>
+<p>jdei 的安装相对要麻烦一下，主要分为一下几个步骤：</p>
+<ul>
+<li>安装相关依赖，包括 virtual、epc、jedi</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install virtualenv</span><br><span class="line">sudo pip install epc</span><br><span class="line">sudo pip install jedi</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>用 package 安装 jdei 插件(package 在安装这个插件的同时会安装它依赖的的插件)</p>
+</li>
+<li><p>在 Emacs 中执行命令 jedi:install-server</p>
+</li>
+</ul>
+<p>安装完成之后可以通过以下配置开启 jedi:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;; setup jedi</span><br><span class="line">(jedi:setup)</span><br><span class="line">(setq jedi:complete-on-dot t)</span><br></pre></td></tr></table></figure>
+<p>同样的，你可以定义一个方法把上面的配置写到函数中，然后通过 hook 挂到 python mode
+中。</p>
+<p>jedi 的具体使用方式，请查考它的<a href="http://tkf.github.io/emacs-jedi/latest/" target="_blank" rel="noopener">官方文档</a> 下面是一些基本的快捷键：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">;; &lt;C-tab&gt; jedi:complete</span><br><span class="line">;; Complete code at point.</span><br><span class="line"></span><br><span class="line">;; C-c ? jedi:show-doc</span><br><span class="line">;; Show the documentation of the object at point.</span><br><span class="line"></span><br><span class="line">;; C-c . jedi:<span class="keyword">goto</span>-definition</span><br><span class="line">;; Goto the definition of the object at point.</span><br><span class="line"></span><br><span class="line">;; C-c , jedi:<span class="keyword">goto</span>-definition-pop-marker</span><br><span class="line">;; Goto the last point where jedi:<span class="keyword">goto</span>-definition was called.</span><br></pre></td></tr></table></figure>
+<p>jedi 在 python 3 下好像并不能很好的工作，建议使用 Python 2 来配置它。（我在 Arch
+下配置的时候因为它以 Python3 作为默认的 Python 版本配置没有成功，把默认改成
+Python2 之后可以正常工作）。</p>
+<h3 id="GUI-特殊配置"><a href="#GUI-特殊配置" class="headerlink" title="GUI 特殊配置"></a>GUI 特殊配置</h3><p>Emacs 中还有一些配置只有在使用 x-window 的时候才有效，比如设置字体，使用
+powerline 和系统共享剪贴板等等。</p>
+<p>为此我专门为 x-window 配置定义了一个函数，当使用 x-window 的时候执行该函数，以配
+置 GUI 特殊功能。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(defun x-window-config()</span><br><span class="line">    (powerline-center-evil-theme)</span><br><span class="line">    (setq x-select-enable-clipboard <span class="number">1</span>)</span><br><span class="line">    (<span class="built_in">set</span>-<span class="keyword">default</span>-font <span class="string">"Courier 10 Pitch"</span>))</span><br><span class="line"></span><br><span class="line">(<span class="keyword">if</span> window-system (x-window-config))</span><br></pre></td></tr></table></figure>
+<h2 id="按键绑定"><a href="#按键绑定" class="headerlink" title="按键绑定"></a>按键绑定</h2><p>按键绑定之所以放在最后面是因为按键的绑定可能涉及到前面提到的插件，在所有的插件都
+配置完成之后设置按键绑定可以清晰明了，也防止冲突，这里的按键绑定主要是 f1-f12 的
+绑定，具体绑定如下，你也可以绑定其他的按键：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">;; 设置 f1 打开帮助文档</span><br><span class="line">(global-set-key [f1] 'info)</span><br><span class="line"></span><br><span class="line">;; 设置 f2 为 yas 扩展快捷键</span><br><span class="line">(define-key yas-minor-mode-map (kbd "&lt;f2&gt;") 'yas-expand)</span><br><span class="line"></span><br><span class="line">;; 设置 f3 关闭当前buffer</span><br><span class="line">(global-set-key [f3] 'kill-this-buffer)</span><br><span class="line"></span><br><span class="line">;; 设置 f4 打开 eshell</span><br><span class="line">(global-set-key [f4] 'eshell)</span><br><span class="line"></span><br><span class="line">;; 设置 f10 为查找符号的引用</span><br><span class="line">(global-set-key [f10] 'gtags-find-rtag)</span><br><span class="line"></span><br><span class="line">;; 设置 f11 为查找符号的定义</span><br><span class="line">(global-set-key [f11] 'gtags-find-tag)</span><br><span class="line"></span><br><span class="line">;; 设置 f12 返回原来的位置</span><br><span class="line">(global-set-key [f12] 'gtags-pop-stack)</span><br></pre></td></tr></table></figure>
+<p>其中 f1 是默认的绑定，f2 作为 yasnippt 的扩展键，f3 用来关闭当前 buffer（Emacs
+的C-x k 是默认的关闭 buffer 按键）。f10 到 f12 是专门绑定到 gtags 插件的相关函数
+上的，这样可以使得 gtags 的使用非常便捷。</p>
+<p>我把 f4 绑定为打开 eshell。Emacs 本身支持 shell 和 eshell，其中前者的使用并不是
+很方便，比如你想要执行上一条命令你需要使用 M-p，而不能使用上箭头（同样下一条命令
+需要用 M-n），而后者方便很多。eshell 是用 Emacs lisp 写的，所以和 Emacs 的融合比
+较好，不存在上面的问题。此外因为它是 Emacs lisp 语言编写的，你可以在 eshell 中执
+行 Emacs 命令，不过应该很少会有人这么干，因为 smex 已经足够强大了。</p>
+<hr>
+<p>完</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Emacs/" rel="tag"># Emacs</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/09/06/linux-interrupt-preemptive-lock/" rel="next" title="Linux 中断、抢占、锁之间的关系">
+                <i class="fa fa-chevron-left"></i> Linux 中断、抢占、锁之间的关系
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/09/18/lkd-chapter-one/" rel="prev" title="LKD 总结 —— 第一章">
+                LKD 总结 —— 第一章 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置目标"><span class="nav-number">2.</span> <span class="nav-text">配置目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件及其结构"><span class="nav-number">3.</span> <span class="nav-text">配置文件及其结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置内容"><span class="nav-number">4.</span> <span class="nav-text">配置内容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#插件无关的公共设置"><span class="nav-number">4.1.</span> <span class="nav-text">插件无关的公共设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在-mode-line-上显示行列号"><span class="nav-number">4.1.1.</span> <span class="nav-text">在 mode line 上显示行列号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去掉滚动条、菜单栏和工具栏"><span class="nav-number">4.1.2.</span> <span class="nav-text">去掉滚动条、菜单栏和工具栏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭-Emacs-的起始欢迎页面"><span class="nav-number">4.1.3.</span> <span class="nav-text">关闭 Emacs 的起始欢迎页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以-y-n代表-yes-no"><span class="nav-number">4.1.4.</span> <span class="nav-text">以 y/n代表 yes/no</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备份设置"><span class="nav-number">4.1.5.</span> <span class="nav-text">备份设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公共插件配置"><span class="nav-number">4.2.</span> <span class="nav-text">公共插件配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#包管理插件-——-package"><span class="nav-number">4.2.1.</span> <span class="nav-text">包管理插件 —— package</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#括号自动匹配-——-autopair"><span class="nav-number">4.2.2.</span> <span class="nav-text">括号自动匹配 —— autopair</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码扩展神器-yasnippet-和代码补全神器-auto-complete"><span class="nav-number">4.2.3.</span> <span class="nav-text">代码扩展神器 yasnippet 和代码补全神器 auto-complete</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vim-和-Emacs-的融合-——-EVIL"><span class="nav-number">4.2.4.</span> <span class="nav-text">Vim 和 Emacs 的融合 —— EVIL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存工作环境-desktop-和-session"><span class="nav-number">4.2.5.</span> <span class="nav-text">保存工作环境 desktop 和 session</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#健步如飞的输入-——-ido、smex"><span class="nav-number">4.2.6.</span> <span class="nav-text">健步如飞的输入 —— ido、smex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#纯文本编辑利器-——-org"><span class="nav-number">4.2.7.</span> <span class="nav-text">纯文本编辑利器 —— org</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他插件"><span class="nav-number">4.2.8.</span> <span class="nav-text">其他插件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单个语言的特殊配置和GUI的特殊配置"><span class="nav-number">4.3.</span> <span class="nav-text">单个语言的特殊配置和GUI的特殊配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#c、cpp-插件配置"><span class="nav-number">4.3.1.</span> <span class="nav-text">c、cpp 插件配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#行字符数限制-——-fill-colum-indicator"><span class="nav-number">4.3.1.1.</span> <span class="nav-text">行字符数限制 —— fill-colum-indicator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码跳转-——-gtags"><span class="nav-number">4.3.1.2.</span> <span class="nav-text">代码跳转 —— gtags</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方便而美观的代码注释-——-doxymacs"><span class="nav-number">4.3.1.3.</span> <span class="nav-text">方便而美观的代码注释 —— doxymacs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义函数"><span class="nav-number">4.3.1.4.</span> <span class="nav-text">自定义函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-插件配置"><span class="nav-number">4.3.2.</span> <span class="nav-text">Python 插件配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GUI-特殊配置"><span class="nav-number">4.3.3.</span> <span class="nav-text">GUI 特殊配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#按键绑定"><span class="nav-number">4.4.</span> <span class="nav-text">按键绑定</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

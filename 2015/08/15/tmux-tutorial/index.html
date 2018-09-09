@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="tmux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这篇文章中的 .tmux.conf 配置文件你可以在我的代码仓库中找到 为什么使用分屏工具在 C、C++ 开发过程中分屏是一项非常提高效率的功能，因为我们时常需要一边写代码 一边编译、测试。在脱离 IDE 的时代，通常我们需要开多个终端：一个终端编辑文件、 一个终端编译运行程序、一个终端查看相关的 man 文档…。多个终端管理起来其实是 非常不便的，因为你需要不停的在各个终端之间切换。终端分屏工具">
+<meta name="keywords" content="tmux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利器系列之 —— 分屏利器 Tmux">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/08/15/tmux-tutorial/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="这篇文章中的 .tmux.conf 配置文件你可以在我的代码仓库中找到 为什么使用分屏工具在 C、C++ 开发过程中分屏是一项非常提高效率的功能，因为我们时常需要一边写代码 一边编译、测试。在脱离 IDE 的时代，通常我们需要开多个终端：一个终端编辑文件、 一个终端编译运行程序、一个终端查看相关的 man 文档…。多个终端管理起来其实是 非常不便的，因为你需要不停的在各个终端之间切换。终端分屏工具">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/tmux_windows.png">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/tmux_panel.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利器系列之 —— 分屏利器 Tmux">
+<meta name="twitter:description" content="这篇文章中的 .tmux.conf 配置文件你可以在我的代码仓库中找到 为什么使用分屏工具在 C、C++ 开发过程中分屏是一项非常提高效率的功能，因为我们时常需要一边写代码 一边编译、测试。在脱离 IDE 的时代，通常我们需要开多个终端：一个终端编辑文件、 一个终端编译运行程序、一个终端查看相关的 man 文档…。多个终端管理起来其实是 非常不便的，因为你需要不停的在各个终端之间切换。终端分屏工具">
+<meta name="twitter:image" content="http://blog.guorongfei.com/img/posts/tmux_windows.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/08/15/tmux-tutorial/"/>
+
+
+
+
+
+  <title>利器系列之 —— 分屏利器 Tmux | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/08/15/tmux-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利器系列之 —— 分屏利器 Tmux</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-15T00:00:00+08:00">
+                2015-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/08/15/tmux-tutorial/" class="leancloud_visitors" data-flag-title="利器系列之 —— 分屏利器 Tmux">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>这篇文章中的 .tmux.conf 配置文件你可以在<a href="https://github.com/zhaohuaxishi/dotfiles" target="_blank" rel="noopener">我的代码仓库</a>中找到</strong></p>
+<h1 id="为什么使用分屏工具"><a href="#为什么使用分屏工具" class="headerlink" title="为什么使用分屏工具"></a>为什么使用分屏工具</h1><p>在 C、C++ 开发过程中分屏是一项非常提高效率的功能，因为我们时常需要一边写代码
+一边编译、测试。在脱离 IDE 的时代，通常我们需要开多个终端：一个终端编辑文件、
+一个终端编译运行程序、一个终端查看相关的 man 文档…。多个终端管理起来其实是
+非常不便的，因为你需要不停的在各个终端之间切换。终端分屏工具是解决这个问题
+的绝佳办法，它可以把一个终端分成多个窗口，把所有需要做的事情放到一个终端里面，
+让你不用再耗费大量的时间在不同的窗口之间切换。</p>
+<a id="more"></a>
+<h1 id="为什么使用-Tmux"><a href="#为什么使用-Tmux" class="headerlink" title="为什么使用 Tmux"></a>为什么使用 Tmux</h1><p>分屏工具主要分成两类，其中第一类是自带分屏功能的终端模拟器：在 Ubuntu 下面有一个
+终端模拟器 Terminator 自身就支持分屏，Deepin Linux 的深度终端也支持同样的功能。</p>
+<p>但是这些终端模拟器的分屏功能可配置性太差，你没有太多的选择。他们最大的硬伤在于
+你只能使用他们的终端，所以你得忍受这些终端模拟器的蹩脚的地方，比如深度终端卡到
+爆的体验。此外如果你没有安装 X11 图形界面系统，你没有办法使用这些终端模拟器。</p>
+<p>第二类是终端分屏软件，它不依赖于终端模拟器本身，可以在任何你喜欢的终端模拟器上
+运行，这一类的软件中比较有名的包括：GNU Screen 以及 Tmux。</p>
+<p>前者的历史非常的悠久比较稳定，以 GPL 协议发布。Tmux 是 2009 年才出现的产品，
+以 BSD 协议发布。很多人戏称 Tmux 为 Screen 的 BSD 版本重写，因为它包含了
+Screen 大部分的功能。从个人体验来说，Tmux 相对来说比 Screen 容易使用一些
+（我试过使用Screen，但是由于太笨，怎么用都不顺手）所以这里只介绍 Tmux 的使用。</p>
+<h1 id="Tmux-能做什么"><a href="#Tmux-能做什么" class="headerlink" title="Tmux 能做什么"></a>Tmux 能做什么</h1><p>Tmux 的功能非常非常的强大，使用它你可以：</p>
+<ul>
+<li><p>在终端模拟器中虚拟出多个窗口</p>
+</li>
+<li><p>把一个窗口分成多个区域（panel）。</p>
+</li>
+<li><p>快速在各个区域中进行复制黏贴操作。</p>
+</li>
+<li><p>配置你喜欢的快捷键。</p>
+</li>
+</ul>
+<ul>
+<li><p>使用脚本控制 Tmux。</p>
+</li>
+<li><p>实现结对编程。</p>
+</li>
+<li><p>…..</p>
+</li>
+</ul>
+<p>本文只是简单的介绍 Tmux 基础配置以及它的分屏和复制功能，其他的功能大家可以参考
+《tmux: Productive Mouse-Free Development》一书。这本书非常的薄，值得通读。</p>
+<h1 id="Tmux-基本概念"><a href="#Tmux-基本概念" class="headerlink" title="Tmux 基本概念"></a>Tmux 基本概念</h1><p>为了方便理解 Tmux 的使用，这里先介绍两个相关的概念。</p>
+<h2 id="窗口（windows）"><a href="#窗口（windows）" class="headerlink" title="窗口（windows）"></a>窗口（windows）</h2><p>在没有 Tmux 这样的工具之前，如果我们需要在终端同时完成多项任务，比如同时听歌、
+收邮件、查看文档、编辑代码，我们可能会需要开多个终端模拟器窗口来解决这个问题。
+（如果连终端模拟器都没有，那估计就只能在不同的 tty 中不断的切换）</p>
+<p>Tmux 强大之处在于，它可以让你在一个终端模拟器窗口中完成原本需要多个终端模拟器
+窗口来完成的事情。它的做法是在一个终端模拟器窗口中虚拟出多个窗口，让你在不同
+的虚拟窗口中完成不同的工作，并能够非常方便的在各个窗口之间进行切换。</p>
+<p>下面是一张 Tmux 多窗口运行界面图：</p>
+<p><img src="/img/posts/tmux_windows.png" alt="Tmux 窗口"></p>
+<p>在上图中，我开了三个窗口，一个用来运行 VIM 编辑博客，一个用来查看 man 文档，
+另一个运行 top 命令查看进程运行状况，而这些统统在 Tmux 的一个 session 中完成
+（其实 Tmux 还可以运行多个 session，不过个人觉得用处不是特别大，有兴趣的可以
+参考《tmux: Productive Mouse-Free Development》一书）。</p>
+<h2 id="面板"><a href="#面板" class="headerlink" title="面板"></a>面板</h2><p>大部分情况下我们会把不同的任务分派到不同的窗口中去。但是很多时候即使是一个任务
+你也没有办法在单个窗口在很好的完成它。比如 coding 这项任务，你可能需要一边写代码
+，一边用 gdb 调试。又如 Git 提交这项任务，在进行 git add 提交之前我们通常是需要
+知道哪些文件有改动，这个时候我通常会调用 git status 命令查看工作目录的状态，
+调用 git diff 查看改动的地方。</p>
+<p>通常我会一边参考 git status 的输出，一边查看 git diff 的输出，一边进行
+git add 操作。我并不希望把这些操作分散到不同的窗口中去，因为我只是在完成一项
+任务。解决这种问题可以使用 Tmux 的面板（panel），它把一个虚拟窗口分成多个可独立
+操作的区域，让你在不同的区域之间协调工作完成同一项任务，如下图。</p>
+<p><img src="/img/posts/tmux_panel.png" alt="Tmux 窗口"></p>
+<p>上面这两个功能是我在日常开发过程中用得最多的功能，所以下面主要讲这两个功能的一些
+配置。其实 GNU Screen 也同样有前面提到的这些功能，Tmux 的优势在于它的易用和容易
+配置上面。</p>
+<h1 id="Tmux-配置"><a href="#Tmux-配置" class="headerlink" title="Tmux 配置"></a>Tmux 配置</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>在进行真正的配置之前，你需要：</p>
+<h3 id="安装-Tmux-（以-debian-系列为例）"><a href="#安装-Tmux-（以-debian-系列为例）" class="headerlink" title="安装 Tmux （以 debian 系列为例）"></a>安装 Tmux （以 debian 系列为例）</h3><pre><code>sudo apt-get install tmux
+</code></pre><h3 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h3><pre><code>touch ~/.tmux.conf
+</code></pre><h3 id="去掉大写键"><a href="#去掉大写键" class="headerlink" title="去掉大写键"></a>去掉大写键</h3><p>大写键是一个历史遗留按键，它霸占了黄金位置，却很少使用。一种比较流行的做法是把
+它替换成 Ctrl 键，或者和 Ctrl 键互换。在 <a href="http://www.emacswiki.org/emacs/MovingTheCtrlKey" target="_blank" rel="noopener">EmacsWiki</a> 中有一篇文章专门介绍各个
+平台如何重新绑定这个键。</p>
+<p>我比较习惯的做法是直接把 <code>Caps Lock</code> 按键替换成 Ctrl。方法很简单，在你的 .bashrc
+或者 .zshrc 中加入：</p>
+<pre><code>setxkbmap -option ctrl:nocaps
+</code></pre><p>有了这个黄金位置，许多命令输入起来会简单很多，比如输入 shell 命令时用常用的
+C-r、C-a、C-e，切换 VIM buffer 常用的 C-w C-w 等等。</p>
+<p>如果你需要输入长串的大写字符，在 VIM 中你可以先输入小写然后输入 gUw 转为
+大写，在 shell 命令行中可以使用 A-u 把输入的单词变成大写。</p>
+<h2 id="绑定快捷键前缀"><a href="#绑定快捷键前缀" class="headerlink" title="绑定快捷键前缀"></a>绑定快捷键前缀</h2><p>修改快捷键前缀是配置 Tmux 的第一步，因为 Tmux 中几乎所有的按键都是组合键，但是它
+默认的前缀 C-b 输入起来有点吃力。许多人建议把它绑定到 GNU Screen 的 C-a 上去，
+不过 C-a 在 shell 命令输入中是一个常用的快捷键（比如编辑一个问题突然发现没有
+权限，可以通过 C-a 跳到命令行首加上 sudo 再执行），所以我把它绑定到了 C-f，因为
+修改过大写键之后，这两个键输入起来是非常顺畅的。</p>
+<p>修改前缀的方法非常简单，你只需要在 <code>~/.tmux.conf</code> 中添加：</p>
+<pre><code>set -g prefix C-f
+unbind C-b
+</code></pre><p>当然无论你使用哪一个前缀你都有可能和其他的软件相冲突，比如 C-a 在 shell 中使用
+较多，C-f 在 VIM 中也是一个快捷键。Tmux 为了解决这个问题提供了一个功能叫做
+sendkey，就是绑定另外一个快捷键，输入这个快捷键可以把 PREFIX 键发送到其他的程序。
+我把这个快捷键设置成了 <code>PREFIX-PREFIX</code>。也就是说连续按两遍 C-f 可以发送一个
+C-f 按键。设置方法是在 <code>~/.tmux.conf</code> 中加入：</p>
+<pre><code>bind C-f send-prefix
+</code></pre><p><strong>注意，在 Tmux 配置中 bind 后面只需要写 PREFIX 后面的部分，所以 bind C-f 其实最终
+是设置了 PREFIX-C-f）</strong></p>
+<p>当然这种方式并不算非常完美，因为你不得不输入两次 PREFIX，不过这个 tradeoff 我
+觉得是值得的。</p>
+<h2 id="窗口（windows）的操作配置"><a href="#窗口（windows）的操作配置" class="headerlink" title="窗口（windows）的操作配置"></a>窗口（windows）的操作配置</h2><p>Tmux 的窗口操作快捷键设置的是比较合理的，并不需要额外的配置，你需要做的只是记住
+它的快捷键：</p>
+<pre><code>PREFIX-c : 创建新的窗口（create）
+EXIT,C-d : 关闭窗口，Tmux 中的窗口和终端模拟器中的窗口一样可以通过 exit、C-d
+           来关闭。
+
+PREFIX-n : 切换到下一个窗口（next）
+PREFIX-p : 切换到前一个窗口（previous）
+
+PREFIX-w : 列出所有的窗口，以供快速切换
+</code></pre><p>Tmux 创建的窗口默认是从 0 开始编号的，如果你希望从 1 开始编号可以在配置文件中
+加入：</p>
+<pre><code>set -g base-index 1
+</code></pre><h2 id="面板（panel）的操作配置"><a href="#面板（panel）的操作配置" class="headerlink" title="面板（panel）的操作配置"></a>面板（panel）的操作配置</h2><p>个人感觉 Tmux 本身的 panel 快捷键配置是不太合理的，所以我修改了大部分的 panel
+操作快捷键。这一小节分三个部分讲解 Tmux 的面板操作 —— 也就是传说中的分屏操作。</p>
+<h3 id="分屏"><a href="#分屏" class="headerlink" title="分屏"></a>分屏</h3><p>Tmux 支持水平分屏和垂直分屏，但是 Tmux 默认的快捷键很难输入。默认垂直分屏是
+<code>C-&quot;</code> 而默认水平分屏是 <code>C-%</code>。我习惯的做法是使用最直观的 <code>-</code> 表示水平分屏，
+<code>|</code> 表示垂直分屏，不过因为 <code>|</code> 和 <code>\</code> 一般在同一个按键上而后者不需要按住
+<code>SHIFT</code> 来转换，所以我一般直接把 <code>\</code> 绑定为垂直分屏。</p>
+<p>在你的 <code>~/.tmux.conf</code> 文件中加入：</p>
+<pre><code>unbind &apos;&quot;&apos;
+bind - splitw -v
+
+unbind %
+bind \ splitw -h
+</code></pre><p>现在你可以使用 <code>PREFIX--</code>（按下 PREFIX 组合键之后按下 - 键）来进行水平分屏，
+使用 <code>PREFIX-\</code> 来进行垂直分屏。</p>
+<p>和窗口一样，Tmux 分出来的 panel 默认是从 0 开始编号，你可以通过在配置文件中
+加入：</p>
+<pre><code>set -g pane-base-index 1
+</code></pre><p>使编号从 1 开始。</p>
+<h3 id="切换面板"><a href="#切换面板" class="headerlink" title="切换面板"></a>切换面板</h3><p>分屏之后最重要的一个操作应该是在不同的 panel 之间切换，我是一个 VIM 重度患者，
+所以习惯把涉及到方位操作的所有按键绑定到 hjkl 上面去。</p>
+<p>我的配置如下：</p>
+<pre><code>bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key l select-pane -R
+</code></pre><p>使用 PREFIX-[hjkl] 就可以轻松的切换到不同方向的小窗口中去。</p>
+<p>Tmux 还可以通过 <code>PREFIX-q</code> 在所有的面板上显示一个编号，输入这个编号可以直接
+跳转到这个这个面板上去。</p>
+<h3 id="修改当前面板的大小"><a href="#修改当前面板的大小" class="headerlink" title="修改当前面板的大小"></a>修改当前面板的大小</h3><p>Tmux 的默认分屏是对半分，不过更多的时候我们需要的是一个较大的主窗口和几个
+小一点辅助窗口。比如一个大的 VIM 窗口编辑源代码，一个小的窗口用来编译源码。
+修改完源码之后可以立即切换到小窗口进行编译是一件很幸福的事情。Tmux 提供了
+改变 panel 大小的功能，我依旧把它绑定到 hjkl 四个按键上，只不过这一次使用的是
+C-[hjkl]，也就是说最终可以通过 PREFIX-C-[hjkl] 来改变当前窗口的大小，配置如下</p>
+<pre><code>bind -r ^k resizep -U 5
+bind -r ^j resizep -D 5
+bind -r ^h resizep -L 5
+bind -r ^l resizep -R 5
+</code></pre><p>如果你是两个垂直并列的 panel，可以使用 PREFIX-C-[hl] 来调整它们的大小，
+如果你是两个水平并列的 panel，可以使用 PREFIX-C-[jk] 来调整它们的大小。
+你可以通过把上面的 5 改成你想要的值来调整单次 resize 的粒度。</p>
+<p>此外如果你想要暂时把其中一个 panel 最大化，你可以使用 <code>PREFIX-z</code></p>
+<p>Tmux 还为 panel 提供了几种默认的布局，你可以通过 <code>PREFIX-space</code> 来切换这些
+布局。</p>
+<h2 id="复制黏贴的操作"><a href="#复制黏贴的操作" class="headerlink" title="复制黏贴的操作"></a>复制黏贴的操作</h2><p>前面几个小节系统的介绍了窗口和面板的使用，下面重点介绍一些 Tmux 的拷贝模式
+（copy-mode）。</p>
+<p>我们经常需要在一个窗口（或者 panel）中复制代码黏贴到另一个窗口（或者 panel）中
+（虽然这不是一个很好的习惯）。Tmux 提供了强大的的复制黏贴功能来帮助我们完成
+这一任务。</p>
+<p>在 Tmux 中复制是在拷贝模式下完成（copy-mode），进入拷贝模式的默认快捷键是
+<code>PREFIX-[</code>，不过我习惯把它绑定到 <code>PREFIX-C-v</code> 上面去</p>
+<pre><code>bind ^v copy-mode
+</code></pre><p>进入了拷贝模式之后可以使用 hjkl 移动光标到你想要拷贝的地方。找到需要复制的部分
+之后按空格键开始复制，使用 hjkl 选择复制的区域，最终按回车完成复制退出拷贝模式。
+同样这些按键，你也可以自己绑定快捷键。我习惯了 VIM 的复制黏贴，所以我把 v 绑定
+为拷贝模式下复制的开始（默认是 SPACE），y 绑定为复制结束（默认是 ENTER）。</p>
+<pre><code>bind -t vi-copy v begin-selection
+bind -t vi-copy y copy-selection
+</code></pre><p>复制完成之后你可以切换到你想要的黏贴的窗口，输入 <code>PREFIX-]</code> 完成黏贴操作，当然
+这个按键你同样可以绑定，比如我把它绑定到 <code>PREFIX-C-p</code> 上面。</p>
+<pre><code>bind ^p pasteb
+</code></pre><h1 id="Tmux-使用中的其他问题"><a href="#Tmux-使用中的其他问题" class="headerlink" title="Tmux 使用中的其他问题"></a>Tmux 使用中的其他问题</h1><h2 id="去掉鼠标"><a href="#去掉鼠标" class="headerlink" title="去掉鼠标"></a>去掉鼠标</h2><p>Tmux 的一个口号是 mouse free，有了它之后你可以抛弃鼠标，如果你想要禁用鼠标
+设置，你可以在你的 <code>~/.tmux.conf</code> 文件中加入：</p>
+<pre><code>set -g mode-mouse off
+</code></pre><h2 id="颜色问题"><a href="#颜色问题" class="headerlink" title="颜色问题"></a>颜色问题</h2><p>Tmux 在很多终端下使用的时候会出现颜色错乱的问题，为了解决这个问题你需要设置
+TERM 环境变量，最简单的做法是给 tmux 起一个别名，如下：</p>
+<pre><code>alias tmux=&apos;TERM=xterm-256color tmux&apos;
+</code></pre><p>把上面这句写到你的 <code>.bashrc</code> 或者 <code>.zshrc</code> 中即可。</p>
+<hr>
+<p>Tmux 网上有很多相关的资料可以参考，最全面的资料应该是
+《tmux: Productive Mouse-Free Development》一书，强烈推荐有兴趣了解 Tmux 的
+人看一看这本书。聪明的你一定很容易找到这本书。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tmux/" rel="tag"># tmux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/25/how-to-fix-the-markdown-newline-blank-problem/" rel="next" title="解决 jekyll 中文换行变成空格的问题">
+                <i class="fa fa-chevron-left"></i> 解决 jekyll 中文换行变成空格的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/31/vim-basic/" rel="prev" title="利器系列之 —— 编辑利器 Vim 之基础配置">
+                利器系列之 —— 编辑利器 Vim 之基础配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用分屏工具"><span class="nav-number">1.</span> <span class="nav-text">为什么使用分屏工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用-Tmux"><span class="nav-number">2.</span> <span class="nav-text">为什么使用 Tmux</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tmux-能做什么"><span class="nav-number">3.</span> <span class="nav-text">Tmux 能做什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tmux-基本概念"><span class="nav-number">4.</span> <span class="nav-text">Tmux 基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#窗口（windows）"><span class="nav-number">4.1.</span> <span class="nav-text">窗口（windows）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面板"><span class="nav-number">4.2.</span> <span class="nav-text">面板</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tmux-配置"><span class="nav-number">5.</span> <span class="nav-text">Tmux 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">5.1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Tmux-（以-debian-系列为例）"><span class="nav-number">5.1.1.</span> <span class="nav-text">安装 Tmux （以 debian 系列为例）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建配置文件"><span class="nav-number">5.1.2.</span> <span class="nav-text">创建配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去掉大写键"><span class="nav-number">5.1.3.</span> <span class="nav-text">去掉大写键</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绑定快捷键前缀"><span class="nav-number">5.2.</span> <span class="nav-text">绑定快捷键前缀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#窗口（windows）的操作配置"><span class="nav-number">5.3.</span> <span class="nav-text">窗口（windows）的操作配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面板（panel）的操作配置"><span class="nav-number">5.4.</span> <span class="nav-text">面板（panel）的操作配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分屏"><span class="nav-number">5.4.1.</span> <span class="nav-text">分屏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切换面板"><span class="nav-number">5.4.2.</span> <span class="nav-text">切换面板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改当前面板的大小"><span class="nav-number">5.4.3.</span> <span class="nav-text">修改当前面板的大小</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制黏贴的操作"><span class="nav-number">5.5.</span> <span class="nav-text">复制黏贴的操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tmux-使用中的其他问题"><span class="nav-number">6.</span> <span class="nav-text">Tmux 使用中的其他问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#去掉鼠标"><span class="nav-number">6.1.</span> <span class="nav-text">去掉鼠标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#颜色问题"><span class="nav-number">6.2.</span> <span class="nav-text">颜色问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

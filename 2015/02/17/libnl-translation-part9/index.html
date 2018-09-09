@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="netlink,libnl," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="9. 抽象数据类型  libnl 的核心库中实现了一些大多数 neltink 协议都会用到的高层的抽象数据类型。 如果需要的话，未来可能还会实现更多。">
+<meta name="keywords" content="netlink,libnl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netlink 库 -- 官方开发者教程中文版第九部分">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/02/17/libnl-translation-part9/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="9. 抽象数据类型  libnl 的核心库中实现了一些大多数 neltink 协议都会用到的高层的抽象数据类型。 如果需要的话，未来可能还会实现更多。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netlink 库 -- 官方开发者教程中文版第九部分">
+<meta name="twitter:description" content="9. 抽象数据类型  libnl 的核心库中实现了一些大多数 neltink 协议都会用到的高层的抽象数据类型。 如果需要的话，未来可能还会实现更多。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/02/17/libnl-translation-part9/"/>
+
+
+
+
+
+  <title>Netlink 库 -- 官方开发者教程中文版第九部分 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/02/17/libnl-translation-part9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netlink 库 -- 官方开发者教程中文版第九部分</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-02-17T00:00:00+08:00">
+                2015-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/02/17/libnl-translation-part9/" class="leancloud_visitors" data-flag-title="Netlink 库 -- 官方开发者教程中文版第九部分">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="abstract_data_type">9. 抽象数据类型</h1>
+
+<p><code>libnl</code> 的核心库中实现了一些大多数 <code>neltink</code> 协议都会用到的高层的抽象数据类型。
+如果需要的话，未来可能还会实现更多。</p>
+<a id="more"></a>
+<h2 id="abstract_addr">9.1 抽象地址</h2>
+
+<p>大部分的 <code>neltink</code> 协议都是处理网络相关问题的，所以处理网络地址是一项常见的工作。</p>
+<p>目前已经支持下面这些网络地址簇：</p>
+<ul>
+<li>AF_INET</li>
+<li>AF_INET6</li>
+<li>AF_LLC</li>
+<li>AF_DECnet</li>
+<li>AF_UNSPEC</li>
+</ul>
+<p><strong>地址分配</strong></p>
+<p><code>nl_addr_alloc()</code> 分配一个新的空地址。<code>maxsize</code> 参数定义了一个网络地址的最长
+字节数。一个地址的大小和地址簇相关。如果一个地址簇和地址数据在分配的时候就已经
+知晓的话，你可以选择使用 <code>nl_addr_build()</code> 函数。你也可以通过调用 <code>nl_addr_clone()</code>
+函数来克隆一个地址。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+struct nl_addr *nl_addr_alloc(size_t maxsize);
+struct nl_addr *nl_addr_clone(struct nl_addr *addr);
+struct nl_addr *nl_addr_build(int family, void *addr, size_t size);
+</code></pre><p>如果地址是通过 <code>netlink</code> 属性传递的，你可以通过 <code>nl_addr_alloc_attr()</code> 函数根据
+提供的属性的载荷分配一个新的地址。<code>family</code> 参数是用来指定一个地址簇的，如果你
+不知道的话请把它设置成 <code>AF_UNSPEC</code>。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+struct nl_addr *nl_addr_alloc_attr(struct nlattr *attr, int family);
+</code></pre><p>如果地址是由用户提供的，它通常是存储在一个易于人类阅读的格式中的。<code>nl_addr_parse()</code>
+可以用来解析一个代表地址的字符序列然后基于它分配一个新的地址。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+int nl_addr_parse(const char *addr, int hint, struct nl_addr **result);
+</code></pre><p>如果分配成功的话，这个函数会返回 <code>0</code> 并新分配的地址存放在 <code>*result</code> 中。</p>
+<p><strong>注意：</strong> 记得在使用完地址之后使用 <code>nl_addr_put()</code> 函数解除对它的引用以释放空间。</p>
+<p><strong>例子：把字符串转换成抽象地址</strong></p>
+<pre><code>struct nl_addr *a = nl_addr_parse(&quot;::1&quot;, AF_UNSPEC);
+printf(&quot;Address family: %s\n&quot;, nl_af2str(nl_addr_get_family(a)));
+nla_addr_put(a);
+
+a = nl_addr_parse(&quot;11:22:33:44:55:66&quot;, AF_UNSPEC);
+printf(&quot;Address family: %s\n&quot;, nl_af2str(nl_addr_get_family(a)));
+nl_addr_put(a);
+</code></pre><p><strong>地址引用计数</strong></p>
+<p>抽象地址使用引用计数器来统计某个地址的使用总数。当最后一个用户解除对地址的引用
+之后这个地址会被释放掉。</p>
+<p>如果你把一个地址对象传递给另一个函数而你不知道这个函数将要使用这个地址多长时间，
+这个时候确保你调用 <code>nl_addr_get()</code> 来活取一个额外的引用，然后让那个函数或者是代码
+执行路径在用完地址之后尽可能早的调用 <code>nl_addr_put()</code>。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+struct nl_addr *nl_addr_get(struct nl_addr *addr);
+void nl_addr_put(struct nl_addr *addr);
+int nl_addr_shared(struct nl_addr *addr);
+</code></pre><p>你可以在任何时候通过调用 <code>nl_addr_shared()</code> 函数来检查自己是不是这个地址的唯一
+使用者。</p>
+<p><strong>地址属性</strong></p>
+<p>地址簇通常是在分配的时候就已经设置好了的。但是如果那时这个地址还不确定的话，你
+可以在之后调用 <code>nl_addr_set_family()</code> 函数来设置它，同样你可以调用
+<code>nl_addr_get_family()</code> 函数来取得地址信息。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+void nl_addr_set_family(struct nl_addr *addr, int family);
+int nl_addr_get_family(struct nl_addr *addr);
+</code></pre><p>这一点对于地址的实际数据同样是成立的，它通常是在分配的时候就给出了。但是如果没有
+在那时指定的话，你可以之后通过调用 <code>nl_addr_set_binary_addr()</code> 来设置或者是覆盖它。
+需要注意的是新设置的值的长度不能超过地址分配的时候给出的最大值。地址数据是通过
+<code>nl_addr_get_binary_addr()</code> 函数取得而它的长度则可以通过调用 <code>nl_addr_get_len()</code>
+获得。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+int nl_addr_set_binary_addr(struct nl_addr, void *data, size_t size);
+void *nl_addr_get_binary_addr(struct nl_addr *addr);
+unsigned int nl_addr_get_len(struct nl_addr *addr);
+</code></pre><p>如果你只想检验地址数据是否全是由零组成的。你可以调用 <code>nl_addr_iszero()</code> 函数来
+轻松的完成这项任务。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+int nl_addr_iszero(struct nl_addr *addr);
+</code></pre><h1>9.1.1 地址前缀长度</h1>
+
+<p>虽然从功能性上来说它属于只和路由相关的功能，但是它是在核心库[^1]中实现的。地址
+可以绑定一个前缀长度，这个长度表示只有前面的 <code>n</code> 个位是重要的。这可以用来实现
+诸如子网之类的功能。</p>
+<p>使用 <code>nl_addr_set_prefixlen()</code> 和 <code>nl_addr_get_prefixlen()</code> 函数来操控前缀长度。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+void nl_addr_set_prefixlen(struct nl_addr *addr, int n);
+unsigned int nl_addr_get_prefixlen(struct nl_addr *addr);
+</code></pre><p><strong>注意：</strong> 默认的前缀长度被设置为（地址长度 × 8）</p>
+<p><strong>地址辅助函数</strong></p>
+<p>库中还存在其他的辅助函数帮助处理地址问题，<code>nl_addr_cmp()</code> 函数会忽略前缀长度
+比较两个地址，并返回一个小于、等于或者大于 <code>0</code> 的整数。如果你需要考虑前缀长度的话，
+你可以使用 <code>nl_addr_cmp_prefix()</code>。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+int nl_addr_cmp(struct nl_addr *addr, struct nl_addr *addr);
+int nl_addr_cmp_prefix(struct nl_addr *addr, struct nl_addr *addr);
+</code></pre><p>如果你需要把地址呈现给用户，那么你需要以一种易于人类阅读的格式呈现它，这个格式对于
+不同的地址簇来说是不一样的。<code>nl_addr2str()</code> 函数会通过在内部调用合适的转换函数来
+应对这一点。它接收一个 <code>size</code> 长的 <code>buf</code> 来存储输出的字符串并返回 <code>buf</code> 的指针以
+方便 <code>printf()</code> 函数的调用。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+char *nl_addr2str(struct nl_addr *addr, char *buf, size_t size);
+</code></pre><p>如果不知道地址簇的话，地址数据会以十六进制的格式打印出来 <code>AA:BB:CC:DD:..</code></p>
+<p>通常唯一能够得知地址簇的方式是查看地址的长度。<code>nl_addr_guess_family()</code> 函数使用
+这种方式基于地址长度返回猜测的地址簇。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+int nl_addr_guess_family(struct nl_addr *addr);
+</code></pre><p>在分配地址之前你可能会想要检查给出的字符序列是否真的能代表你期望的地址簇中的一个
+合法地址。<code>nl_addr_valid()</code> 函数可以用来完成这一个任务，如果给出的是地址簇中的
+合法地址，这个函数会返回 <code>1</code>。关于合法的地址格式的更多信息，请查看 <code>inet_pton(3)</code>
+、<code>dnet_pton(3)</code>。</p>
+<pre><code>#include &lt;netlink/addr.h&gt;
+
+int nl_addr_valid(char *addr, int family);
+</code></pre><h2 id="abstract_data">9.2. 抽象数据</h2>
+
+<p>抽象数据类型是一种简单的数据类型，它的主要目的是简化任意长度的 <code>netlink</code> 属性的
+使用。</p>
+<p><strong>数据对象的分配</strong></p>
+<p><code>nl_data_alloc()</code> 函数会分配一个新的抽象数据对象，然后使用提供的数据填充它。
+<code>nl_data_alloc_attr()</code> 完成同一项工作，只不过它是基于 <code>netlink</code> 属性的载荷中的
+数据的。新的数据对象也可以通过调用 <code>nl_data_clone()</code> 函数克隆已有的数据而得到。</p>
+<pre><code>struct nl_data *nl_data_alloc(void *buf, size_t size);
+struct nl_data *nl_data_alloc_attr(struct nlattr *attr);
+struct nl_data *nl_data_clone(struct nl_data *data);
+void nl_data_free(struct nl_data *data);
+</code></pre><p><strong>访问数据</strong></p>
+<p><code>nl_data_get()</code> 函数返回一个指向数据的指针，数据的大小是通过 <code>nl_data_get_size()</code>
+函数返回的。</p>
+<pre><code>void *nl_data_get(struct nl_data *data);
+size_t nl_data_get_size(struct nl_data *data);
+</code></pre><p><strong>数据处理的辅助函数</strong></p>
+<p><code>nl_data_append()</code> 函数会重新分配内部的数据缓冲区，然后把给定的 <code>buf</code> 中的数据
+添加到已有的数据末尾。</p>
+<pre><code>int nl_data_append(struct nl_data *data. void *buf, size_t size);
+</code></pre><p><strong>注意：</strong> 任何 <code>nl_data_append()</code> 函数的调用都会使得所有 <code>nl_data_get()</code> 函数
+返回的同一数据对象的指针失效。</p>
+<pre><code>int nl_data_cmp(struct nl_data *data, struct nl_data *data);
+</code></pre><p>version 3.2</p>
+<p>最后一次更新事件是 2014-07-16 12:04:02 CEST</p>
+<hr>
+<p>  [^1]: <code>libnl</code> 库分为多个子库，请参考文档的<a href="/netlink/2015/01/20/libnl-translation-part1.html">第一部分</a>，这份文档是核心库的开发者文档。【译者注】</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/netlink/" rel="tag"># netlink</a>
+          
+            <a href="/tags/libnl/" rel="tag"># libnl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/02/16/libnl-translation-part8/" rel="next" title="Netlink 库 -- 官方开发者教程中文版第八部分">
+                <i class="fa fa-chevron-left"></i> Netlink 库 -- 官方开发者教程中文版第八部分
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/02/18/libnl-translation/" rel="prev" title="Netlink 库 -- 官方开发者教程中文版目录">
+                Netlink 库 -- 官方开发者教程中文版目录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#abstract_data_type"><span class="nav-number">1.</span> <span class="nav-text">9. 抽象数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract_addr"><span class="nav-number">1.1.</span> <span class="nav-text">9.1 抽象地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">9.1.1 地址前缀长度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract_data"><span class="nav-number">2.1.</span> <span class="nav-text">9.2. 抽象数据</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

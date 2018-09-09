@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="netlink,libnl," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="5. 消息的解析和构建  5.1 消息格式  关于 netlink 协议以及它的消息格式请查看 netlink 协议基础 一 节。 对齐  大部分的 netlink 协议对所有的边界都有严格的对齐方案。对齐值是由 NLMSG_ALIGNTO 定义的，这个值固定为 4 个字节。所以所有的 netlink 消息头部、有 效载荷段的开头、协议相关头部和属性段都必须从一个是 NLMSG_ALIGNTO 倍">
+<meta name="keywords" content="netlink,libnl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netlink 库 -- 官方开发者教程中文版第五部分">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/01/31/libnl-translation-part5/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="5. 消息的解析和构建  5.1 消息格式  关于 netlink 协议以及它的消息格式请查看 netlink 协议基础 一 节。 对齐  大部分的 netlink 协议对所有的边界都有严格的对齐方案。对齐值是由 NLMSG_ALIGNTO 定义的，这个值固定为 4 个字节。所以所有的 netlink 消息头部、有 效载荷段的开头、协议相关头部和属性段都必须从一个是 NLMSG_ALIGNTO 倍">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netlink 库 -- 官方开发者教程中文版第五部分">
+<meta name="twitter:description" content="5. 消息的解析和构建  5.1 消息格式  关于 netlink 协议以及它的消息格式请查看 netlink 协议基础 一 节。 对齐  大部分的 netlink 协议对所有的边界都有严格的对齐方案。对齐值是由 NLMSG_ALIGNTO 定义的，这个值固定为 4 个字节。所以所有的 netlink 消息头部、有 效载荷段的开头、协议相关头部和属性段都必须从一个是 NLMSG_ALIGNTO 倍">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/01/31/libnl-translation-part5/"/>
+
+
+
+
+
+  <title>Netlink 库 -- 官方开发者教程中文版第五部分 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/01/31/libnl-translation-part5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netlink 库 -- 官方开发者教程中文版第五部分</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-31T00:00:00+08:00">
+                2015-01-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/01/31/libnl-translation-part5/" class="leancloud_visitors" data-flag-title="Netlink 库 -- 官方开发者教程中文版第五部分">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="message_parse_construct">5. 消息的解析和构建</h1>
+
+<h2 id="msg_formate">5.1 消息格式</h2>
+
+<p>关于 <code>netlink</code> 协议以及它的消息格式请查看 <a href="/netlink/2015/01/23/libnl-translation-part2.html#nlp_fundamentals">netlink 协议基础</a> 一
+节。</p>
+<h3>对齐</h3>
+
+<p>大部分的 <code>netlink</code> 协议对所有的边界都有严格的对齐方案。对齐值是由
+<code>NLMSG_ALIGNTO</code> 定义的，这个值固定为 4 个字节。所以所有的 <code>netlink</code> 消息头部、有
+效载荷段的开头、协议相关头部和属性段都必须从一个是 <code>NLMSG_ALIGNTO</code> 倍数的偏移量
+开始。</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_size</span><span class="params">(<span class="keyword">int</span> payloadlen)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_total_size</span><span class="params">(<span class="keyword">int</span> payloadlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这个库提供了一系列的函数来自动处理对齐问题。<code>nl_total_size()</code> 函数返回一个消息总
+长度，这个长度包括了确保下一个消息头部已经正确对齐的填充（padding）长度。</p>
+<pre><code> &lt;----------- nlmsg_total_size(len) ------------&gt;
+ &lt;----------- nlmsg_size(len) ------------&gt;
++-------------------+- - -+- - - - - - - - +- - -+-------------------+- - -
+|  struct nlmsghdr  | Pad |     Payload    | Pad |  struct nlsmghdr  |
++-------------------+- - -+- - - - - - - - +- - -+-------------------+- - -
+ &lt;---- NLMSG_HDRLEN -----&gt; &lt;- NLMSG_ALIGN(len) -&gt; &lt;---- NLMSG_HDRLEN ---
+</code></pre><p>如果你想知道是否需要在一个消息的尾部进行填充处理，<code>nlmsg_padlen()</code> 函数会返回对
+于一个给定的有效载荷长度需要进行填充的字节数目。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_padlen</span><span class="params">(<span class="keyword">int</span> payloadlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="parse_msg">5.2 解析一个消息</h2>
+
+<p>这个库提供了两套完全不同的方法来解析 <code>netlink</code> 消息。它为那些需要手动完成所有解
+析的应用程序提供了一套低层（low level）的 API。这种方式会在下面进行介绍。此外该
+库也提供了另外一套接口用于把解析器实现成高速缓存（cache[^1]）操作的一部分，如果
+你的协议是用来处理诸如网络链路、路由的任何类型的对象的时候这种方式将会非常有用。
+这套高层（hight level）接口会在 <a href="/netlink/2015/02/15/libnl-translation-part8.html#cache_system">高速缓存系统</a> 一节中介绍。</p>
+<h3>把字节流拆分成多条消息</h3>
+
+<p>通常从一个网络套接字中接收下来的是消息流。你将会得到一个缓冲区以及它的长度，这个
+缓冲区可能包含任意数量的 <code>netlink</code> 消息。</p>
+<p>第一个消息头部位于消息流的开始处。任何后续的消息都是通过在前一个头部的基础上调用
+<code>nlmsg_next()</code> 函数来获得。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">struct nlmsghdr *<span class="title">nlmsg_next</span><span class="params">(struct nlmsghdr *hdr, <span class="keyword">int</span> *remaining)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>nlmsg_next()</code> 会自动从剩余字节数中减掉前一个消息的大小。</p>
+<p>需要注意的是，在前一个消息中并没有指示是否存在下一个消息，你必须假设有更多的消息
+存在直到消息流中的所有数据都被解析完成为止。</p>
+<p>为了简化这个工作，<code>libnl</code> 库提供了另一个函数 <code>nlmsg_ok()</code>，如果消息流中的剩余字
+节中还存在另一个消息的话，这个函数会返回 <code>true</code>。<code>nlmsg_valid_hdr()</code> 是一个类似
+的函数，它检查的是一个给定的 <code>netlink</code> 消息中是否至少包含某个最小长度的有效载荷
+。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_valid_hdr</span><span class="params">(<span class="keyword">const</span> struct nlmsgdhr *hdr, <span class="keyword">int</span> payload)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_ok</span><span class="params">(<span class="keyword">const</span> struct nlmsghdr *hdr, <span class="keyword">int</span> remaining)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这些函数的一个典型使用方式如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">my_parse</span><span class="params">(<span class="keyword">void</span> *stream, <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">hdr</span> = <span class="title">stream</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(nlmsg_ok(hdr, length)) &#123;</span><br><span class="line">		<span class="comment">// Parse message here</span></span><br><span class="line">		hdr = nlmsg_next(hdr, &amp;length);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> nlmsg_ok() 只会在剩余缓冲区长度足够容纳包括消息有效载荷在内的整个消息
+的时候才会返回 <code>true</code> 。如果只是包含部分消息的话它会返回 <code>false</code></p>
+<p>上面的例子可以使用 <code>nlmsg_for_each()</code> 迭代器改写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">hdr</span>;</span></span><br><span class="line"></span><br><span class="line">nlmsg_for_each(hdr, stream, length) &#123;</span><br><span class="line">	<span class="comment">/* 处理消息 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3>消息有效载荷</h3>
+
+<p>消息的有效载荷是附加在消息头部的末尾的，而且它一定是在 <code>NLMSG_ALIGNTO</code> 的倍数位
+置开始。前面这点是通过在消息头部的末尾进行必要的填充来保证的。<code>nlmsg_data()</code> 函
+数会根据消息计算好必要的偏移量然后返回消息有效负载开始处的指针。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">nlmsg_data</span><span class="params">(<span class="keyword">const</span> struct nlmsghdr *nlh)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">nlmsg_tail</span><span class="params">(<span class="keyword">const</span> strcut nlmsghdr *nlh)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_datalen</span><span class="params">(<span class="keyword">const</span> struct nlmsgdhr *nlh)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>消息有效负载的长度是通过 <code>nlmsg_datalen()</code> 返回的。</p>
+<pre><code>                   &lt;--- nlmsg_datalen(nlh) ---&gt;
+    +-------------------+- - -+----------------------------+- - -+
+    |  struct nlmsghdr  | Pad |           Payload          | Pad |
+    +-------------------+- - -+----------------------------+- - -+
+nlmsg_data(nlh) ---------------^                                  ^
+nlmsg_tail(nlh) --------------------------------------------------^
+</code></pre><p>有效负载可能包含任意的数据，但是可能会有严格的对齐以及格式标准，这一切都由实际的
+<code>netlink</code> 协议决定。</p>
+<h3 id="parse_msg_attr">消息属性</h3>
+
+<p>大部分的 <code>netlink</code> 协议都使用了 <code>netlink</code> 属性。它不但可以使得协议自身更容易理解
+而且可以使得协议在日后扩展更加方便。新的协议可以在任意时刻添加而旧的属性也可以被
+新的属性废弃掉而不会破坏协议的二进制兼容性。</p>
+<pre><code>                   &lt;---------------------- payload -------------------------&gt;
+                   &lt;----- hdrlen ----&gt;       &lt;- nlmsg_attrlen(nlh, hdrlen) -&gt;
+    +-------------------+- - -+-----  ------------+- - -+--------------------------------+- - -+
+    |  struct nlmsghdr  | Pad |  Protocol Header  | Pad |           Attributes           | Pad |
+    +-------------------+- - -+-------------------+- - -+--------------------------------+- - -+
+nlmsg_attrdata(nlh, hdrlen) -----------------------------^
+</code></pre><p><code>nlmsg_attrdata()</code> 函数会返回一个属性段的指针。属性段的长度可以通过调用
+<code>nlmsg_attrlen()</code> 函数得到。</p>
+<pre><code>#include &lt;netlink/msg.h&gt;
+
+struct nlattr *nlmsg_attrdata(const struct nlmsghdr *hdr, int hdrlen);
+int nlmsg_attrlen(const struct nlmsgdhr *hdr, int hdrlen);
+</code></pre><p>关于如何使用 <code>netlink</code> 的属性请查看 <a href="/netlink/2015/02/12/libnl-translation-part6.html#attributes">属性</a> 一节。</p>
+<h3>解析消息的便捷方式</h3>
+
+<p><code>nlmsg_parse()</code> 函数一步完成一个完整的 <code>netlink</code> 消息的检验。如果 <code>hdrlen &gt; 0</code>
+的话，这个函数首先会调用 <code>nlmsg_valid_hdr()</code> 来检验这个消息中是否能容纳下协议头
+部。如果还有有效载荷需要解析的话，该函数会假设这些有效载荷是属性然后按照属性来解
+析有效载荷。当用于属性解析的时候，这个函数和 <code>nla_parse()</code> 函数是完全一样的，更
+多详情请查看 <a href="/netlink/2015/02/12/libnl-translation-part6.html#core_attr_parse_easy"><a href="/netlink/2015/02/12/libnl-translation-part6.html#core_attr_parse_easy">core_attr_parse_easy</a></a>。</p>
+<pre><code>int nlmsg_parse(struct nlmsghdr *hdr, int hdrlen, struct nlattr **attrs,
+    int maxtype, struct nla_policy *policy);
+</code></pre><p>在 <a href="/netlink/2015/02/12/libnl-translation-part6.html#core_attr_parse_easy"><a href="/netlink/2015/02/12/libnl-translation-part6.html#core_attr_parse_easy">core_attr_parse_easy</a></a> 中还有一个额外的例子，以及更加
+详细的信息。</p>
+<h2 id="construct_msg">5.3. 构建消息</h2>
+
+<p>关于 <code>netlink</code> 消息格式以及对齐需求方面的信息请参考 <a href="/netlink/2015/01/23/libnl-translation-part2.html#message_formate">消息格式</a> 一节
+。</p>
+<p>消息的构建是基于 <code>struct nl_msg</code> 结构体的，它使用内部缓冲区来存储实际的
+<code>netlink</code> 消息。<code>struct nlmsg</code> 结构体并不指向与 <code>netlink</code> 消息的头部。请使用
+<code>nlmsg_hdr()</code> 来获取这条 <code>netlink</code> 消息的头部指针。</p>
+<p>在分配结构体的时候，可以指定最大的消息长度。它的默认大小是一页（PAGE_SIZE）。构
+造消息应用程序将会不断地从这个最大消息长度中为每个添加的头部和属性预留空间。这种
+方式可以让构建一个跨越多个层代码的消息时下层不用知道上层需要的空间。</p>
+<p>为什么需要设置最大消息长度呢？这个问题经常和被推荐的方法——使用 <code>realloc()</code> 函数
+动态的重新分配消息有效载荷缓冲区——一起被提出来。虽然在构建消息时可以使用
+<code>nlmsg_expand()</code> 函数重新分配缓冲区，但这会导致所有指向消息缓冲区的指针失效。这
+会使得 <code>nlmsg_hdr()</code>、<code>nla_nest_start()</code> 和 <code>nla_nest_end()</code> 函数出错，所以这种
+方式无法作为默认方式。</p>
+<h3>分配 <code>struct nl_msg</code> 结构体</h3>
+
+<p>构建一条新的 <code>netlink</code> 消息的第一步是分配一个 <code>struct nl_msg</code> 结构体来承载消息头
+部和有效载荷。为了简化各种各样的操作，库中存在多个这类的函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">struct nl_msg *<span class="title">nlmsg_alloc</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">nlmsg_free</span><span class="params">(struct nl_msg *msg)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>nlmsg_alloc()</code> 函数是默认的分配函数，它使用默认的最大消息长度，也就是一页的大小
+（<code>PAGE_SIZE</code>）来分配一条新的消息。应用程序可以通过调用
+<code>nlmsg_set_defualt_size()</code> 函数来更改默认大小。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> 	<span class="title">nlmsg_set_defualt_size</span><span class="params">(<span class="keyword">size_t</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>注意： 调用 <code>nlmsg_set_default_size()</code>并不会改变已经分配了的消息的最大消息长度
+。</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct nl_msg *<span class="title">nlmsg_alloc_size</span><span class="params">(<span class="keyword">size_t</span> max)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>除了改变默认消息长度之外，你也可以使用 <code>nlmsg_alloc_size()</code> 函数使用一个给定的最
+大消息长度来来分配一条消息。</p>
+<p>如果 <code>netlink</code> 消息头部在分配的时候就已经确定，应用程序可以考虑使用[^2]
+<code>nlmsg_inherit()</code> 函数。这个函数会使用默认的最大消息长度分配一条消息，然后把头部
+拷贝到这条消息中去。以 <code>NULL</code> 为参数调用 <code>nlmsg_inherit()</code> 就等于是调用
+<code>nlmsg_alloc()</code> 函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct nl_msg * <span class="title">nlmsg_inherit</span><span class="params">(struct nlmsghdr *hdr)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>除了上面的方式之外，你也可以调用 <code>nlmsg_alloc_simple()</code> ，这个函数接收消息类型和
+消息标志为参数。它的作用和 <code>nlmsg_inherit()</code> 其实是一样的，只不过前者把两个常用
+的头部字段作为参数而后者使用使用整个头部作为参数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">struct nl_msg *<span class="title">nlmsg_alloc_simple</span><span class="params">(<span class="keyword">int</span> nlmsg_type, <span class="keyword">int</span> flags)</span></span>;</span><br></pre></td></tr></table></figure>
+<h3>附加 netlink 消息头部</h3>
+
+<p>分配了 <code>struct nl_msg</code> 结构体之后，你需要添加 <code>netlink</code> 消息头部，除非你使用了
+<code>nlmsg_alloc_simple()</code> 或者 <code>nlmsg_inherit()</code> 函数。如果你使用了前面两个方法之后
+还进行这一步操作的话，这一步操作给出的头部会覆盖前面两个函数中的头部。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlin/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">struct nlmsghdr *<span class="title">nlmsg_put</span><span class="params">(struct nl_msg *msg, <span class="keyword">uint32_t</span> port, <span class="keyword">uint32_t</span> seqnr,</span></span></span><br><span class="line"><span class="function"><span class="params">		<span class="keyword">int</span> nlmsg_type, <span class="keyword">int</span> payload, <span class="keyword">int</span> nlmsg_flags)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>nl_put()</code> 函数会根据提供的 <code>nlmsg_type</code>、<code>nlmsg_flags</code>、<code>seqnr</code>、<code>port</code> 参数构
+建一个消息头部，然后把数据拷贝到 <code>netlink</code> 消息中。<code>seqnr</code> 可以设置成
+<code>NL_AUTO_SEQ</code>，这表示自动使用下一个可用的序列号。为了使用这一特性，这条消息必须
+通过 <code>nl_send_auto()</code> 函数发送出去。和 <code>seqnr</code> 参数一样，<code>port</code> 参数可以被设置为
+<code>NL_AUTO_PORT</code>，这表示使用套接字中的本地端口号作为源端口。这通常是一个不错误的主
+意，除非你是在回复一个请求[^3]。关于如何填充消息头部的更多信息请参考 <a href="/netlink/2015/01/23/libnl-translation-part2.html#nlp_fundamentals">Netlink 协
+议基础</a>
+一节。</p>
+<p><strong>注意： 应用程序可以使用 <code>payload</code> 参数在头部后面为额外的数据预留空间。如果
+<code>payload</code> 的值大于 0 的话，这相当于是调用 <code>nlmsg_reserve(msg, payload,
+NLMSG_ALIGNTO)</code>。关于为数据预留空间的更多信息请参考 「core_msg_reserve」</strong></p>
+<p>示例:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">hdr</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nl_msg</span> *<span class="title">msg</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">myhdr</span> &#123;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">uint32_t</span> foo1, foo2;</span><br><span class="line"></span><br><span class="line">&#125; hdr = &#123; <span class="number">10</span>, <span class="number">20</span> &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 使用默认大小分配一条消息 */</span></span><br><span class="line"></span><br><span class="line">msg = nlmsg_alloc();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 使用类型 MY_MSGTYPE, 标志 NLM_F_CREATE 构造消息头部，</span></span><br><span class="line"><span class="comment"> * 让库来填充端口号和序列号并且为 struct myhdr 预留空间。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">hdr = nlmsg_put(msg, NL_AUTO_PORT, NL_AUTO_SEQ, MY_MSGTYPE, <span class="keyword">sizeof</span>(hdr), NLM_F_CREATE);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 把自己的消息头部拷贝到刚刚预留的空间 */</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">memcpy</span>(nlmsg_data(hdr), &amp;hdr, <span class="keyword">sizeof</span>(hdr));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 消息的格式如下:</span></span><br><span class="line"><span class="comment"> *     +-------------------+- - -+----------------+- - -+</span></span><br><span class="line"><span class="comment"> *     |  struct nlmsghdr  | Pad |  struct myhdr  | Pad |</span></span><br><span class="line"><span class="comment"> *     +-------------------+-----+----------------+- - -+</span></span><br><span class="line"><span class="comment"> * nlh -^                        /                \</span></span><br><span class="line"><span class="comment"> *                              +--------+---------+</span></span><br><span class="line"><span class="comment"> *                              |  foo1  |  foo2   |</span></span><br><span class="line"><span class="comment"> *                              +--------+---------+</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<h3>在消息的末尾预留空间</h3>
+
+<p>虽然后面介绍的大部分函数都会为添加到 <code>neltink</code> 消息尾部的数据自动预留空间，但是
+有些情况下，应用程序还是需要直接预留空间。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">nlmsg_reserve</span><span class="params">(struct nl_msg *msg, <span class="keyword">size_t</span> len, <span class="keyword">int</span> pad)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>nlmsg_reserve()</code> 函数在 <code>netlink</code> 消息的默认预留 <code>len</code> 字节的空间，然后返回一个
+指向这块预留空间开始位置的指针。<code>pad</code> 参数可以用来在预留空间之前把 <code>len</code> 对齐到
+任意字节。</p>
+<p>下面这个例子请求在消息末尾预留一块 17 字节的空间并对齐到 4 字节处，因此最后预留
+的空间总共是 20 个字节。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *buf = nlmsg_reserve(msg, <span class="number">17</span>, <span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>注意： <code>nlmsg_reserve()</code> 不会对齐缓冲区的开头，任何对齐需求都必须由前面的消息
+段的所有者来。</strong></p>
+<h3> 在消息的尾部添加数据</h3>
+
+<p><code>nlmsg_append()</code> 函数在消息的末尾添加 <code>len</code> 字节的数据，并在请求了填充且需要填充
+的情况下进行填充。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netlink/msg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">nlmsg_append</span><span class="params">(strcut nl_msg *msg, <span class="keyword">void</span> *data, <span class="keyword">size_t</span> len, <span class="keyword">int</span> pad)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这个方法等同于调用 <code>nlmsg_reserve()</code> 函数然后调用 <code>memcpy()</code> 函数把数据拷贝到刚
+刚预留的空间中去。</p>
+<p><strong>注意： <code>nlmsg_reserve()</code> 不会对齐缓冲区的开头，任何对齐需求都必须由前面的消息
+段的所有者来。</strong></p>
+<h3>在消息中添加属性</h3>
+
+<p>关于如何构建属性和把属性添加到消息将会在 <a href="/netlink/2015/02/12/libnl-translation-part6.html#attributes">属性</a> 一节中介绍。</p>
+<p>  [^1]: 这里的 <code>cache</code> 不是计算机组成原理里面提供的硬件，不要混淆。「译者注」
+  [^2]: 原文中使用 <code>sue</code> 一词应该是 <code>use</code> 一词的笔误。「译者注」
+  [^3]: 前面两句在是按照原文中的顺序翻译的，个人觉得顺序有颠倒。因为是使用自动序列号在应答消息中不适用（应答消息的序列号可能和请求一致）。「译者注」</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/netlink/" rel="tag"># netlink</a>
+          
+            <a href="/tags/libnl/" rel="tag"># libnl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/27/libnl-translation-part4/" rel="next" title="Netlink 库 -- 官方开发者教程中文版第四部分">
+                <i class="fa fa-chevron-left"></i> Netlink 库 -- 官方开发者教程中文版第四部分
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/02/12/libnl-translation-part6/" rel="prev" title="Netlink 库 -- 官方开发者教程中文版第六部分">
+                Netlink 库 -- 官方开发者教程中文版第六部分 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#message_parse_construct"><span class="nav-number">1.</span> <span class="nav-text">5. 消息的解析和构建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#msg_formate"><span class="nav-number">1.1.</span> <span class="nav-text">5.1 消息格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.1.</span> <span class="nav-text">对齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parse_msg"><span class="nav-number">1.2.</span> <span class="nav-text">5.2 解析一个消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.1.</span> <span class="nav-text">把字节流拆分成多条消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.2.</span> <span class="nav-text">消息有效载荷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parse_msg_attr"><span class="nav-number">1.2.3.</span> <span class="nav-text">消息属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.4.</span> <span class="nav-text">解析消息的便捷方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#construct_msg"><span class="nav-number">1.3.</span> <span class="nav-text">5.3. 构建消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.1.</span> <span class="nav-text">分配 struct nl_msg 结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.2.</span> <span class="nav-text">附加 netlink 消息头部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.3.</span> <span class="nav-text">在消息的末尾预留空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.4.</span> <span class="nav-text"> 在消息的尾部添加数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.5.</span> <span class="nav-text">在消息中添加属性</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

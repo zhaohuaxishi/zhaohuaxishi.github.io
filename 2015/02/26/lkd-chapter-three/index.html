@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux Kernel,LKD," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述这一章主要介绍的是进程的生命周期，包括进程如何表示，如何创建，如何销毁等等。第一 遍看这些内容的时候觉得有很多的地方都不太理解，重温一遍结合源代码理解之后有了更多 的领悟。文中引用的所有的源代码都是 linux-2.6.32.65 内核版本。">
+<meta name="keywords" content="Linux Kernel,LKD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LKD 总结 —— 第三章">
+<meta property="og:url" content="http://blog.guorongfei.com/2015/02/26/lkd-chapter-three/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="概述这一章主要介绍的是进程的生命周期，包括进程如何表示，如何创建，如何销毁等等。第一 遍看这些内容的时候觉得有很多的地方都不太理解，重温一遍结合源代码理解之后有了更多 的领悟。文中引用的所有的源代码都是 linux-2.6.32.65 内核版本。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LKD 总结 —— 第三章">
+<meta name="twitter:description" content="概述这一章主要介绍的是进程的生命周期，包括进程如何表示，如何创建，如何销毁等等。第一 遍看这些内容的时候觉得有很多的地方都不太理解，重温一遍结合源代码理解之后有了更多 的领悟。文中引用的所有的源代码都是 linux-2.6.32.65 内核版本。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2015/02/26/lkd-chapter-three/"/>
+
+
+
+
+
+  <title>LKD 总结 —— 第三章 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/02/26/lkd-chapter-three/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LKD 总结 —— 第三章</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-02-26T00:00:00+08:00">
+                2015-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/02/26/lkd-chapter-three/" class="leancloud_visitors" data-flag-title="LKD 总结 —— 第三章">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>这一章主要介绍的是进程的生命周期，包括进程如何表示，如何创建，如何销毁等等。第一
+遍看这些内容的时候觉得有很多的地方都不太理解，重温一遍结合源代码理解之后有了更多
+的领悟。文中引用的所有的源代码都是 <code>linux-2.6.32.65</code> 内核版本。</p>
+<a id="more"></a>
+<h1 id="进程描述符"><a href="#进程描述符" class="headerlink" title="进程描述符"></a>进程描述符</h1><p>在内核的内部，一个进程是由它的描述符来标识的，它包含了进程的所有信息。在其他的
+操作系统教程中通常也会把它称为进程控制块（PCB）。Linux 内核的内部是通过
+<code>struct task_struct</code> 结构体来表示进程描述符的，这是一个非常庞大而复杂的结构体。
+书中简单的列举了它的一些这一章和下一章用到的重要字段：</p>
+<pre><code>struct task_struct {
+    unsigned long state;
+    int prio;
+    unsigned long policy;
+    struct task_struct *parent;
+    struct list_head tasks;
+    pid_t pid;
+
+    ...
+
+};
+</code></pre><p>从上面的结构体定义可以看出，在 Linux 中 <code>process</code> 其实和 <code>task</code> 应该是等价的。
+此外因为 Linux 没有单独的结构体来表示线程，所以 <code>thread</code> 在内核的内部和
+<code>process</code> 并没有什么本质的区别，也就和 <code>task</code> 没有本质的区别。</p>
+<h2 id="进程列表"><a href="#进程列表" class="headerlink" title="进程列表"></a>进程列表</h2><p>书中在这一章中多次提到了进程列表（task list）这个概念，但是书中并没有具体的介绍
+它到底是什么东西，下面是我个人的理解：</p>
+<p>要理解进程队列的概念首先还要理解内核链表的实现方式。</p>
+<h3 id="内核链表"><a href="#内核链表" class="headerlink" title="内核链表"></a>内核链表</h3><p>大部分教科书上提到的链表实现方式是把一个结构体变成链表，比如：</p>
+<pre><code>struct node {
+    int         data;
+};
+</code></pre><p>改造成：</p>
+<pre><code>struct node {
+    int         data;
+    struct node     *prev;
+    struct node     *next;
+}
+</code></pre><p>而内核对于链表的实现方式是把链表的节点嵌入到结构体中去。所谓的链表节点就是两个
+指向不同方向的指针。</p>
+<pre><code>struct list_head {
+    struct list_head *prev;
+    struct list_head *next;
+}
+</code></pre><p>如果想要把数据连接起来，只要在结构体中加入一个链表节点就可以了：</p>
+<pre><code>struct node {
+    int         data;
+    struct list_head *list;
+}
+</code></pre><p>乍一看两者没有区别，后面这种方式似乎还更加的复杂（node-&gt;prev 现在要通过
+node-&gt;list-&gt;prev 才能访问）。但是仔细想想就会发现，这种做法有着极大的灵活性，因为
+它<strong>实现了链表结构部分和数据部分解耦</strong>。</p>
+<p>这个最直接的好处是，如果我需要把数据加入到一个新的链表中去的话，我只需要加入一个
+新的链表节点。</p>
+<pre><code>struct node {
+    int         data;
+    struct list_head *list1;
+    struct list_head *list2;
+};
+</code></pre><p>如果不用这种方式你可能需要写下面这样的代码：</p>
+<pre><code>struct node {
+    int data;
+    struct node *prev1;
+    struct node *next1;
+    struct node *prev2;
+    struct node *next2;
+};
+</code></pre><p>如果你想要把节点加入到第三个、第四个、第五个 …… 链表中。</p>
+<p>这样做还有另外一个好处就是，理论上你可以用不同的数据结构来形成一个链表。</p>
+<pre><code>struct foo {
+    int foo1;
+    int foo2;
+    struct list_head *list;
+} foo_instance;
+
+struct bar {
+    int bar1;
+    int bar2;
+    struct list_head *list;
+} bar_instance;
+</code></pre><p>当然这种做法本身是一种非常糟糕的方式。</p>
+<h3 id="进程列表的实现"><a href="#进程列表的实现" class="headerlink" title="进程列表的实现"></a>进程列表的实现</h3><p>在 <code>tasks_struct</code> 结构体中有一个字段 <code>tasks</code> 它的类型是 <code>list_head</code>，它相当于是
+双向链表的一个节点。通过这个节点，每一个 <code>task_struct</code> 结构被链接在了进程列表中。
+最终也就得到书中提到的进程列表。这一点可以在后面提到的 <code>for_each_process()</code> 函
+数中体现。</p>
+<h2 id="进程描述符的分配"><a href="#进程描述符的分配" class="headerlink" title="进程描述符的分配"></a>进程描述符的分配</h2><p>在 2.6 内核之前 <code>struct task_struct</code> 结构体是固定在每个进程的内核栈的底部的，也
+就是说分配一个内核栈就等于分配了一个进程描述符。这样就可以非常容易的获得这个
+描述符，因为栈的指针存放在寄存器中。</p>
+<pre><code>+--------------------+      --- 高地址
+|                    |       ^
+|                    |       |
+|                    |    内核栈
+|--------------------|       |
+| struct task_struct |       v
++--------------------+      --- 低地址
+</code></pre><p>现在 <code>task_struct</code> 是由 <code>slab allocator</code> 分配，也就是说 <code>struct task_struct</code>
+结构体的地址并不固定，为了能够方便的获取进程描述符，在栈的底部存放了一个新的
+结构体 <code>struct thread_info</code> 而这个结构体中存在一个指向 <code>slab allocator</code> 分配的
+<code>struct task_struct</code> 结构体的指针。</p>
+<pre><code>                +--------------------+      --- 高地址
++--------------------+        |                    |       ^
+| struct task_struct |        |                    |       |
++--------------------+        |                    |    内核栈
+    ^            |--------------------|       |
+    +----------------------    | struct thread_info |       v
+                +--------------------+      --- 低地址
+</code></pre><p>关于这两个结构体之间的相互引用关系可以查看后面关于新建进程描述符中的解释。</p>
+<h1 id="进程的标识"><a href="#进程的标识" class="headerlink" title="进程的标识"></a>进程的标识</h1><p>对于应用程序来说，我们可以调用 <code>getpid()</code> 系统调用来得到一个进程的标识。而在内核
+的内部，唯一确定一个进程的就是它的进程描述符，它可以通过调用 <code>current</code> 宏来实现。</p>
+<p>因为 <code>current</code> 宏返回的是当前进程的进程描述符，所以这个宏只有在 <em>进程上下文</em> 中
+才是有效的的，因为与子对应的 <em>中断上下文</em> 没有相关的进程存在，也就没有进程描述符。</p>
+<h1 id="进程树"><a href="#进程树" class="headerlink" title="进程树"></a>进程树</h1><p>在 Linux 内核中，进程被组织成了一颗树的形式，所有的进程都是 <code>init</code> 进程的后代。
+在 <code>task_struct</code> 结构体中存在一个指向父进程的 <code>task_struct</code> 的字段 <code>parent</code>[^1]
+以及一个存放子进程的 <code>children</code> 字段。</p>
+<p>书中的遍历进程的子进程的例子如下：</p>
+<pre><code>list_for_each(list, &amp;current-&gt;children) {
+    task = list_entry(list, struct task_struct, sibling);
+}
+</code></pre><p>上面这个例子中比较奇怪的一点是 <code>list_entry</code> 函数使用的 <code>sibling</code> 字段而不是
+<code>children</code> 字段。这里之所以写成 <code>sibling</code> 的原因是因为其实父进程的所有子进程是
+通过子进程的 <code>sibling</code> 链接节点链接起来的，而父进程中的 <code>children</code> 字段是这个链表
+的表头。在内核源码的 <code>copy_process()</code> 函数中创建完新的子进程进程描述符之后有下面
+这段代码：</p>
+<pre><code>if (likely(p-&gt;pid)) {
+    list_add_tail(&amp;p-&gt;sibling, &amp;p-&gt;real_parent-&gt;children);
+    ...
+}
+</code></pre><p>也就是说 <code>sibling</code> 字段最终链接到的是 <code>real_parent-&gt;children</code> 链表。</p>
+<p>但是因为 <code>list_entry</code> 其实就是 <code>container_of</code> 宏的一个别名，而 <code>container_of</code>
+宏本身并不在乎使用的是哪一个字段。所以如果我的理解没有错误的话， 上面例子中的
+<code>sibling</code> 可以替换成任何一个 <code>task_struct</code> 中的字段。</p>
+<pre><code>#define list_entry(ptr, type, member) \
+    container_of(ptr, type, member)
+
+#define container_of(ptr, type, member) ({                      \
+        const typeof( ((type *)0)-&gt;member ) *__mptr = (ptr);    \
+    (type *)( (char *)__mptr - offsetof(type,member) );})
+</code></pre><p>在上一个小节中有提到，系统中存在一个进程列表连接所有的进程，这个列表是一个双向的
+循环链表。遍历这个链表的方法是调用 <code>for_each_process</code></p>
+<pre><code>#define next_task(p) \
+    list_entry_rcu((p)-&gt;tasks.next, struct task_struct, tasks)
+
+#define for_each_process(p) \
+        for (p = &amp;init_task ; (p = next_task(p)) != &amp;init_task ; )
+</code></pre><p>上面的 <code>next_task</code> 的实现也进一步证明 <code>tasks</code> 字段是用来链接整个进程列表的。</p>
+<h1 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h1><p>在 Linux 内核中创建新进程通常是通过 <code>fork()</code> 系统调用实现的，它实际上则是调用
+<code>clone()</code> 系统调用，进而调用 <code>do_fork()</code> 函数来完成这一工作。它实际上的工作就是
+调用 <code>copy_process()</code> 复制父进程的进程描述符。<code>copy_process()</code> 函数主要完成以下
+工作。</p>
+<ol>
+<li><p>调用 <code>dup_task_struct()</code> 创建新的内核栈和以及 <code>thread_info</code> <code>task_struct</code>
+结构体。</p>
+<ul>
+<li><p>调用 <code>alloc_task_struct()</code> 函数使用 <code>slab allocator</code> 分配一个新的
+<code>struct task_struct</code> 结构。</p>
+</li>
+<li><p>调用 <code>alloc_thread_info()</code> 获得一个新的 <code>thread_info</code> 结构体。这个函数在
+<code>x86</code> 架构中的实现其实是调用 <code>__get_free_pages()</code> 函数。也就是说其实这个
+函数分配了一页作为栈，而把这一页的开头强制转换成 <code>struct thread_info</code>。这
+一点可以从后面的赋值语句：<code>tsk-&gt;stack = ti;</code> 中得知。这也可以解释为什了
+<code>struct thread_info</code> 在内核栈的底部，因为内核栈是向下生长，所以页的开头
+位置也就是栈的底部。</p>
+</li>
+<li><p>调用 <code>arch_dup_task_struct()</code> 函数复制原来的进程的 <code>task_struct</code> 结构体，
+调用 <code>setup_thread_stack()</code> 函数复制原来的 <code>struct thread_info</code> 中的数据，
+并设置新的 <code>thread_info</code> 的 task 字段，让他指向刚刚分配的 <code>task_struct</code>
+结构。这样就形成了进程描述符的分配一节中提到的结构。</p>
+</li>
+</ul>
+</li>
+<li><p>调用 <code>copy_semundo()</code> <code>copy_files()</code> <code>copy_fs()</code> <code>copy_mm</code> 等等 <code>copy_**()</code>
+函数拷贝相关的进程资源。</p>
+</li>
+<li><p>调用 <code>alloc_pid()</code> 分配新的 <code>PID</code>。从随后的两个赋值语句 <code>p-&gt;pid = pid_nr(pid);</code>
+和 <code>p-&gt;tgid = p-&gt;pid;</code> 可以看出对于一个普通的进程，它的 <code>tgid</code> 和 <code>pid</code> 是同一个
+值。</p>
+</li>
+</ol>
+<h1 id="Linux-中线程的实现方式"><a href="#Linux-中线程的实现方式" class="headerlink" title="Linux 中线程的实现方式"></a>Linux 中线程的实现方式</h1><p>在 Linux 没有单独的结构体用来表示 <code>thread</code> 这个概念，线程和进程没有本质的区别，
+线程只不过是和其他线程共享资源的进程而已。</p>
+<p>起 <code>Solaris</code> 和 <code>Mircrosoft Windows</code> 这些系统中，线程抽象出来只是为了能够实现轻量
+级别的调度单元，而在 <code>Linux</code> 中线程是为了共享资源而存在因为 <code>Linux</code> 的线程本身就
+已经足够轻量了，这是这两种操作系统在设计理念的区别。</p>
+<p>因为在 Linux 中线程和进程本质上没有区别，都是使用 <code>task_struct</code> 来表示的，所以这
+其中存在一个非常有趣的问题，那就是 <code>PID</code> 的问题。因为同一个进程的所有线程都应该
+返回同一个 <code>PID</code> 而所有的线程都有自己独立的 <code>task_struct</code> 结构也就有不同的 <code>pid</code>
+字段，也就是线程的 <code>tid</code>。</p>
+<p>在 <code>Linux</code> 的实现中，<code>task_struct</code> 结构体中除了存在一个 <code>pid</code> 字段之外还存在一个
+<code>tgid</code> 字段，也就是线程组的概念。从上一小节的第三点中我们知道，当一个进程创建为
+普通的进程的时候，<code>pid</code> 和 <code>tgid</code> 属于同一个值，也就是说它属于一个只包含它自己的
+线程组。但是从一个进程派生一个线程（比如通过 <code>pthread_create()</code> 函数）的时候，
+新产生的 <code>task_struct</code> 会分配到一个新的 <code>pid</code>，但是它的 <code>tgid</code> 和它的父进程保持
+一致，这样一来子进程（线程）就加入到了父进程的线程组中。</p>
+<p>在 <code>copy_process()</code> 函数中有下面代码进一步的证明了上面这一点：</p>
+<pre><code>if (clone_flags &amp; CLONE_THREAD)
+    p-&gt;tgid = current-&gt;tgid;
+</code></pre><p>所以当我们调用 <code>getpid()</code> 系统调用的时候，无论是进程还是线程都会放回 <code>tgid</code> ，
+而调用 <code>gettid()</code> 的时候返回的才是 <code>pid</code> 字段。下面的代码是内核中这两个系统调用
+的实现方式：</p>
+<pre><code>/* Thread ID - the internal kernel &quot;pid&quot; */
+SYSCALL_DEFINE0(gettid)
+{
+    return task_pid_vnr(current);
+}
+
+/**
+ * sys_getpid - return the thread group id of the current process
+ *
+ * Note, despite the name, this returns the tgid not the pid.  The tgid and
+ * the pid are identical unless CLONE_THREAD was specified on clone() in
+ * which case the tgid is the same in all threads of the same group.
+ *
+ * This is SMP safe as current-&gt;tgid does not change.
+ */
+SYSCALL_DEFINE0(getpid)
+{
+    return task_tgid_vnr(current);
+}
+</code></pre><p>所以其实用户看到的 PID 和内核看到的 PID 并不是同一个值，在内核中使用 <code>task_struct</code>
+结构体的 <code>pid</code> 字段而用户空间看到的则是 <code>tgid</code>。</p>
+<p>新建进程（线程）的时候这两个值的赋值情况如下图：</p>
+<pre><code>            USER VIEW
+ &lt;-- PID 43 --&gt; &lt;----------------- PID 42 -----------------&gt;
+             +---------+
+             | process |
+            _| pid=42  |_
+          _/ | tgid=42 | \_ (new thread) _
+       _ (fork) _/   +---------+                  \
+      /                                        +---------+
++---------+                                    | process |
+| process |                                    | pid=44  |
+| pid=43  |                                    | tgid=42 |
+| tgid=43 |                                    +---------+
++---------+
+ &lt;-- PID 43 --&gt; &lt;--------- PID 42 --------&gt; &lt;--- PID 44 ---&gt;
+            KERNEL VIEW
+</code></pre><h1 id="进程的终止"><a href="#进程的终止" class="headerlink" title="进程的终止"></a>进程的终止</h1><p>进程的终止调用的是 <code>exit()</code> 系统调用，而这个系统调用实际上调用的是 <code>do_exit()</code>
+函数：</p>
+<pre><code>SYSCALL_DEFINE1(exit, int, error_code)
+{
+        do_exit((error_code&amp;0xff)&lt;&lt;8);
+}
+</code></pre><p>而 <code>do_exit()</code> 函数的框架如下：</p>
+<pre><code>NORET_TYPE void do_exit(long code)
+{
+    ...
+    exit_signals(tsk);  /* sets PF_EXITING */
+    ...
+    tsk-&gt;exit_code = code;
+    ...
+    exit_mm(tsk);
+    ...
+    exit_sem(tsk);
+    exit_files(tsk);
+    exit_fs(tsk);
+    exit_thread();
+    ...
+    exit_notify(tsk, group_dead);
+
+    tsk-&gt;state = TASK_DEAD;
+    schedule();
+}
+</code></pre><p>这个函数最后会调用 <code>schedule()</code> 函数选择另一个进程运行，所以这个函数永远都不会
+返回。在这个函数中比较值得关注的函数就是 <code>exit_notify()</code> 。这个函数会把当前进程
+的所有子进程进行 <code>reparent</code> 并把当前进程的 <code>task_struct</code> 的 <code>exit_state</code>
+设置成 <code>EXIT_DEAD</code> 或者是 <code>EXIT_ZOMBIE</code>。它的简化版本如下：</p>
+<pre><code>static void exit_notify(struct task_struct *tsk, int group_dead)
+{
+    ...
+    forget_original_parent(tsk);
+    ...
+    tsk-&gt;exit_state = signal == DEATH_REAP ? EXIT_DEAD : EXIT_ZOMBIE;
+    ...
+}
+</code></pre><p><code>do_exit()</code> 函数并不会调用 <code>free_task()</code> 函数来释放进程描述符占用的空间，因为它
+需要保留这些信息以便父进程调用 <code>wait4()</code> 来获取子进程的终止信息。</p>
+<p>书中关于相关函数的介绍并不是非常的清晰，从源码的分析来看，这些函数有以下的调用
+关系：<code>sys_wait4()-&gt;do_wait()-&gt;do_wait_thread()-&gt;wait_consider_task()-&gt;
+wait_task_continued()-&gt;put_task_struct()-&gt;__put_task_struct()-&gt;free_task()</code></p>
+<p>最终的 <code>free_task()</code> 会调用 <code>free_thread_info()</code> 和 <code>free_task_struct</code> 释放相关
+结构体占用的空间。</p>
+<h1 id="reparent"><a href="#reparent" class="headerlink" title="reparent"></a>reparent</h1><p>如果父进程在子进程之前结束了，那么它永远不会调用 <code>wait4()</code> 来获取子进程的终止信息
+这样以来就会导致子进程的进程描述符得不到释放，浪费空间。为了解决这个问题，在进程
+结束的时候需要对为它所有的子进程设置新的父进程，这一操作叫做 <code>reparent</code>。</p>
+<p><code>exit_notify()</code> 函数调用的 <code>forget_original_parent()</code> 会调用 <code>find_new_reaper()</code>
+函数，这个函数查找该线程组中的其他进程作为 <code>reaper</code> 如果不存在这样的进程就使用
+<code>init</code> 进程。</p>
+<p>涉及到设置新的父进程的时候有另外一个地方比较难以理解，那就是在 <code>task_struct</code> 结
+构体中存在两个不同的字段表示父进程 <code>parent</code> 和 <code>real_parent</code> 这两个字段的相关解释
+可以参考 <a href="http://lists.kernelnewbies.org/pipermail/kernelnewbies/2012-February/004794.html" target="_blank" rel="noopener">http://lists.kernelnewbies.org/pipermail/kernelnewbies/2012-February/004794.html</a>
+从该文中的解释来看，这个 <code>real_parent</code> 才是真正的指向父进程的进程描述符，而
+<code>parent</code> 则是指向 <code>ptrace</code> 的进程描述符。</p>
+<p>在 <code>do_fork()</code> 创建新的进程的时候，新进程的进程描述符有如下的设置：</p>
+<pre><code>/* CLONE_PARENT re-uses the old parent */
+if (clone_flags &amp; (CLONE_PARENT|CLONE_THREAD)) {
+    p-&gt;real_parent = current-&gt;real_parent;
+    p-&gt;parent_exec_id = current-&gt;parent_exec_id;
+} else {
+    p-&gt;real_parent = current;
+    p-&gt;parent_exec_id = current-&gt;self_exec_id;
+}
+</code></pre><p>这里都只是涉及到 <code>real_parent</code> 的设置。而在 <code>__ptrace_link()</code> 函数中有下面的设
+置：</p>
+<pre><code>child-&gt;parent = new_parent;
+</code></pre><p>所以从这一点来看，书中在 <em>The Process Family tree</em> 一节中提到 <code>task_struct</code> 中的
+<code>parent</code> 字段指向父进程的说法并不是特别妥当。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux-Kernel/" rel="tag"># Linux Kernel</a>
+          
+            <a href="/tags/LKD/" rel="tag"># LKD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/02/20/markdown-syntax-copy/" rel="next" title="【转载】 Markdown 语法说明（简体中文版）">
+                <i class="fa fa-chevron-left"></i> 【转载】 Markdown 语法说明（简体中文版）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/03/07/lfs-build-fcitx/" rel="prev" title="LFS 中编译 Fcitx">
+                LFS 中编译 Fcitx <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程描述符"><span class="nav-number">2.</span> <span class="nav-text">进程描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程列表"><span class="nav-number">2.1.</span> <span class="nav-text">进程列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内核链表"><span class="nav-number">2.1.1.</span> <span class="nav-text">内核链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程列表的实现"><span class="nav-number">2.1.2.</span> <span class="nav-text">进程列表的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程描述符的分配"><span class="nav-number">2.2.</span> <span class="nav-text">进程描述符的分配</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程的标识"><span class="nav-number">3.</span> <span class="nav-text">进程的标识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程树"><span class="nav-number">4.</span> <span class="nav-text">进程树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程的创建"><span class="nav-number">5.</span> <span class="nav-text">进程的创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-中线程的实现方式"><span class="nav-number">6.</span> <span class="nav-text">Linux 中线程的实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程的终止"><span class="nav-number">7.</span> <span class="nav-text">进程的终止</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reparent"><span class="nav-number">8.</span> <span class="nav-text">reparent</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

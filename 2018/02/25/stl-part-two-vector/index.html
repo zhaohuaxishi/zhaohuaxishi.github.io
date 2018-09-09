@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C/CPP,C++轮子," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="STL中大家最耳熟能详的可能就是容器，容器大致可以分为两类，序列型容器（SequenceContainer）和关联型容器（AssociativeContainer）这篇文章中将会重点介绍STL中的各种序列型容器和相关的容器适配器。主要内容包括  std::vector std::array std::deque std::queue std::stack std::priority_queue s">
+<meta name="keywords" content="C&#x2F;CPP,C++轮子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++轮子 —— STL 序列容器">
+<meta property="og:url" content="http://blog.guorongfei.com/2018/02/25/stl-part-two-vector/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="STL中大家最耳熟能详的可能就是容器，容器大致可以分为两类，序列型容器（SequenceContainer）和关联型容器（AssociativeContainer）这篇文章中将会重点介绍STL中的各种序列型容器和相关的容器适配器。主要内容包括  std::vector std::array std::deque std::queue std::stack std::priority_queue s">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.guorongfei.com/img/posts/devdocs.io_cpp_concept_container.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.747Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++轮子 —— STL 序列容器">
+<meta name="twitter:description" content="STL中大家最耳熟能详的可能就是容器，容器大致可以分为两类，序列型容器（SequenceContainer）和关联型容器（AssociativeContainer）这篇文章中将会重点介绍STL中的各种序列型容器和相关的容器适配器。主要内容包括  std::vector std::array std::deque std::queue std::stack std::priority_queue s">
+<meta name="twitter:image" content="http://blog.guorongfei.com/img/posts/devdocs.io_cpp_concept_container.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2018/02/25/stl-part-two-vector/"/>
+
+
+
+
+
+  <title>C++轮子 —— STL 序列容器 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2018/02/25/stl-part-two-vector/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++轮子 —— STL 序列容器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-25T17:23:57+08:00">
+                2018-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/02/25/stl-part-two-vector/" class="leancloud_visitors" data-flag-title="C++轮子 —— STL 序列容器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>STL中大家最耳熟能详的可能就是容器，容器大致可以分为两类，序列型容器（SequenceContainer）和关联型容器（AssociativeContainer）这篇文章中将会重点介绍STL中的各种序列型容器和相关的容器适配器。主要内容包括</p>
+<ul>
+<li>std::vector</li>
+<li>std::array</li>
+<li>std::deque</li>
+<li>std::queue</li>
+<li>std::stack</li>
+<li>std::priority_queue</li>
+<li>std::list</li>
+<li>std::forward_list</li>
+</ul>
+<a id="more"></a>
+<h1 id="std-vector"><a href="#std-vector" class="headerlink" title="std::vector"></a>std::vector</h1><p>提到STL，大部分人的第一反应是容器，而提到容器大部分人首先想到的是<code>std::vector</code>。斯特劳斯特卢普的观点来说，<code>std::vector</code>是所有的容器中的首先，如果你不清楚应该使用哪个容器，那就选<code>std::vector</code>吧（当然，你不应该不清楚选哪个容器，合格是程序员对自己写的代码应该要了如指掌）。</p>
+<p><code>std::vector</code>的使用非常简单，下面是一个简单的例子。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;                               // 1</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ages = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span> &#125;;     <span class="comment">// 2</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="头文件"><a href="#头文件" class="headerlink" title="头文件"></a>头文件</h2><p><code>// 1</code>中引入了<code>std::vector</code>的头文件，需要注意的是所有C++标准库的头文件都是没有<code>.h</code>结尾的。这么做是为了区分，C标准库的头文件和C++标准库的头文件。比如最具代表性的：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;     // C 标准库头文件，包含 strlen，memset 等函数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;       // C++ 标准库头文件，包含 std::string 类</span></span></span><br></pre></td></tr></table></figure>
+<p>此外对于所有C标准库头文件，如果你是在C++项目中引用，你应该使用<code>#include &lt;cxxx&gt;</code>这种方式而不是<code>#include &lt;xxx.h&gt;</code>这种形式。也就是说我们应该使用<code>#include &lt;cstring&gt;</code>而不是<code>#include &lt;string.h&gt;</code></p>
+<h2 id="std-vector-还是-vector"><a href="#std-vector-还是-vector" class="headerlink" title="std::vector 还是 vector"></a>std::vector 还是 vector</h2><p>我见过很多的人（包括很多书）的习惯是在源文件头部写上<code>using namespace std;</code>然后在代码中使用<code>vector&lt;int&gt;</code>，而不是直接使用<code>std::vector&lt;int&gt;</code>。</p>
+<p>我个人的习惯是直接使用<code>std::vector&lt;int&gt;</code>，因为<code>namespace</code>对我来说是一个模块，写明了<code>std::</code>有更强的模块内聚表达力，而且也不太容易出现名字碰撞。</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p><code>// 2</code>在构造<code>std::vector</code>的时候直接给了初始值，这是<code>C++11</code>的特性，在<code>C++11</code>之前不能这样写，有一种大致等同的写法如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> initilizer[<span class="number">4</span>] = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span> &#125;;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ages(initilizer, initilizer + <span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+<p><code>std::vector&lt;int&gt; ages = { 1, 2, 3, 4 }</code>这种写法实际上从语法分析上来说是分成下面几个步骤的：</p>
+<ol>
+<li><code>{ 1, 2, 3, 4 }</code> 被编译器构造成一个临时变量<code>std::initializer_list&lt;int&gt;</code>，然后使用临时变量构造一个临时变量 <code>std::vector&lt;int&gt;</code>，然后再用 <code>std::vector&lt;int&gt;</code>的拷贝构造函数构造最终的<code>ages</code></li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;<span class="keyword">int</span>&gt; initilizer;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; tmp(initilizer);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ags(tmp);</span><br></pre></td></tr></table></figure>
+<p>当然上面的分析只是语法上的分析，绝大部分编译器都可以优化掉<code>tmp</code>，而且因为<code>{1, 2, 3, 4}</code>转换成<code>std::initializer_list</code>是编译器在编译器完成的事情，所以其实效率比我们想象中要高一些。</p>
+<h2 id="std-vector-1"><a href="#std-vector-1" class="headerlink" title="std::vector"></a>std::vector<bool></bool></h2><p><code>std::vector</code>有一个特化版本<code>std::vector&lt;bool&gt;</code>，用于实现<code>dynamic bitset</code>，需要注意的是，这个特化版本并不是容器，它的迭代器无法很好的适配<code>STL</code>中的所有算法。它的存在是为了节省空间，它的每一个元素只占用一位而不是一个字节。为了实现这种优化，<code>operator[]</code>返回的是一个代理类，你没有办法取单个元素的地址。通常的建议是，如果你不需要动态的<code>bitset</code>，你可以使用<code>std::bitset</code>，如果你需要<code>dynamic bitset</code>你可以考虑使用<code>std::deque&lt;bool&gt;</code>替代。</p>
+<h2 id="push-back-vs-emplace-back"><a href="#push-back-vs-emplace-back" class="headerlink" title="push_back vs emplace_back"></a><code>push_back</code> vs <code>emplace_back</code></h2><p>C++11在容器尾部添加一个元素调用的函数是<code>push_back</code>，它在<code>libcxx</code>中的实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Tp</span>, <span class="title">class</span> _<span class="title">Allocator</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> _<span class="title">LIBCPP_INLINE_VISIBILITY</span></span></span><br><span class="line"><span class="class"><span class="title">void</span></span></span><br><span class="line"><span class="class"><span class="title">vector</span>&lt;_Tp, _Allocator&gt;:</span>:push_back(const_reference __x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;__end_ != <span class="keyword">this</span>-&gt;__end_cap())</span><br><span class="line">    &#123;</span><br><span class="line">        __RAII_IncreaseAnnotator __annotator(*<span class="keyword">this</span>);</span><br><span class="line">        __alloc_traits::construct(<span class="keyword">this</span>-&gt;__alloc(),</span><br><span class="line">                                  _VSTD::__to_raw_pointer(<span class="keyword">this</span>-&gt;__end_), __x);</span><br><span class="line">        __annotator.__done();</span><br><span class="line">        ++<span class="keyword">this</span>-&gt;__end_;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        __push_back_slow_path(__x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里存在两次元素的构造，一次是 __x 参数的构造，一次是容器内部原始的拷贝构造。也就是说使用拷贝构造在末尾构造一个新的元素。<code>emplace_back</code>是C++11为减少其中一次拷贝而引入的新的接口，在<code>libcxx</code>中的实现如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Tp</span>, <span class="title">class</span> _<span class="title">Allocator</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">template</span> &lt;class... _Args&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span></span></span><br><span class="line"><span class="class">#<span class="title">if</span> _<span class="title">LIBCPP_STD_VER</span> &gt; 14</span></span><br><span class="line"><span class="class"><span class="title">typename</span> <span class="title">vector</span>&lt;_Tp, _Allocator&gt;:</span>:reference</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="keyword">void</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="built_in">vector</span>&lt;_Tp, _Allocator&gt;::emplace_back(_Args&amp;&amp;... __args)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;__end_ &lt; <span class="keyword">this</span>-&gt;__end_cap())</span><br><span class="line">    &#123;</span><br><span class="line">        __RAII_IncreaseAnnotator __annotator(*<span class="keyword">this</span>);</span><br><span class="line">        __alloc_traits::construct(<span class="keyword">this</span>-&gt;__alloc(),</span><br><span class="line">                                  _VSTD::__to_raw_pointer(<span class="keyword">this</span>-&gt;__end_),</span><br><span class="line">                                  _VSTD::forward&lt;_Args&gt;(__args)...);</span><br><span class="line">        __annotator.__done();</span><br><span class="line">        ++<span class="keyword">this</span>-&gt;__end_;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        __emplace_back_slow_path(_VSTD::forward&lt;_Args&gt;(__args)...);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> _LIBCPP_STD_VER &gt; 14</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>-&gt;back();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="back-和-pop-back"><a href="#back-和-pop-back" class="headerlink" title="back() 和 pop_back()"></a>back() 和 pop_back()</h2><p>std::vector内部的数据使用连续的空间存储，除了在尾部插入和删除之外都会需要涉及到其他元素的挪动（空间不足的时候在尾部插入也会需要挪动元素）。std::vector 提供了两个接口用于删除尾部数据，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">reference <span class="title">back</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pop_back</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>理想状态下，我们可以用一个接口完成</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">value_type <span class="title">pop_back</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>之所以分开成两个接口是为了保证异常安全，如果让<code>pop_back</code>返回尾部数据就必然涉及到尾部数据的拷贝，而这个拷贝可能抛出异常导致数据的丢失。</p>
+<h2 id="自动增长"><a href="#自动增长" class="headerlink" title="自动增长"></a>自动增长</h2><p><code>std::vector</code> 会在内存不够的时候自动增长空间，这是相对于C数组来说最大的一个优势。那么空间不够的时候怎么增长呢？答案是不知道。之所以特地强调这一点是为了说明C++标准一个非常重要的特点，规定结果不规定实现，甚至不规定结果。很多人因此抨击C++，带着来自其他语言的优越感嘲笑着为不确定性而焦头烂额的C++工程师。标准之所以这样规定，很大程度上承袭自C语言，C语言标准在很多地方不给出确定的结果是为了给编译器最大的选择，从而达到性能的最优化，毕竟那个时代性能真的很重要。</p>
+<p>实际上标准规定<code>push_back</code>是<code>Amortized constant</code>，但并没有规定应该怎么实现，所以最准确的答案是不知道，虽然如果要实现<code>Amortized constant</code>，必须分配 2 倍以上的空间。</p>
+<p>这里之所有特地强调这个点，是希望大家重视C++代码的可移植性，做到这一点的关键就是以来行为而不依赖实现。C++作为系统编程语言，几乎可以在任何平台上跑，它的可移植性实际上远高于Java语言。</p>
+<h2 id="缩减-std-vector"><a href="#缩减-std-vector" class="headerlink" title="缩减 std::vector"></a>缩减 std::vector</h2><p><code>std::vector</code>会在空间不够的时候自动分配空间，但是它并不会在空间冗余的时候自动释放空间。如果你使用<code>C++11</code>之后的版本，你可以使用<code>std::vector::shrink_to_fit</code>来回收空间，否则你需要像下面这个缩减空间。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ages;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(ages.begin(), ages.end()).swap(ages)</span><br></pre></td></tr></table></figure>
+<p>这种用法叫做<code>copy and swap</code>在拷贝构造函数的实现中用的也很多。这个地方需要特别注意的是临时变量和实际变量位置不能写反<code>ages.swap(std::vector&lt;int&gt;(ages.begin(), ages.end()))</code>是语法错误，因为<code>std::vector::swap</code>的原型如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">( <span class="built_in">vector</span>&amp; other )</span></span>;</span><br></pre></td></tr></table></figure>
+<p>临时变量（前面哪个匿名对象）是右值，无法绑定到一个左值引用上面。</p>
+<h2 id="兼容-C-数组"><a href="#兼容-C-数组" class="headerlink" title="兼容 C 数组"></a>兼容 C 数组</h2><p>C++很重要的一个特性就是兼容C语言，C的接口中，如果需要传入一个数组，通常的方式s是传入一个起始地址加上一个长度，如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">memset</span><span class="params">( <span class="keyword">void</span>* dest, <span class="keyword">int</span> ch, <span class="built_in">std</span>::<span class="keyword">size_t</span> count )</span></span>;</span><br></pre></td></tr></table></figure>
+<p>如果你现在有一个<code>std::vector</code>，现在需要把它传递给C，接口你可以调用<code>std::vector::data</code>这个成员变量获取底层的内存空间的首地址。<code>std::vector</code>和其他的容器一个非常重要的区别就是它保证了底层的内存空间的连续性，也就是说，它保证了内存空间和C数组的兼容性，能用C数组的地方都可以使用<code>std::vector</code>，而且它还能保证内存空间的自动管理。</p>
+<h2 id="std-vector-的内存模型"><a href="#std-vector-的内存模型" class="headerlink" title="std::vector 的内存模型"></a>std::vector 的内存模型</h2><p>我们来看下面这段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector small(100);</span><br><span class="line">std::vector large(1000);</span><br></pre></td></tr></table></figure>
+<p>那么 <code>sizeof(small)</code> 和 <code>sizeof(large)</code> 哪个大呢？答案是一样大，要解答这个问题我们需要了解 <code>std::vector</code> 的内存模型。<code>std::vector</code>的实现的内存模型并不完全一样，但是基本上都大同小异，类似下面这种结构。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">            <span class="built_in">stack</span></span><br><span class="line">        +------------+</span><br><span class="line">        |  begin     +----------+</span><br><span class="line">        +------------+          |</span><br><span class="line">        |  end       +-------------------------------+</span><br><span class="line">        +------------+          |                    |</span><br><span class="line">+-------+  cap       |          v                    v</span><br><span class="line">|       +------------+          +--------------------+----------+</span><br><span class="line">|       |   ......   |          |                    |          |   heap</span><br><span class="line">|       +------------+          +--------------------+----------+</span><br><span class="line">|                                                               ^</span><br><span class="line">+---------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<p>从上面的图中我们可以看出<code>small</code>和<code>large</code>真正的差别其实在<code>heap</code>不在<code>stack</code>，所以说<code>sizeof(small) == sizeof(large)</code>。</p>
+<h2 id="返回一个-std-vector-的开销到底有多大"><a href="#返回一个-std-vector-的开销到底有多大" class="headerlink" title="返回一个 std::vector 的开销到底有多大"></a>返回一个 std::vector 的开销到底有多大</h2><p>大概是受C语言的影响，很多人觉得返回一个<code>std::vector</code>的开销很大，很多人为了能够避免这部分开销，选择使用输入参数的方式返回函数的返回值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; out)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这种写法和下面的写法到底有多大的开销上的区别呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::vector foo();</span><br></pre></td></tr></table></figure>
+<p>在我看来其实差别并不大，原因主要有两个：</p>
+<ol>
+<li><p>因为<code>RVO</code>和<code>NRVO</code>的存在，第一种写法和第二种写法很有可能在最后生成的代码上是一致的。</p>
+</li>
+<li><p>及时<code>foo</code>的实现导致没有办法做<code>RVO</code>，在<code>C++11</code>中返回一个<code>std::vector</code>的开销实际上也不大，以为返回值都是以<code>move</code>而不是以<code>copy</code>的方式返回的，也就是说真正拷贝的部分只是<code>stack</code>上的那一部分，<code>heap</code>那一部分是不需要拷贝的。</p>
+</li>
+</ol>
+<p>所以大部分情况下，你都可以放心的返回一个<code>std::vector</code>，因为相对下引用参数的写法，直接用返回值会有更好的代码可读性。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; param_out;</span><br><span class="line">foo(param_out);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 远没有下面的写法直观</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span> out = foo();</span><br></pre></td></tr></table></figure>
+<h1 id="std-array"><a href="#std-array" class="headerlink" title="std::array"></a>std::array</h1><p><code>std::vector</code>会自动管理使用到的内存，这是一个非常重要的特性，但是如果你的数据的大小是已知而且固定的，这个特性对于你来说是不必要的开销。因为前面提到<code>std::vector</code>的数据实际上放到heap上面，访问需要额外的解引用，而且它可能内部有内存空闲，空间有浪费。这种情况下你可以考虑使用<code>std::array</code>来替换<code>std::vector</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> LogLevel &#123; kTrace, kInfo, kDebug, kWarning, kError &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(LogLevel level, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">array</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, 5&gt; kTags = &#123;<span class="string">"trace"</span>, <span class="string">"info"</span>, <span class="string">"debug"</span>,</span><br><span class="line">                                                     <span class="string">"waring"</span>, <span class="string">"error"</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"[ "</span> &lt;&lt; kTags[level] &lt;&lt; <span class="string">" ] "</span> &lt;&lt; msg &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="非类型参数"><a href="#非类型参数" class="headerlink" title="非类型参数"></a>非类型参数</h2><p>上面的定义有一个很有意思的地方是，第二个参数是一个数值而不是一个类型，C++模板参数分为类型参数和非类型模板参数，其中后者可以使用整型、指针和引用。指针和引用我没怎么见过，整型出现的频率倒是比较高，比如上面的例子其实可以改写成下面这个样子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> LogLevel &#123; kTrace, kInfo, kDebug, kWarning, kError &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;LogLevel LEVEL&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">LogTag</span> &#123;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;LogLevel LEVEL&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    PrintLog(LogTag&lt;LEVEL&gt;(), msg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(LogTag&lt;kTrace&gt;, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"[ trace ] "</span> &lt;&lt; msg &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(LogTag&lt;kInfo&gt;, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"[ info ] "</span> &lt;&lt; msg &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(LogTag&lt;kDebug&gt;, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"[ debug ] "</span> &lt;&lt; msg &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(LogTag&lt;kWarning&gt;, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"[ warning ] "</span> &lt;&lt; msg &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintLog</span><span class="params">(LogTag&lt;kError&gt;, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"[ error ] "</span> &lt;&lt; msg &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种写法的效率会比使用vector的效率要高，因为LogLevel在编译器期间就已经确定，所以在编译期间就已经确定需要调用哪一个函数，不需要做一次额外的数组访问。</p>
+<h2 id="为什么不直接使用C数组"><a href="#为什么不直接使用C数组" class="headerlink" title="为什么不直接使用C数组"></a>为什么不直接使用C数组</h2><p><code>std::array</code>实际上是一个容器，它提供来迭代器可以很方便的遍历元素，它可以用过 size() 方法返回数组的大小，而且它是zero cost abstraction的绝佳体现，它的开销实际上并不比C数组要大，但是却提供来大量的方便易用的接口，可以和STL很好的整合在一起，所以如果你使用C++，你基本上可以考虑告别C数组了，变长数组你可以使用vector，定长数组可以使用<code>std::array</code>。</p>
+<h1 id="std-deque"><a href="#std-deque" class="headerlink" title="std::deque"></a>std::deque</h1><p>前文提到，<code>std::vector</code>的内存空间是连续的，在头部插入数据需要移动所有数据是O(N)级别的操作，因为开销过于巨大，<code>std::vector</code>并没有提供在头部插入和删除的接口。如果我们真的有这样的需求，我们可以选择使用<code>std::deque</code>。它支持在头部和尾部以O（1）的开销插入和删除数据，同时可以在O（1）时间内访问任意元素。</p>
+<h2 id="push-front、front、pop-front"><a href="#push-front、front、pop-front" class="headerlink" title="push_front、front、pop_front"></a><code>push_front</code>、<code>front</code>、<code>pop_front</code></h2><p>如果你选择使用<code>std::deque</code>而不是vector，十有八九你是为了用这三个函数，<code>std::deque</code>提供这三个函数用于在队列的头部插入和删除数据。需要注意的是下面两点：</p>
+<ul>
+<li>这三个函数的复杂度都是O（1）</li>
+<li>提供三个函数而不是两个函数是为了保证异常安全性</li>
+</ul>
+<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p><code>std::deque</code>是如何做到O（1）时间内访问任意元素又保证O（1）时间在头部和尾部操作数据内？这要从它的内存模型说起。</p>
+<p><code>std::deque</code>在逻辑上也是一个数组，只不过在物理上它的空间并不连续，它实际上由一段一段的小块儿内存拼接而成，这些小块儿的内存我们姑且叫它<code>buffer</code>，把这些<code>buffer</code>串在一起的就形成了一个逻辑上的一纬数组，用来串连这些<code>buffer</code>我们姑且称之为<code>map</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">      +------+-------+-------+-------+--------+------+</span><br><span class="line">      |      |       |       |       |        |      | map</span><br><span class="line">      +------+---+---+----+--+----+--+----+---+------+</span><br><span class="line">                 |        |       |       |</span><br><span class="line">              +--v-+   +--v-+  +--v-+  +--v-+</span><br><span class="line">              |    |   |    |  |    |  |    |  buffer</span><br><span class="line">              |    |   |    |  |    |  |    |</span><br><span class="line">              |    |   |    |  |    |  |    |</span><br><span class="line">begin   +--&gt;  +----+   |    |  |    |  +----+  &lt;-+    end</span><br><span class="line">              |    |   |    |  |    |  |    |</span><br><span class="line">              |    |   |    |  |    |  |    |</span><br><span class="line">              +----+   +----+  +----+  +----+</span><br></pre></td></tr></table></figure>
+<p>这个结构实际上是把一维数组变成了二维结构，本质上来说它就是通过增加一个间接层来实现的。再一次印证来那句老化，什么问题都可以通过增加间接层来解决。</p>
+<h2 id="逻辑上的数组"><a href="#逻辑上的数组" class="headerlink" title="逻辑上的数组"></a>逻辑上的数组</h2><p>我们说逻辑上，<code>std::deque</code>也是一个数组，它支持取下标操作符，可以在O（1）时间内访问容器内部的任意元素。需要注意的是<code>std::deque</code>的O（1）和vector的O（1）存在常数上的差别，因为vector只需要一次解引用就可以获取元素而<code>std::deque</code>需要两次。</p>
+<p><code>std::deque</code>的这种逻辑和物理存储不一致的特性也从另外一个侧面反应了接口和实现直接的本质区别。编程的核心思想在于抽象，而抽象的核心在于分离接口和实现。</p>
+<h2 id="自动回收空间"><a href="#自动回收空间" class="headerlink" title="自动回收空间"></a>自动回收空间</h2><p>和vector一样空间不足的时候会自动分配分配新的空间，大多数情况下只需要分配固定大小的buffer挂到map上，但是buffer过多的时候会导致map的重新分配。和vector不同的是<code>std::deque</code>会自动回收多余的空间，如果你对于运行时的内存要求非常严苛，而且会频繁的插入和删除数据可以考虑使用<code>std::deque</code>。</p>
+<h2 id="首尾插入和删除数据可以保证其他迭代器的合法性"><a href="#首尾插入和删除数据可以保证其他迭代器的合法性" class="headerlink" title="首尾插入和删除数据可以保证其他迭代器的合法性"></a>首尾插入和删除数据可以保证其他迭代器的合法性</h2><p><code>std::deque</code>还有一个特性就是如果你只是在头部或者尾部操作数据，你之前持有的迭代器不会失效，这一点我们会放到后面迭代器相关的文章中重点的讨论。</p>
+<h1 id="std-queue"><a href="#std-queue" class="headerlink" title="std::queue"></a>std::queue</h1><p>传统的数据结构课程中，提到同时操作头部和尾部，我们首先想到的应该是队列，它是一种FIFO的结构，广泛的使用在各种程序中。STL中提供来<code>std::queue</code>这个模板类来实现这一结构，但是需要特别注意的是它不是一个容器，它是容器适配器。</p>
+<h2 id="什么是容器"><a href="#什么是容器" class="headerlink" title="什么是容器"></a>什么是容器</h2><p>想要理解为什么我们说<code>std::queue</code>不是容器，我们需要理解前面我们一直没有讨论的一个问题——什么是容器？</p>
+<p>加入你生活在OO的世界，你需要定义某一个概念，通常你会定义一个接口（这里说的接口是语法层面的接口而不是逻辑层面的接口），然后定义需要支持的函数，比如（伪代码）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IContainer</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~IContainer() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> size_t <span class="title">size</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> T <span class="title">at</span><span class="params">(<span class="keyword">size_t</span> idx)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    ......</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">vector</span> :</span> <span class="keyword">public</span> IContainer&lt;T&gt; &#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在C++范型的世界里，并不存在类似这样的语法元素，定义某一个概念靠的是文本描述（C++后续的版本可能会改善这一点，但是目前最新的版本C++17没有）。这段文本描述称之为concept，它定义来范型世界里面的接口。比如说容器的concept如下：</p>
+<p><img src="/img/posts/devdocs.io_cpp_concept_container.png" alt="container"></p>
+<p>也就是说，标准里面使用这样的文字描述来一个容器应该满足的条件，满足这些条件的就是一个容器。从这一点上来说，concept是一种鸭子模型，会飞、会游泳、会呱呱呱叫的就是一只鸭子，至于你是野鸭子还是橡皮鸭都不重要。</p>
+<p>concept这个概念在范型编程中极其重要，用别人的范型类或者范型函数的时候，你需要了解它的参数的concept以保证你的参数输入合法（编译器没办法帮你检查这一点），自己写范型的时候，你需要考虑并标明你的模板参数所需要满足的concept以便别人可以正常的使用，这其实是接口使用者和接口实现者之间的合约，人无信不立这句话放在这里其实也好合适。</p>
+<h2 id="为什么不是容器"><a href="#为什么不是容器" class="headerlink" title="为什么不是容器"></a>为什么不是容器</h2><p>了解了容器的concept之后，我们就可以很清楚的知道为什么<code>std::queue</code>不是容器，因为它不满足容器的concept，比如它没有定义iterator这个成员类型，它也不提供begin、end这样的成员方法，也就谁说你没有办法它不提供迭代器，没有迭代器你就不能使用STL中的算法，你也就失去了STL中的半壁江山。</p>
+<h2 id="什么是容器适配器"><a href="#什么是容器适配器" class="headerlink" title="什么是容器适配器"></a>什么是容器适配器</h2><p>我们说<code>std::queue</code>是一个容器适配器，所谓的适配器从设计模式的角度考虑就是把一个类的接口适配成另外一种接口。<code>std::queue</code>实际上就是拿着容器的接口，适配成队列的所需要的接口。默认情况下，它用来适配的容器是<code>std::deque</code>，这是为什么我们在讲完<code>std::deque</code>之后接着就讲<code>std::queue</code>的原因。我们来看一下标准库中<code>std::queue</code>的定义：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">T</span>,</span></span><br><span class="line"><span class="class">    <span class="title">class</span> <span class="title">Container</span> = <span class="title">std</span>:</span>:<span class="built_in">deque</span>&lt;T&gt;</span><br><span class="line">&gt; <span class="class"><span class="keyword">class</span> <span class="title">queue</span>;</span></span><br></pre></td></tr></table></figure>
+<p>上面这段定义有两个地方值得讨论：</p>
+<ol>
+<li><p>模板参数可以又默认值，就像我们普通的函数参数一样，在C++11之前只有模板类的模板参数可以有默认值在C++11之后，模板函数的模板参数也可以有默认值。</p>
+</li>
+<li><p><code>std::queue</code>默认使用的容器是<code>std::deque</code>。也就是说如果你觉得不合适，你完全可以换掉它，只要你提供的类型满足 Container 这个模板参数需要的条件：</p>
+</li>
+</ol>
+<blockquote>
+<p>The type of the underlying container to use to store the elements. The
+container must satisfy the requirements of SequenceContainer. Additionally,
+it must provide the following functions with the usual semantics:</p>
+<ul>
+<li>back()</li>
+<li>front()</li>
+<li>push_back()</li>
+<li>pop_front()</li>
+</ul>
+</blockquote>
+<p>在标准库中除了<code>std::deque</code>之外<code>std::list</code>也满足这个条件。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>我们用一个例子结束这一部分的讨论</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cassert&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">queue</span>&lt;<span class="keyword">int</span>, <span class="built_in">std</span>::<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt;&gt; numbers;</span><br><span class="line"></span><br><span class="line">    numbers.push(<span class="number">1</span>);</span><br><span class="line">    numbers.push(<span class="number">2</span>);</span><br><span class="line">    numbers.push(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">    assert(numbers.front() == <span class="number">1</span>);</span><br><span class="line">    assert(numbers.back() == <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">    numbers.pop();</span><br><span class="line">    assert(numbers.front() == <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>请注意上面<code>std::queue</code>的定义，我提供了第二个参数，也请注意前面的写法是<code>std::list&lt;int&gt;</code>而不是<code>std::list</code>因为list不是类型，list<int>才是。</int></p>
+<h1 id="std-stack"><a href="#std-stack" class="headerlink" title="std::stack"></a>std::stack</h1><p>说完FIFO的队列，我们顺便说一下FILO的栈，在STL中提供了<code>std::stack</code>用来实现栈的功能，它和<code>std::queue</code>一样是容器适配器而不是容器，而且它同样默认使用<code>std::deque</code>作为默认的容器，和<code>std::queue</code>不同的是，<code>std::stack</code>只需要操作容器的尾部，所以你可以用vector当作来适配<code>std::stack</code>。</p>
+<p><code>std::stack</code>的接口比较直观这里不再赘述，有需要的同学可以自行查看devdocs或者cppreference上面的文档。</p>
+<h1 id="std-priority-queue"><a href="#std-priority-queue" class="headerlink" title="std::priority_queue"></a>std::priority_queue</h1><p>在STL中，优先队列也是一个容器适配器，每次获取的数据都是优先级最大值的值（如何定义优先级可以通过模板参数来控制）。和前面两个容器适配器不同的是，它默认适配的容器是<code>std::vector</code>（<code>std::deque</code>也可以用于适配优先队列）。</p>
+<h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><p>优先队列和前面两个容器适配器一个重要的区别就是它不仅仅是用底层的容器来存取数据，它会调整存储的数据的顺序，构建一个堆来达到优先队列每次都在常量时间取得优先级最大的数据的功能。</p>
+<p>这里说的堆不是堆空间而是一种特殊的数据结构，它是基于数组实现的一颗完全二叉树，有大堆和小堆之分，默认情况下，<code>std::priority_queue</code>是基于大堆实现的，它的特点是父节点比子节点都要大（相反小堆是指它的父节点比子节点都要小）。正是因为堆的这种特点，所以它获取最高优先级的数据可以在常量时间内完成。</p>
+<p>堆STL中也是一个非常独特的存在，在传统的数据结构和算法课程中，它属于数据结构部分，经常和队列和栈一起讲。但是在STL中它是放在算法库而不是容器或者容器适配器中实现的，和堆相关的算法有下面这些：</p>
+<ul>
+<li><code>std::make_heap</code></li>
+<li><code>std::pop_heap</code></li>
+<li><code>std::push_heap</code></li>
+</ul>
+<p>之所以这样设计是因为堆只需要底层是一个逻辑数组就可以了，把它设计成算法可以让它适用于各种逻辑数组的实现（std::vector，std::deque，std::array，c array）。</p>
+<h2 id="逆序"><a href="#逆序" class="headerlink" title="逆序"></a>逆序</h2><p>如果你需要实现的是每次找到最小值而不是最大值，你可以通过改变默认的模板参数来控制。<code>std::priority_queue</code>的原型如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template&lt;</span><br><span class="line">    class T,</span><br><span class="line">    class Container = std::vector&lt;T&gt;,</span><br><span class="line">    class Compare = std::less&lt;typename Container::value_type&gt;</span><br><span class="line">&gt; class priority_queue;</span><br></pre></td></tr></table></figure>
+<p>第二个参数可以替换成<code>std::deque</code>，最后一个参数可以替换成你想要的排序算法，比如<code>std::greater</code>，下面是一个具体的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::priority_queue&lt;int, std::deque&lt;int&gt;, std::greater&lt;int&gt;&gt; q;</span><br></pre></td></tr></table></figure>
+<h1 id="std-list"><a href="#std-list" class="headerlink" title="std::list"></a>std::list</h1><p>STL中提供了<code>std::list</code>表示链表，通常它的实现是双链表（它支持双向迭代），如果你的代码中需要使用到链表结构可以选择用它做为容器，虽然它的适用场景可能会比我们想象中要低很多。</p>
+<h2 id="std-vector-vs-std-list"><a href="#std-vector-vs-std-list" class="headerlink" title="std::vector vs std::list"></a>std::vector vs std::list</h2><p>传统的数据结构的教程中，<code>list</code>通常都是伴随着<code>array</code>而来，通常书上会告诉你</p>
+<blockquote>
+<p><code>list</code>中元素的插入和删除比<code>array</code>要快，如果你频繁使用插入和删除你应该使用<code>list</code>而不是<code>array</code></p>
+</blockquote>
+<p>这个说法在学术上是可以认为是正确的，但是实际上大部分情况下，上面的说法是不靠谱的。绝大部分情况下，<code>std::vector</code>的效率都会比<code>std::list</code>要高，原因主要有下面几点：</p>
+<ol>
+<li>找到插入点，<code>std::list</code>需要O（N）的时间，而vector只需要O（1）的时间。</li>
+<li><code>std::vector</code>的数据是集中存储的，而<code>std::list</code>的数据是离散存储的，这意味着vector的cache命中率会比<code>std::list</code>的cache命中率要高，内存的读写效率可能会比<code>std::list</code>要高。</li>
+<li><code>std::list</code>存储一个数据需要两个指针（双链表）的额外空间，<code>std::vector</code>不需要，所以<code>std::vector</code>的内存内存使用效率会高于<code>std::list</code>。</li>
+<li><code>std::vector</code>的数据是连续的，可以使用二分查找，快速查找等算法，<code>std::list</code>不行，所以<code>std::vector</code>的查找效率可能会高于<code>std::list</code>。</li>
+</ol>
+<p>所以大部分情况下你实际需要的可能都是vector而不是<code>std::list</code>，即使你伴随着数据的删除和插入。那么什么时候应该选用<code>std::list</code>呢？</p>
+<h2 id="什么时候考虑用std-list"><a href="#什么时候考虑用std-list" class="headerlink" title="什么时候考虑用std::list"></a>什么时候考虑用std::list</h2><ol>
+<li><p>容器里面的元素比较大，这种情况下，两个指针的额外开销基本上可以接受，而且如果元素本身比较大，它自身cache的命中率会高。</p>
+</li>
+<li><p>容器的原始特别多，而且插入删除比较频繁（而且很多在头部插入，如果都是在头部插入可以对比一下deque）</p>
+</li>
+<li><p>你需要频繁的在迭代的同时删除数据，或者你需要频繁的合并容器。<code>std::list</code>因为本身数据是离散存储的，所以迭代中删除数据不会导致后续的迭代器的失效，做区间插入的时候也可以保证全局的异常安全性。</p>
+</li>
+</ol>
+<h2 id="std-list-中特殊的函数"><a href="#std-list-中特殊的函数" class="headerlink" title="std::list 中特殊的函数"></a>std::list 中特殊的函数</h2><p><code>std::list</code>中有一些特殊的成员函数值得我们在这里稍微的讨论一下：</p>
+<h3 id="size"><a href="#size" class="headerlink" title="size"></a>size</h3><p>这个函数比较特别的是，它的开销可能是O（N），在C++11之前，标准规定它的开销可能是O（N）也可能是O（1），所以轻易不要调用这个函数。比如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">list</span>.size() == <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>最好写成</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">list</span>.empty() == <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h3><p>这个函数之所以特殊是因为<code>std::vector</code>不提供这个函数，而是使用算法<code>std::remove</code>，而remove实际上不删除数据，需要配合<code>std::vector::erase</code>来删除数据。而 <code>std::list</code> 的提供这个成员函数而且会实际删除数据。</p>
+<h3 id="insert-iterator-pos-InputIt-first-InputIt-last"><a href="#insert-iterator-pos-InputIt-first-InputIt-last" class="headerlink" title="insert(iterator pos, InputIt first, InputIt last)"></a>insert(iterator pos, InputIt first, InputIt last)</h3><p>这个函数之所以特殊是因为所有的容器中的区间insert，只有<code>std::list</code>的这个方法保证强异常安全性（要么全部插入，要么一个都不插入）【2】</p>
+<h1 id="std-forward-list"><a href="#std-forward-list" class="headerlink" title="std::forward_list"></a>std::forward_list</h1><p>前面提到<code>std::list</code>是一个双向链表，在C++11之后，STL还提供了单链表：<code>forward_list</code>。单链表的开销比双链表要小一些，但是舍弃了双向迭代的功能，而且只支持在头部插入和删除数据。</p>
+<p>在你不需要双向迭代的时候，你可以考虑使用单链表替代双链表，比如哈希表的冲突列表就可以使用单链表来实现的。</p>
+<h2 id="insert-after、erase-after"><a href="#insert-after、erase-after" class="headerlink" title="insert_after、erase_after"></a>insert_after、erase_after</h2><p>这两个函数和其实容器不太一样，其他容器是在给定的pos之前（实际上给定的位置，但是因为当前位置的数据往后挪动，相当于插入到来这个位置的元素之前）插入删除，单链表因为不支持双向迭代，只能实现在给定的位置之后插入和删除。</p>
+<hr>
+<p>【1】 C++标准只规定了结果，并不规定如何实现，不同的C++编译器对于<code>std::vector</code>的实现可能完全不一样，这里看的源码是来自llvm的<code>libcxx</code>实现。</p>
+<p>【2】单链表也支持类似功能，不过它提供的方法是 <code>insert_after</code>，不是<code>insert</code></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-CPP/" rel="tag"># C/CPP</a>
+          
+            <a href="/tags/C-轮子/" rel="tag"># C++轮子</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/01/stl-part-one/" rel="next" title="C++轮子 —— STL 简介">
+                <i class="fa fa-chevron-left"></i> C++轮子 —— STL 简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/14/cpp-const/" rel="prev" title="C++ const 到底表示什么">
+                C++ const 到底表示什么 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#std-vector"><span class="nav-number">1.</span> <span class="nav-text">std::vector</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件"><span class="nav-number">1.1.</span> <span class="nav-text">头文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-vector-还是-vector"><span class="nav-number">1.2.</span> <span class="nav-text">std::vector 还是 vector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化"><span class="nav-number">1.3.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-vector-1"><span class="nav-number">1.4.</span> <span class="nav-text">std::vector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-back-vs-emplace-back"><span class="nav-number">1.5.</span> <span class="nav-text">push_back vs emplace_back</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#back-和-pop-back"><span class="nav-number">1.6.</span> <span class="nav-text">back() 和 pop_back()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动增长"><span class="nav-number">1.7.</span> <span class="nav-text">自动增长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缩减-std-vector"><span class="nav-number">1.8.</span> <span class="nav-text">缩减 std::vector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容-C-数组"><span class="nav-number">1.9.</span> <span class="nav-text">兼容 C 数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-vector-的内存模型"><span class="nav-number">1.10.</span> <span class="nav-text">std::vector 的内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回一个-std-vector-的开销到底有多大"><span class="nav-number">1.11.</span> <span class="nav-text">返回一个 std::vector 的开销到底有多大</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-array"><span class="nav-number">2.</span> <span class="nav-text">std::array</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#非类型参数"><span class="nav-number">2.1.</span> <span class="nav-text">非类型参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不直接使用C数组"><span class="nav-number">2.2.</span> <span class="nav-text">为什么不直接使用C数组</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-deque"><span class="nav-number">3.</span> <span class="nav-text">std::deque</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#push-front、front、pop-front"><span class="nav-number">3.1.</span> <span class="nav-text">push_front、front、pop_front</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存模型"><span class="nav-number">3.2.</span> <span class="nav-text">内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑上的数组"><span class="nav-number">3.3.</span> <span class="nav-text">逻辑上的数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动回收空间"><span class="nav-number">3.4.</span> <span class="nav-text">自动回收空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#首尾插入和删除数据可以保证其他迭代器的合法性"><span class="nav-number">3.5.</span> <span class="nav-text">首尾插入和删除数据可以保证其他迭代器的合法性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-queue"><span class="nav-number">4.</span> <span class="nav-text">std::queue</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是容器"><span class="nav-number">4.1.</span> <span class="nav-text">什么是容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不是容器"><span class="nav-number">4.2.</span> <span class="nav-text">为什么不是容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是容器适配器"><span class="nav-number">4.3.</span> <span class="nav-text">什么是容器适配器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子"><span class="nav-number">4.4.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-stack"><span class="nav-number">5.</span> <span class="nav-text">std::stack</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-priority-queue"><span class="nav-number">6.</span> <span class="nav-text">std::priority_queue</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#堆"><span class="nav-number">6.1.</span> <span class="nav-text">堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆序"><span class="nav-number">6.2.</span> <span class="nav-text">逆序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-list"><span class="nav-number">7.</span> <span class="nav-text">std::list</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#std-vector-vs-std-list"><span class="nav-number">7.1.</span> <span class="nav-text">std::vector vs std::list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么时候考虑用std-list"><span class="nav-number">7.2.</span> <span class="nav-text">什么时候考虑用std::list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-list-中特殊的函数"><span class="nav-number">7.3.</span> <span class="nav-text">std::list 中特殊的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#size"><span class="nav-number">7.3.1.</span> <span class="nav-text">size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#remove"><span class="nav-number">7.3.2.</span> <span class="nav-text">remove</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insert-iterator-pos-InputIt-first-InputIt-last"><span class="nav-number">7.3.3.</span> <span class="nav-text">insert(iterator pos, InputIt first, InputIt last)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-forward-list"><span class="nav-number">8.</span> <span class="nav-text">std::forward_list</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#insert-after、erase-after"><span class="nav-number">8.1.</span> <span class="nav-text">insert_after、erase_after</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

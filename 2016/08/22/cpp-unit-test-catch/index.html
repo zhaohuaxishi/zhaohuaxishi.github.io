@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C/CPP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="如果你平常使用 Java 语言做开发，当你听到单元测试工具的时候，你很可能马上会想起 JUnit。作为一名C++软件工程师，当我第一次打算给我的程序做单元测试的时候，我的第一 想法是：有这样的工具吗？经过一段时间的搜索之后，我的反应变成了：我该用哪一个？ 我在学校的时候，很少听说C++的单元测试工具，以至于我一直认为这样的工具是不存在。 后来慢慢的发现我们可以选择的远比你想象中的要多得多：Catc">
+<meta name="keywords" content="C&#x2F;CPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 的单元测试工具 —— Catch">
+<meta property="og:url" content="http://blog.guorongfei.com/2016/08/22/cpp-unit-test-catch/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="如果你平常使用 Java 语言做开发，当你听到单元测试工具的时候，你很可能马上会想起 JUnit。作为一名C++软件工程师，当我第一次打算给我的程序做单元测试的时候，我的第一 想法是：有这样的工具吗？经过一段时间的搜索之后，我的反应变成了：我该用哪一个？ 我在学校的时候，很少听说C++的单元测试工具，以至于我一直认为这样的工具是不存在。 后来慢慢的发现我们可以选择的远比你想象中的要多得多：Catc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 的单元测试工具 —— Catch">
+<meta name="twitter:description" content="如果你平常使用 Java 语言做开发，当你听到单元测试工具的时候，你很可能马上会想起 JUnit。作为一名C++软件工程师，当我第一次打算给我的程序做单元测试的时候，我的第一 想法是：有这样的工具吗？经过一段时间的搜索之后，我的反应变成了：我该用哪一个？ 我在学校的时候，很少听说C++的单元测试工具，以至于我一直认为这样的工具是不存在。 后来慢慢的发现我们可以选择的远比你想象中的要多得多：Catc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2016/08/22/cpp-unit-test-catch/"/>
+
+
+
+
+
+  <title>C++ 的单元测试工具 —— Catch | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/08/22/cpp-unit-test-catch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++ 的单元测试工具 —— Catch</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-22T15:37:30+08:00">
+                2016-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/08/22/cpp-unit-test-catch/" class="leancloud_visitors" data-flag-title="C++ 的单元测试工具 —— Catch">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果你平常使用 Java 语言做开发，当你听到单元测试工具的时候，你很可能马上会想起
+JUnit。作为一名C++软件工程师，当我第一次打算给我的程序做单元测试的时候，我的第一
+想法是：有这样的工具吗？经过一段时间的搜索之后，我的反应变成了：我该用哪一个？</p>
+<p>我在学校的时候，很少听说C++的单元测试工具，以至于我一直认为这样的工具是不存在。
+后来慢慢的发现我们可以选择的远比你想象中的要多得多：Catch, Boost.Test,
+UnitTest++, lest, bandit, igloo, xUnit++, CppTest, CppUnit, CxxTest, cpputest,
+googletest, cute。</p>
+<p>那我们应该使用哪一个呢？如果你在 Google 里面搜索：<code>best c++ unit testing
+framework</code>。头两条，一条是 <a href="http://stackoverflow.com/questions/20606793/state-of-the-art-c-unit-testing" target="_blank" rel="noopener">stackoverflow</a> 的问答，另一条是 <a href="https://www.reddit.com/r/cpp/comments/36pru0/best_way_to_do_unit_testing_in_c/" target="_blank" rel="noopener">reddit</a> 的问答
+。这两个问题都指向同一个单元测试框架：<a href="https://github.com/philsquared/Catch" target="_blank" rel="noopener">Catch</a>。</p>
+<a id="more"></a>
+<h1 id="为什么使用-Catch"><a href="#为什么使用-Catch" class="headerlink" title="为什么使用 Catch"></a>为什么使用 Catch</h1><p>在 Catch 的官方文档中有一篇：<a href="https://github.com/philsquared/Catch/blob/master/docs/why-catch.md" target="_blank" rel="noopener">Why do we need yet another C++ test
+framework?</a> 有兴趣的可以去看看。对我来说，它最吸引我的地方主要是：</p>
+<ul>
+<li>几乎不用配置，它是一个单头文件的测试框架，压根不要什么额外的配置就可以使用</li>
+<li>语法非常简单明了，用它写的测试代码和自然语言一样易懂。</li>
+</ul>
+<h1 id="如何使用它"><a href="#如何使用它" class="headerlink" title="如何使用它"></a>如何使用它</h1><p><code>Catch</code> 是单头文件库，你直接 #include “catch.hpp” 它就可以了。然后你就可以像下面
+这样写测试代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">SCENARIO( &quot;vectors can be sized and resized&quot;, &quot;[vector]&quot; ) &#123;</span><br><span class="line"></span><br><span class="line">    GIVEN( &quot;A vector with some items&quot; ) &#123;</span><br><span class="line">        std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 5 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">        WHEN( &quot;the size is increased&quot; ) &#123;</span><br><span class="line">            v.resize( 10 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;the size and capacity change&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 10 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        WHEN( &quot;the size is reduced&quot; ) &#123;</span><br><span class="line">            v.resize( 0 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;the size changes but not capacity&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 0 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        WHEN( &quot;more capacity is reserved&quot; ) &#123;</span><br><span class="line">            v.reserve( 10 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;the capacity changes but not the size&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 5 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        WHEN( &quot;less capacity is reserved&quot; ) &#123;</span><br><span class="line">            v.reserve( 0 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;neither size nor capacity are changed&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 5 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这几乎是不需要解释就可以理解的读懂的代码。这种测试方式称为 BDD（Behaviour Driven
+Development），是最新的一种测试方式，它强调的是“行为”而不是“测试”，有兴趣可以看
+看<a href="https://dannorth.net/introducing-bdd/" target="_blank" rel="noopener">这篇文章</a>。</p>
+<p>如果你习惯传统的TDD测试，你可以像下面这样写测试代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">TEST_CASE( &quot;vectors can be sized and resized&quot;, &quot;[vector]&quot; ) &#123;</span><br><span class="line"></span><br><span class="line">    std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">    REQUIRE( v.size() == 5 );</span><br><span class="line">    REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">    SECTION( &quot;resizing bigger changes size and capacity&quot; ) &#123;</span><br><span class="line">        v.resize( 10 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 10 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">    &#125;</span><br><span class="line">    SECTION( &quot;resizing smaller changes size but not capacity&quot; ) &#123;</span><br><span class="line">        v.resize( 0 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 0 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">    &#125;</span><br><span class="line">    SECTION( &quot;reserving bigger changes capacity but not size&quot; ) &#123;</span><br><span class="line">        v.reserve( 10 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 5 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">    &#125;</span><br><span class="line">    SECTION( &quot;reserving smaller does not change size or capacity&quot; ) &#123;</span><br><span class="line">        v.reserve( 0 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 5 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际上这两种方式是等价，SCENARIO 只是 <code>TEST_CASE</code> 的别名，GIVEN、WHEN、THEN 最终
+也是 map 到 SECTION 上面的。这其中的差异只是存在于测试的思维不同而已，你完全可以
+根据自己的喜好使用你最喜欢的方式即可。</p>
+<h1 id="SECTION-的执行顺序"><a href="#SECTION-的执行顺序" class="headerlink" title="SECTION 的执行顺序"></a>SECTION 的执行顺序</h1><p>上面的代码很清晰易懂，不过有一个地方需要注意，那就是 SECTION 的执行方式。在上一
+小节的代码中，<code>TEST_CASE</code> 中有 4 个 SECTION，它们并不是单纯的顺序执行关系。在第
+一个 SECTION 执行完成之后，会重头开始执行并跳过已经执行过的 SECTION。也就是说上
+面的代码的执行路径大概是这样的（去掉了 SECTION 宏之后）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">// SECTION 1</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">v.resize( 10 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 10 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line"></span><br><span class="line">// SECTION 2</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">v.resize( 0 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 0 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">// SECTION 3</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">v.reserve( 10 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line"></span><br><span class="line">// SECTION 4</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">v.reserve( 0 );</span><br><span class="line"></span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br></pre></td></tr></table></figure>
+<h1 id="测试代码的执行入口"><a href="#测试代码的执行入口" class="headerlink" title="测试代码的执行入口"></a>测试代码的执行入口</h1><p>在C++中任何代码需要执行，都需要通过 main 函数这个入口，测试代码也不例外。Catch
+不需要我们自己编写 main 函数去调用这些测试代码。它提供了默认的 main 函数入口，你
+只需要在（而且仅在）一个文件中加入下面的配置宏：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define CATCH_CONFIG_MAIN</span><br><span class="line">#include &quot;catch.hpp&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>最佳实践是单独用一个文件放这两行代码，把测试代码写在其他的文件中。</p>
+<p>之所以这样做是因为Catch是单头文件库，这意味着它里面的内容会最终出现在所有的包含
+这个头文件的编译单元中。如果我们把测试代码和上面两行代码放在一起会导致每次编译测
+试代码的时候都需要编译 Catch 的内核，这会导致编译速度非常非常的慢。如果把两者分
+开，Catch 的内核只需要在一个文件中编译一次（因为 Catch 内部做了判断，如果内核编
+译过了是不需要再次编译的，即使你在多个文件中使用了 #include “catch.hpp”）。这个
+文件的编译速度相对较慢，但是这个文件不会改动所以整个开发周期中它只需要编译一次，
+而不断更新的测试代码的编译速度会因此快很多。</p>
+<h2 id="命令行参数"><a href="#命令行参数" class="headerlink" title="命令行参数"></a>命令行参数</h2><p>Catch 提供的这个 main 函数实现的另一个强大的功能是丰富的命令行参数，你可以选择执
+行其中的某些 <code>TEST_CASE</code>，也可以选择不执行其中的某些 <code>TEST_CASE</code>，你可以用它调整
+输出到 xml 文件，也可以用它从文件中读取需要测试的用例。这些命令的具体使用请参考
+Catch 的官方文档<a href="https://github.com/philsquared/Catch/blob/master/docs/command-line.md" target="_blank" rel="noopener">Command line</a>一节。</p>
+<h2 id="TAG"><a href="#TAG" class="headerlink" title="TAG"></a>TAG</h2><p>需要注意的是，这些强大的命令行大多数是基于 TAG 的，也就是 <code>TEST_CASE</code> 定义中的第
+二个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TEST_CASE( &quot;vectors can be sized and resized&quot;, &quot;[vector]&quot; )</span><br></pre></td></tr></table></figure>
+<p>上面的定义中 “[vector]” 就是一个 TAG，你可以提供多个 TAG：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TEST_CASE( &quot;D&quot;, &quot;[widget][gadget]&quot; ) &#123; /* ... */ &#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话你可以在命令行中根据 TAG 去选择是否需要执行该 <code>TEST_CASE</code>。比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./catch &quot;[vector]&quot; // 只执行那些标记为 vector 的测试用例</span><br></pre></td></tr></table></figure>
+<p>此外你还可以使用一些特殊的字符，比如 <code>[.]</code> 表示隐藏。<code>[.integration]</code> 则表示默认
+隐藏，但是可以在命令行中使用 <code>[.integration]</code> 这个 TAG 执行。其他的一些特殊的字符
+请参考官方文档的<a href="https://github.com/philsquared/Catch/blob/master/docs/test-cases-and-sections.md" target="_blank" rel="noopener">Test cases and sections</a>一节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./catch // 默认不执行 integration</span><br><span class="line"></span><br><span class="line">./catch &quot;[.integration]&quot; // 使用 TAG 执行 integration</span><br></pre></td></tr></table></figure>
+<h2 id="提供自己的-main-函数入口"><a href="#提供自己的-main-函数入口" class="headerlink" title="提供自己的 main 函数入口"></a>提供自己的 main 函数入口</h2><p>如果你不喜欢上面的处理方式，想要自己提供 main 函数，你可以使用
+<code>CATCH_CONFIG_RUNNER</code>，具体的细节请查看官方文档中的 <a href="https://github.com/philsquared/Catch/blob/master/docs/own-main.md" target="_blank" rel="noopener">Supplying main() yourself</a>一节。</p>
+<h1 id="其他内容"><a href="#其他内容" class="headerlink" title="其他内容"></a>其他内容</h1><p>其实 Catch 本身相对来说比较简单，不需要太多其他的学习，大部分的用法是非常的直观
+的，看完它的<a href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md" target="_blank" rel="noopener">官方教程</a>之后基本上可以上手了，然后有时间慢慢的读一读它的<a href="https://github.com/philsquared/Catch/blob/master/docs/Readme.md" target="_blank" rel="noopener">官方文
+档集合</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-CPP/" rel="tag"># C/CPP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/31/gnu-autotools-note/" rel="next" title="GNU 的自动构建工具 autotools 小结">
+                <i class="fa fa-chevron-left"></i> GNU 的自动构建工具 autotools 小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/20/mingw-with-msvc-cpp/" rel="prev" title="在 MSVC 中使用 MinGW 编译的 C++ 库的方式">
+                在 MSVC 中使用 MinGW 编译的 C++ 库的方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用-Catch"><span class="nav-number">1.</span> <span class="nav-text">为什么使用 Catch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使用它"><span class="nav-number">2.</span> <span class="nav-text">如何使用它</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SECTION-的执行顺序"><span class="nav-number">3.</span> <span class="nav-text">SECTION 的执行顺序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试代码的执行入口"><span class="nav-number">4.</span> <span class="nav-text">测试代码的执行入口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践"><span class="nav-number">4.1.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行参数"><span class="nav-number">4.2.</span> <span class="nav-text">命令行参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TAG"><span class="nav-number">4.3.</span> <span class="nav-text">TAG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提供自己的-main-函数入口"><span class="nav-number">4.4.</span> <span class="nav-text">提供自己的 main 函数入口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他内容"><span class="nav-number">5.</span> <span class="nav-text">其他内容</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

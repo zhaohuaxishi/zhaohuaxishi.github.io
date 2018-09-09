@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C/CPP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="C++可以说是社区驱动型语言，它不像Java和Go背后有主导的公司在推，它的发展更多靠的是由各路专家组成的标准委员会。所以一直以来，它饱受诟病的一点是较难统一，虽然有统一的标准，但是不同的组织有不同的实现和扩充，不同的构建方式，不同的包管理工具。 近年来，CMake慢慢的成为了C++项目构建方式的事实标准，而这篇文章要介绍的是个人认为很有可能在未来几年成为C++包管理工具事实标准的：conan。">
+<meta name="keywords" content="C&#x2F;CPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++包管理器——conan">
+<meta property="og:url" content="http://blog.guorongfei.com/2018/04/23/conan-tutorial/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="C++可以说是社区驱动型语言，它不像Java和Go背后有主导的公司在推，它的发展更多靠的是由各路专家组成的标准委员会。所以一直以来，它饱受诟病的一点是较难统一，虽然有统一的标准，但是不同的组织有不同的实现和扩充，不同的构建方式，不同的包管理工具。 近年来，CMake慢慢的成为了C++项目构建方式的事实标准，而这篇文章要介绍的是个人认为很有可能在未来几年成为C++包管理工具事实标准的：conan。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://docs.conan.io/en/latest/_images/package_create_flow.png">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.751Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++包管理器——conan">
+<meta name="twitter:description" content="C++可以说是社区驱动型语言，它不像Java和Go背后有主导的公司在推，它的发展更多靠的是由各路专家组成的标准委员会。所以一直以来，它饱受诟病的一点是较难统一，虽然有统一的标准，但是不同的组织有不同的实现和扩充，不同的构建方式，不同的包管理工具。 近年来，CMake慢慢的成为了C++项目构建方式的事实标准，而这篇文章要介绍的是个人认为很有可能在未来几年成为C++包管理工具事实标准的：conan。">
+<meta name="twitter:image" content="http://docs.conan.io/en/latest/_images/package_create_flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2018/04/23/conan-tutorial/"/>
+
+
+
+
+
+  <title>C++包管理器——conan | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2018/04/23/conan-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++包管理器——conan</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-23T20:14:31+08:00">
+                2018-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/23/conan-tutorial/" class="leancloud_visitors" data-flag-title="C++包管理器——conan">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>C++可以说是社区驱动型语言，它不像Java和Go背后有主导的公司在推，它的发展更多靠的是由各路专家组成的标准委员会。所以一直以来，它饱受诟病的一点是较难统一，虽然有统一的标准，但是不同的组织有不同的实现和扩充，不同的构建方式，不同的包管理工具。</p>
+<p>近年来，<code>CMake</code>慢慢的成为了<code>C++</code>项目构建方式的事实标准，而这篇文章要介绍的是个人认为很有可能在未来几年成为C++包管理工具事实标准的：<code>conan</code>。</p>
+<a id="more"></a>
+<h1 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h1><p>本文只是一个入门性质的教程，讲解我个人在使用理解<code>conan</code>的时候的心得以及遇到的一些问题。推荐大家在看完本文之后找一个时间完成的阅读一下最权威的<a href="http://docs.conan.io/en/latest/" target="_blank" rel="noopener">官方文档</a>。</p>
+<h1 id="包管理器"><a href="#包管理器" class="headerlink" title="包管理器"></a>包管理器</h1><p>很多语言都有自己的包管理器，比如Python的PyPi，C#的Nuget，Rust的cargo。我们可以看一下下面这个直观的例子——gRPC的使用——来感受一下有包管理工具和没有包管理器的区别：</p>
+<h2 id="C-版本（Ubuntu为例子，Windows-更复杂）"><a href="#C-版本（Ubuntu为例子，Windows-更复杂）" class="headerlink" title="C++ 版本（Ubuntu为例子，Windows 更复杂）"></a>C++ 版本（Ubuntu为例子，Windows 更复杂）</h2><h3 id="Pre-requisites"><a href="#Pre-requisites" class="headerlink" title="Pre-requisites"></a>Pre-requisites</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> [sudo] apt-get install build-essential autoconf libtool pkg-config</span></span><br></pre></td></tr></table></figure>
+<h3 id="Protoc"><a href="#Protoc" class="headerlink" title="Protoc"></a>Protoc</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> grpc/third_party/protobuf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo make install   <span class="comment"># 'make' should have been run by core grpc</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="Build-from-Source"><a href="#Build-from-Source" class="headerlink" title="Build from Source"></a>Build from Source</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> -b $(curl -L https://grpc.io/release) https://github.com/grpc/grpc</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> grpc</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> [sudo] make install</span></span><br></pre></td></tr></table></figure>
+<h2 id="Android-版本"><a href="#Android-版本" class="headerlink" title="Android 版本"></a>Android 版本</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">compile</span> <span class="string">'io.grpc:grpc-okhttp:1.11.0'</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">'io.grpc:grpc-protobuf-lite:1.11.0'</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">'io.grpc:grpc-stub:1.11.0'</span></span><br></pre></td></tr></table></figure>
+<p>眼神再不好使，大概也能看出，Android版本会比C++版本简单很多，更重要的是Android版本除了拷贝上面这段代码之外其他的基本都是自动化的过程，而C++版本需要你各种手动的输入和折腾才能侥幸得到你想要的结果。</p>
+<p>包管理器有最大的好处在于，绝大部分操作都是自动化的，所以它的操作很简单，基本不会出现错误。作为C++的死忠粉，我除了仇视Android的开发者之外没有其他选择。直到有一个天我遇到<code>conan</code>，这个跨平台的C++包版本管理器，我终于可以像下面使用Windows的gRPC：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[requires]</span></span><br><span class="line">gRPC/1.9.1@inexorgame/stable</span><br></pre></td></tr></table></figure>
+<p>嗯，世界真美好。</p>
+<h1 id="跨平台的包管理器"><a href="#跨平台的包管理器" class="headerlink" title="跨平台的包管理器"></a>跨平台的包管理器</h1><p>实际上，<code>conan</code>并不是第一个流行起来的C++包管理器，在VS的生态中，Nuget可以用于管理VS平台的C++包，所以如果你只需要支持Windows平台，你可以直接使用Nuget，因为它和VS的集成度会比较高，在开发上可能便利性可能会超过<code>conan</code>。</p>
+<p><code>conan</code>最大的优势在于它的跨平台，它可以支持：</p>
+<ul>
+<li>不同的操作系统（Windows，Linux，macOS，FreeBSD等等）</li>
+<li>不同的编译器（gcc，msvc，clang等等）</li>
+<li>不同的构建工具（CMake，QMake，MSBuild，Autotools等等）</li>
+<li>不同的构建方式（原生编译，交叉编译等等）</li>
+</ul>
+<p>如果你需要一个跨平台的解决方案，<code>conan</code>可能是目前唯一的选择</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>有意思的是，作为C++的包版本管理器，conan不是用C++来实现的，它甚至不是使用编译型语言来实现的，它使用的是脚本语言Python【1】。所以安装<code>conan</code>之前，我们需要先安装Python和pip，然后执行下面的命令安装<code>conan</code>包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install conan</span></span><br></pre></td></tr></table></figure>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>conan的使用其实分为两个角色：包的使用者和包的创建者，这一节重点介绍包的使用者的操作，下一节介绍包的创建者的操作。</p>
+<p><strong>本小节以假设你使用CMake来做自动构建，其他的自动构建工具大同小异，我会在后文中给出参考文档</strong></p>
+<h2 id="conanfile-txt"><a href="#conanfile-txt" class="headerlink" title="conanfile.txt"></a>conanfile.txt</h2><p><code>conan</code>的使用比较方便，我们只需要一个配置文件<code>conanfile.txt</code>【2】，用于写明我们需要直接依赖的包即可（conan会自动处理依赖的传递）：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[requires]</span></span><br><span class="line">zlib/1.2.11@conan/stable</span><br><span class="line"></span><br><span class="line"><span class="section">[generators]</span></span><br><span class="line">cmake</span><br></pre></td></tr></table></figure>
+<h2 id="conan-install"><a href="#conan-install" class="headerlink" title="conan install"></a>conan install</h2><p>然后执行下面这条命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> conan install .</span></span><br></pre></td></tr></table></figure>
+<p>上面这条命令中的<code>.</code>表示<code>conanfile.txt</code>的路径，如果你不是在同一个路径下面（比如在编译路径下），你需要指定相对路径或者全路径。通常上面这条命令会自动安装我们想要的包，然后在在执行<code>install</code>命令的路径下生成三个文件：</p>
+<ul>
+<li>conanbuildinfo.txt</li>
+<li>conanbuildinfo.cmake</li>
+<li>conaninfo.txt</li>
+</ul>
+<p>其中<code>conaninfo.txt</code>这个文件可以用来判断这个包的详细信息，包括编译器信息，系统架构（<code>x86</code>，<code>x86_64</code>等），通常如果你自动安装出现编译错误时可以考虑查看这个文件来确认一下包的信息和你期望的信息是否一致（比如你想要一个Debug包，但是下载成来Release包）。</p>
+<p><code>conanbuildinfo.cmake</code>这个文件是给CMake用的，让它知道如何引用依赖包，比如头文件的引用路径，库的引用路径，库的链接等信息。相对的<code>conanbuildinfo.txt</code>这个文件可供我们阅读，排查上面这些信息是否有误。不同的<code>generators</code>导致不同的供构建系统使用的文件生成（比如如果指定<code>generators</code>是<code>visual_studio</code>，会生成<code>conanbuildinfo.props</code>），但是统统都会生成供我们阅读的<code>conanbuildinfo.txt</code>。</p>
+<h2 id="引用生成自动生成的编译文件"><a href="#引用生成自动生成的编译文件" class="headerlink" title="引用生成自动生成的编译文件"></a>引用生成自动生成的编译文件</h2><p>我们需要额外的设置，把这个生成的文件集成到我们自己的编译系统中去，比如如果我们使用的是<code>CMake</code>，我们需要修改我们顶层的的<code>CMakefile.txt</code>，加入下面这两句（第一句的<code>include</code>怎么写，依赖于我们在哪个路径下执行<code>conan install</code>命令）：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span>(<span class="variable">$&#123;CMAKE_BINARY_DIR&#125;</span>/conanbuildinfo.cmake)</span><br><span class="line">conan_basic_setup()</span><br></pre></td></tr></table></figure>
+<p>然后让我们的<code>target</code>链接我们的依赖库，</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(target <span class="variable">$&#123;CONAN_LIBS&#125;</span>)</span><br></pre></td></tr></table></figure>
+<p>上面这个过程通常只需要执行一次，所以其实工作量比我们想象中的要小一些。</p>
+<h2 id="使用动态库"><a href="#使用动态库" class="headerlink" title="使用动态库"></a>使用动态库</h2><p>大部分的包既提供动态库版本又提供动态库版本，大部分包默认情况下自动安装<code>static</code>版本的包，如果你需要使用<code>shared</code>版本的包，通常可以在配置文件中加入<code>shared</code>这个<code>option</code>（注意，并不是所有的包都会提供这个选项）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[options]</span><br><span class="line">zlib:shared=True</span><br></pre></td></tr></table></figure>
+<p>在Windows中，动态库分成两个部分<code>xxx.dll</code>会导出库<code>xxx.lib</code>，<code>dll</code>不用参与链接，但是需要放到可执行目录下，所以使用动态库通常还意味着需要拷贝<code>dll</code>到<code>bin</code>目录下，<code>conan</code>使用<code>import</code>这个配置来自动完成这个操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[imports]</span><br><span class="line">bin, *.dll -&gt; ./bin</span><br><span class="line">lib, *.dylib* -&gt; ./bin</span><br></pre></td></tr></table></figure>
+<h2 id="使用-Debug-版本的库"><a href="#使用-Debug-版本的库" class="headerlink" title="使用 Debug 版本的库"></a>使用 Debug 版本的库</h2><p>默认情况下，conan自动安装<code>Release</code>版本的包，但是使用<code>Debug</code>版本的库对于调试开发其实比较有帮助。和前面不同的是，如果我们想要使用<code>Debug</code>版本包，我们通常不是使用<code>conanfile.txt</code>而是使用命令行参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan install . -s build_type=Debug</span><br></pre></td></tr></table></figure>
+<p>上面的<code>-s</code>表示<code>setting</code>，主要包括<code>build_type</code>，<code>compiler</code>，<code>arch</code>等。设置和选项最大的不同在于，设置是<code>conan</code>内置的，每个包都存在，而<code>option</code>是每个包单独定义的，不同的包可能有不同的<code>option</code>（虽然像shared这样的option基本上都会有，理论上更像是setting，conan最新的版本默认都加上这个选项，个人感觉更像是conan的设计失误的一种弥补范式）。</p>
+<p>除了<code>-s</code>参数之外，<code>conan</code>还提供<code>-o</code>参数用于指定选项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan install . -o zlib:shared=True</span><br></pre></td></tr></table></figure>
+<p>你甚至可以不提供<code>conanfile.txt</code>文件，直接使用命令行完成包的安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan install zlib/1.2.11@conan/stable -g cmake -s build_type=Debug -o zlib:shared=True</span><br></pre></td></tr></table></figure>
+<h2 id="profile"><a href="#profile" class="headerlink" title="profile"></a>profile</h2><p>其实和<code>option</code>一样，<code>setting</code>既可以用命令行参数指定，也可以通过配置文件指定，只不过<code>setting</code>是写在<code>profile</code>而不是<code>conanfile.txt</code>中。conan安装完之后会有一个默认的profile：<code>$HOME/.conan/profiles/default</code>【3】。如果你想要系统默认都下载<code>Debug</code>包，你可以修改这个文件，把<code>build_type</code>改成<code>Debug</code>。</p>
+<p>如果你不想影响全局，又不想频繁的输入命令行参数，你可以在<code>$HOME/.conan/profiles/</code>下新建一个profile，比如<code>myproject</code>，然后使用下面命令安装依赖包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan install . --profile=myproject</span><br></pre></td></tr></table></figure>
+<p>这种方式在对于简单的参数来说没有太大的意义，但是对于交叉编译的中特别有用，可以避免大量的参数的输入工作。</p>
+<h2 id="其他工具的集成"><a href="#其他工具的集成" class="headerlink" title="其他工具的集成"></a>其他工具的集成</h2><p>前面的例子以<code>CMake</code>为例，其他工具的集成使用可以参考下面这个<a href="http://docs.conan.io/en/latest/integrations.html" target="_blank" rel="noopener">官方文档</a></p>
+<h1 id="创建一个包"><a href="#创建一个包" class="headerlink" title="创建一个包"></a>创建一个包</h1><p>好吧，我得承认，上面一小节其实带着忽悠的成分。因为实际上<code>conan</code>目前的生态并不是特别完善，所以很多时候，你可能找不到你想要的包，很多时候你可能没有办法直接通过<code>install</code>安装你要的包的依赖。</p>
+<p>俗话说，求人不如求己，我们完全可以自己的打包，自己用。这一些节主要介绍如何创建一个<code>conan</code>包。</p>
+<h2 id="理解conan的包名"><a href="#理解conan的包名" class="headerlink" title="理解conan的包名"></a>理解conan的包名</h2><p>在实际创建一个包之前，我们先来理解一下conan包的包名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zlib/1.2.11@conan/stable</span><br></pre></td></tr></table></figure>
+<p>上面这个包名包含四个部分：</p>
+<ul>
+<li>zlib      名字</li>
+<li>1.2.11    版本</li>
+<li>conan     用户</li>
+<li>stable    通道（channel）</li>
+</ul>
+<p>虽然它们出现在同一个名字中，但它们不在同一个位置设置。前面两个通常写在配置文件中，而后面两个在命令行中指定。</p>
+<h2 id="包的创建步骤"><a href="#包的创建步骤" class="headerlink" title="包的创建步骤"></a>包的创建步骤</h2><p>创建一个包，实际上就是编译一个包的过程，只不过<code>conan</code>把这个过程脚本化来而已。所以在创建一个包之前，我们先整理一下编译一个包需要的步骤：</p>
+<ul>
+<li>重复下面这三个步骤，直到所有依赖编译完成，后然执行下面三个步骤编译自身</li>
+<li>下载源码</li>
+<li>编译</li>
+<li>安装</li>
+</ul>
+<p>所以创建一个<code>conan</code>包大概也就是把这几个步骤自动化而已，自动化这些操作的脚本叫做：<code>conanfile.py</code>，官方称之为<code>recipe</code>。<code>recipe</code>是菜谱的意思，这个词非常好的体现了<code>conanfile.py</code>的功能，引导<code>conan</code>一步一步的创建一个包。</p>
+<h2 id="conanfile-py"><a href="#conanfile-py" class="headerlink" title="conanfile.py"></a>conanfile.py</h2><p>一个 <code>conanfile.py</code> 通常的像下面这个样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> conans <span class="keyword">import</span> ConanFile, CMake, tools</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloConan</span><span class="params">(ConanFile)</span>:</span></span><br><span class="line">    name = <span class="string">"Hello"</span></span><br><span class="line">    version = <span class="string">"0.0.1"</span></span><br><span class="line">    license = <span class="string">"MIT"</span></span><br><span class="line">    url = <span class="string">"https://github.com/hello/hello.git"</span></span><br><span class="line">    description = <span class="string">"Hello conan"</span></span><br><span class="line">    settings = <span class="string">"os"</span>, <span class="string">"compiler"</span>, <span class="string">"build_type"</span>, <span class="string">"arch"</span></span><br><span class="line">    options = &#123;<span class="string">"shared"</span>: [<span class="keyword">True</span>, <span class="keyword">False</span>]&#125;</span><br><span class="line">    default_options = <span class="string">"shared=False"</span></span><br><span class="line">    generators = <span class="string">"cmake"</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">source</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.run(<span class="string">"git clone https://github.com/hello/hello.git"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">        cmake = CMake(self)</span><br><span class="line">        cmake.configure(source_folder=<span class="string">"hello"</span>)</span><br><span class="line">        cmake.build()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">package</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.copy(<span class="string">"*.h"</span>, dst=<span class="string">"include"</span>, src=<span class="string">"hello"</span>)</span><br><span class="line">        self.copy(<span class="string">"*hello.lib"</span>, dst=<span class="string">"lib"</span>, keep_path=<span class="keyword">False</span>)</span><br><span class="line">        self.copy(<span class="string">"*.dll"</span>, dst=<span class="string">"bin"</span>, keep_path=<span class="keyword">False</span>)</span><br><span class="line">        self.copy(<span class="string">"*.so"</span>, dst=<span class="string">"lib"</span>, keep_path=<span class="keyword">False</span>)</span><br><span class="line">        self.copy(<span class="string">"*.dylib"</span>, dst=<span class="string">"lib"</span>, keep_path=<span class="keyword">False</span>)</span><br><span class="line">        self.copy(<span class="string">"*.a"</span>, dst=<span class="string">"lib"</span>, keep_path=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">package_info</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.cpp_info.libs = [<span class="string">"hello"</span>]</span><br></pre></td></tr></table></figure>
+<p>你可以使用下面的命令来创建这个脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan new Hello/0.0.1</span><br></pre></td></tr></table></figure>
+<p><code>conanfile.py</code>是一个合法的Python脚本，里面定义了一个继承自：ConanFile的类。这个类包括两个部分：属性和方法，属性用于设置一些只读信息而方法用于自动化打包的逻辑。下面我们分步骤讲解一下Conan的打包过程。</p>
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>conanfile.py提供了两种方式来声明包的依赖，属性<code>requires</code>和<code>requirements</code>成员函数。通常如果依赖逻辑比较简单，我们可以直接设置属性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLibConan</span><span class="params">(ConanFile)</span>:</span></span><br><span class="line">    requires = ((<span class="string">"Hello/0.1@user/testing"</span>),</span><br><span class="line">                (<span class="string">"Say/0.2@dummy/stable"</span>, <span class="string">"override"</span>),</span><br><span class="line">                (<span class="string">"Bye/2.1@coder/beta"</span>, <span class="string">"private"</span>))</span><br></pre></td></tr></table></figure>
+<p>依赖本身有两种属性，<code>override</code>和<code>private</code>。前者出现在需要覆盖依赖的依赖的时候；而后者用于限定内部依赖，比如动态库中依赖的静态库。</p>
+<p>如果依赖的逻辑比较复杂，比如需要根据不同的option和setting来设定，我们可以在<code>requirements()</code>成员函数中声明依赖：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">requirements</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> self.options.myoption:</span><br><span class="line">        self.requires(<span class="string">"zlib/1.2@drl/testing"</span>, private=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.requires(<span class="string">"opencv/2.2@drl/stable"</span>, override=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>这个成员函数最终调用的是<code>requires()</code>函数，这个函数同样可以设置<code>private</code>和<code>override</code>属性。</p>
+<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><p>依赖处理完之后，我们可以正式的编译我们自己的包来，第一步要做的就是获取源码，同样源码获取其实分为两种情况，一种是使用<code>exports_sources</code>属性，一个使用<code>source()</code>成员函数。</p>
+<p>使用哪一种方式主要看你的<code>recipe</code>文件（conanfile.py）是否和源码放在一起。假如你是这个包的开发者，通常你可以把你的recipe和你的源码放一起托管到同一个仓库，假如你只是打包人员【4】，通常你的<code>recipe</code>和源码不在同一个仓库。</p>
+<p>如果<code>recipe</code>和源码在同一个仓库，通常使用<code>exports_sources</code>，否则使用<code>source()</code>成员函数。</p>
+<h4 id="exports-sources"><a href="#exports-sources" class="headerlink" title="exports_sources"></a>exports_sources</h4><p>这个属性可以用于导出当前仓库下的源码，比如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exports_sources = <span class="string">"include*"</span>, <span class="string">"src*"</span>, <span class="string">"!src/build/*"</span></span><br></pre></td></tr></table></figure>
+<p><code>recipe</code>中的大部分属性如果支持多个都是以这种tuple的形式设置，因为它们是只读的。如上所示，我们可以使用通配符<code>*</code>也可以排除单独的文件<code>!</code>。</p>
+<h4 id="source-方法"><a href="#source-方法" class="headerlink" title="source() 方法"></a>source() 方法</h4><p>如果你需要手动下载代码，你可以定义这个成员函数，然后在函数内部编写源码的获取逻辑，最常用的两种方式是：<code>git clone</code>和下载源码包。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">source</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.run(<span class="string">"git clone https://github.com/openssl/openssl.git"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">source_tgz = <span class="string">"https://www.openssl.org/source/openssl-%s.tar.gz"</span> % version</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">source</span><span class="params">(self)</span>:</span></span><br><span class="line">    tools.download(self.source_tgz, <span class="string">"openssl.tar.gz"</span>)</span><br><span class="line">    tools.unzip(<span class="string">"openssl.tar.gz"</span>)</span><br></pre></td></tr></table></figure>
+<p>conan给我们提供了大量的工具辅助我们编写<code>recipe</code>，这些工具大多集中在<code>tools</code>模块里面，比如我们上面用到的<code>tools.download</code>和<code>tools.unzip</code></p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>这个过程可能是整个过程中最复杂的操作，因为C++没有统一的构建工具（CMake慢慢的在变成事实标准，但是目前还有大量的历史遗留项目不支持CMake）。幸运的是，conan本身提供了很多封装来帮助我们减少这个过程的复杂性。</p>
+<h4 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h4><p>如果你在编写一个新项目，很有可能你也在使用CMake（如果不是，推荐你试试），如果你使用CMake，那么构建实际上也非常简单，因为conan提供了CMake这个类帮我们简化编译流程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">	cmake = CMake(self)</span><br><span class="line">	cmake.configure()</span><br><span class="line">	cmake.build()</span><br></pre></td></tr></table></figure>
+<h4 id="AutoToolsBuildEnvironment"><a href="#AutoToolsBuildEnvironment" class="headerlink" title="AutoToolsBuildEnvironment"></a>AutoToolsBuildEnvironment</h4><p>在CMake流行之前，在泛UNIX圈我们通常使用<code>AutoTool</code>来自动构建我们的项目，如果你恰好需要处理这种项目，我们可以使用Conan提供的<code>AutoToolsBuildEnvironment</code>来编译项目。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">    env_build = AutoToolsBuildEnvironment(self)</span><br><span class="line">    env_build.configure()</span><br><span class="line">    env_build.make()</span><br></pre></td></tr></table></figure>
+<h4 id="MSBuild"><a href="#MSBuild" class="headerlink" title="MSBuild"></a>MSBuild</h4><p>如果你的项目需要在Windows下使用，但又没有使用CMake，很有可能你用来VS的MSBuild来做自动构建，同样conan为我们提供了<code>MSBuild</code>类来简化编译逻辑：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">	msbuild = MSBuild(self)</span><br><span class="line">    msbuild.build(<span class="string">"MyProject.sln"</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="同时兼容多种编译方式"><a href="#同时兼容多种编译方式" class="headerlink" title="同时兼容多种编译方式"></a>同时兼容多种编译方式</h4><p>如果你没有办法使用统一的方式处理所有平台的编译，我们可以根据settting或options动态选择：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> self.settings.os == <span class="string">"Windows"</span>:</span><br><span class="line">        build_with_msbuild(self)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        build_with_cmake(self)</span><br></pre></td></tr></table></figure>
+<h3 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h3><p>编译完成之后，我们需要对编译输出打包，在conan中打包分为两种情况，主要得看我们的自动构建系统是否已经做了打包这个环节。</p>
+<h4 id="构建脚本包含打包"><a href="#构建脚本包含打包" class="headerlink" title="构建脚本包含打包"></a>构建脚本包含打包</h4><p>如果我们使用CMake或者使用<code>AutoTool</code>，我们通常会在编译脚本中指定要安装的文件，这样在执行<code>make install</code>的时候，可以把我们想要的头文件和库文件都安装到指定的目录。如果我们的构建脚本中包含这些操作，那么打包这一步我们可以什么都不做，只需要在编译的时候加上<code>install</code>这个步骤就可以了。</p>
+<p>如果你使用<code>CMake</code>你可以调用<code>install()</code>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">	...</span><br><span class="line">	cmake.install()</span><br></pre></td></tr></table></figure>
+<p>如果你使用<code>AutoTool</code>，你可以使用<code>make()</code>函数并指定<code>install</code>参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(self)</span>:</span></span><br><span class="line">	...</span><br><span class="line">    env_build.make(args=[<span class="string">'install'</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="构建脚本不包含打包"><a href="#构建脚本不包含打包" class="headerlink" title="构建脚本不包含打包"></a>构建脚本不包含打包</h4><p>如果你的构建脚本中没有包含打包这个过程，你可以通过conan提供的<code>package()</code>成员函数来完成打包，你可以自动拷贝你想要的文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">package</span><span class="params">(self)</span>:</span></span><br><span class="line">	self.copy(<span class="string">"*.h"</span>, dst=<span class="string">"include"</span>)</span><br><span class="line">	self.copy(<span class="string">"*.so"</span>, dst=<span class="string">"lib"</span>, keep_path=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>conan会自动查找符合条件的文件，并拷贝到最终的输出目录下面。这个操作对于<code>MSBuild</code>的编译比较方便。</p>
+<h3 id="配置包信息"><a href="#配置包信息" class="headerlink" title="配置包信息"></a>配置包信息</h3><p>打包的过程实际上到上面已经结束了，最后这个步骤其实是设置包的信息，以便使用者能够正常的使用，最常见的操作是设置<code>self.cpp_info.libs</code>这个属性，它用来告诉使用者在使用的时候需要链接什么库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def package_info(self):</span><br><span class="line">	self.cpp_info.libs = [&quot;hello&quot;]</span><br></pre></td></tr></table></figure>
+<p>上面这段代码表示使用的时候需要在库引用列表中加上<code>hello</code>（具体的设置方式还要看使用者用的是什么编译器）。</p>
+<h2 id="创建本地的conan包"><a href="#创建本地的conan包" class="headerlink" title="创建本地的conan包"></a>创建本地的conan包</h2><p>有了上面脚本，我们可以使用下面的命令来创建一个conan包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan create . guorongfei/testing</span><br></pre></td></tr></table></figure>
+<p>它会把<code>recipe</code>和相关的文件拷贝到本地的缓存中，然后根据<code>recipe</code>创建一个包。本地缓存通常放在<code>$HOME/.conan/data</code>目录下，我们可以直接在这个目录下面找到我们刚刚创建的包，通常这个包里面会包含下面几个目录，</p>
+<ul>
+<li>export</li>
+<li>export_source</li>
+<li>source</li>
+<li>build</li>
+<li>package</li>
+</ul>
+<p>其中 export 里面存放了我们的<code>recipe</code>，剩下的几个目录的功能我们在前面<code>conanfile.py</code>的讲解中有讲解，这里不赘述。<code>package</code>中存放了我们最终打包出来的文件，如果你想知道自己打的包对不对，可以检查一下这个目录。</p>
+<h3 id="conan-打包的内部过程"><a href="#conan-打包的内部过程" class="headerlink" title="conan 打包的内部过程"></a>conan 打包的内部过程</h3><p>conan打包的内部过程可以用下面这张表来描述：</p>
+<p><img src="http://docs.conan.io/en/latest/_images/package_create_flow.png" alt="打包流程"></p>
+<p>conan create 把文件拷贝到本地缓存中，之后把文件拷贝到source目录下，执行source()函数下载代码，然后把文件拷贝到build目录下（没一种配置都会有一个相应的build目录），执行build()函数，最后执行package()函数把最终的输出拷贝的对应的<code>package</code>目录。</p>
+<p>如果我们的编译脚本中包含了<code>install</code>这个步骤，所有的文件会被install到package目录下，所以可以不用编写package()再做拷贝。</p>
+<h3 id="只打包不编译"><a href="#只打包不编译" class="headerlink" title="只打包不编译"></a>只打包不编译</h3><p>上面提到，不同的成员函数对应打包的不同的步骤，如果我们没有办法获取源码，只能获取到二进制文件，但是又不想自己去设置库的路径，conan给我们提供来一种方式：只打包不编译。</p>
+<p>因为我们不需要编译，所以<code>recipe</code>中绝大部分的函数我们都可以不重载，通常我们只需要重载<code>packet()</code>和<code>packet_info()</code>方法。假如我们已经下载好了所有需要的文件，我们可以这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> conans <span class="keyword">import</span> ConanFile, CMake, tools</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloConan</span><span class="params">(ConanFile)</span>:</span></span><br><span class="line">    name = <span class="string">"Hello"</span></span><br><span class="line">    version = <span class="string">"0.0.1"</span></span><br><span class="line">    license = <span class="string">"MIT"</span></span><br><span class="line">    url = <span class="string">"https://github.com/hello/hello.git"</span></span><br><span class="line">    description = <span class="string">"Hello conan"</span></span><br><span class="line">    settings = <span class="string">"os"</span>, <span class="string">"compiler"</span>, <span class="string">"build_type"</span>, <span class="string">"arch"</span></span><br><span class="line">    options = &#123;<span class="string">"shared"</span>: [<span class="keyword">True</span>, <span class="keyword">False</span>]&#125;</span><br><span class="line">    default_options = <span class="string">"shared=False"</span></span><br><span class="line">    generators = <span class="string">"cmake"</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">package</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.copy(<span class="string">"*"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">package_info</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.cpp_info.libs = [<span class="string">"hello"</span>]</span><br></pre></td></tr></table></figure>
+<p>当然我们也可以重载<code>build()</code>函数从构建服务器上自动下载已经编译好的二进制包进行打包。如果我们只打包不编译，我们可以使用<code>export-pkg</code>命令创建包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan export-pkg . Hello/0.0.1@conan/testing</span><br></pre></td></tr></table></figure>
+<h2 id="把本地的conan包上传到远程的仓库"><a href="#把本地的conan包上传到远程的仓库" class="headerlink" title="把本地的conan包上传到远程的仓库"></a>把本地的conan包上传到远程的仓库</h2><p>上面这些步骤让我们在本地创建了一个conan包，但是独乐乐不如众乐乐，我们最后一个步骤通常是把包上传到远程仓库。这里涉及到三个步骤：</p>
+<h3 id="1-添加远程仓库"><a href="#1-添加远程仓库" class="headerlink" title="1. 添加远程仓库"></a>1. 添加远程仓库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan remote add remote_name remote_url</span><br></pre></td></tr></table></figure>
+<h3 id="2-获取上传权限"><a href="#2-获取上传权限" class="headerlink" title="2. 获取上传权限"></a>2. 获取上传权限</h3><p>下面这条命令可以用于获取远程仓库的权限，通常下载不需要权限，但是上传需要。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan user</span><br></pre></td></tr></table></figure>
+<h3 id="3-上传包"><a href="#3-上传包" class="headerlink" title="3. 上传包"></a>3. 上传包</h3><p>因为我们可能创建了多个包（不同到setting，不同到options），我们可以加上 <code>--all</code> 表示上传所有到包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conan upload Hello/0.0.1@conan/testing --all</span><br></pre></td></tr></table></figure>
+<p><code>conan</code>是一个去中心化的包版本管理工具，模型和<code>git</code>十分相识。</p>
+<h1 id="美中不足"><a href="#美中不足" class="headerlink" title="美中不足"></a>美中不足</h1><p>我非常希望<code>conan</code>是一个完美的包版本管理器，但是它毕竟不是，我个人使用过程中最大的麻烦是他们对于Android的交叉编译支持其实不是特别友好。</p>
+<h2 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h2><p>交叉编译是指在一个架构中编译另一个架构的包，比如在Linux上编译Android的包。conan对于交叉编译的支持是通过创建<code>toolchain</code>，并且设置<code>CXX</code>、<code>CC</code>、<code>SYSTEM_ROOT</code>等环境变量来实现的，这种方式在<code>AutoTool</code>流行的年代比较流行，目前很多嵌入式开发依旧使用这中方式。具体的使用方式参考官方给的例子：</p>
+<ul>
+<li><a href="http://blog.conan.io/2018/01/30/Cross-building-Boost-Android.html" target="_blank" rel="noopener">Cross building Boost C++ libraries to Android with Conan</a></li>
+</ul>
+<p>但是Android的NDK，现在也支持使用<code>toolchain</code>这种方式，但是这种方式在后续会被慢慢的移除掉。NDK目前的交叉编译使用的是CMake的toolchain.cmake这种方式，直接使用CMake系统来完成交叉编译，它不需要单独制作<code>toolchian</code>，使用起来其实方便很多。但是目前conan并不支持这种方式。</p>
+<hr>
+<p>【1】：为什么使用脚本语言来实现编译语言的包版本管理器可以参考官方的解释：<a href="http://blog.conan.io/2016/09/27/Why-a-C++-package-manager-can&#39;t-be-written-in-C++.html" target="_blank" rel="noopener">Why a C++ package manager can’t be written in C++</a></p>
+<p>【2】：这个文件的格式比较像<code>toml</code>，但我没有找到官方的说法。</p>
+<p>【3】：Windows 中的 HOME 目录通常是用户目录的根目录。</p>
+<p>【4】：比如目前网络上存在大量的开源C/C++项目没有conan包，我们可以为这些包编写打包脚本</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-CPP/" rel="tag"># C/CPP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/16/cpp-std-functional/" rel="next" title="C++轮子——函数式编程">
+                <i class="fa fa-chevron-left"></i> C++轮子——函数式编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/09/zuozhuan-one/" rel="prev" title="读左传——鲁隐公">
+                读左传——鲁隐公 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#官方文档"><span class="nav-number">1.</span> <span class="nav-text">官方文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#包管理器"><span class="nav-number">2.</span> <span class="nav-text">包管理器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-版本（Ubuntu为例子，Windows-更复杂）"><span class="nav-number">2.1.</span> <span class="nav-text">C++ 版本（Ubuntu为例子，Windows 更复杂）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pre-requisites"><span class="nav-number">2.1.1.</span> <span class="nav-text">Pre-requisites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Protoc"><span class="nav-number">2.1.2.</span> <span class="nav-text">Protoc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-from-Source"><span class="nav-number">2.1.3.</span> <span class="nav-text">Build from Source</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-版本"><span class="nav-number">2.2.</span> <span class="nav-text">Android 版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#跨平台的包管理器"><span class="nav-number">3.</span> <span class="nav-text">跨平台的包管理器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">4.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">5.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#conanfile-txt"><span class="nav-number">5.1.</span> <span class="nav-text">conanfile.txt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conan-install"><span class="nav-number">5.2.</span> <span class="nav-text">conan install</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用生成自动生成的编译文件"><span class="nav-number">5.3.</span> <span class="nav-text">引用生成自动生成的编译文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用动态库"><span class="nav-number">5.4.</span> <span class="nav-text">使用动态库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Debug-版本的库"><span class="nav-number">5.5.</span> <span class="nav-text">使用 Debug 版本的库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#profile"><span class="nav-number">5.6.</span> <span class="nav-text">profile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他工具的集成"><span class="nav-number">5.7.</span> <span class="nav-text">其他工具的集成</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建一个包"><span class="nav-number">6.</span> <span class="nav-text">创建一个包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#理解conan的包名"><span class="nav-number">6.1.</span> <span class="nav-text">理解conan的包名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包的创建步骤"><span class="nav-number">6.2.</span> <span class="nav-text">包的创建步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conanfile-py"><span class="nav-number">6.3.</span> <span class="nav-text">conanfile.py</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖"><span class="nav-number">6.3.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载源码"><span class="nav-number">6.3.2.</span> <span class="nav-text">下载源码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#exports-sources"><span class="nav-number">6.3.2.1.</span> <span class="nav-text">exports_sources</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#source-方法"><span class="nav-number">6.3.2.2.</span> <span class="nav-text">source() 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">6.3.3.</span> <span class="nav-text">编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CMake"><span class="nav-number">6.3.3.1.</span> <span class="nav-text">CMake</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AutoToolsBuildEnvironment"><span class="nav-number">6.3.3.2.</span> <span class="nav-text">AutoToolsBuildEnvironment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MSBuild"><span class="nav-number">6.3.3.3.</span> <span class="nav-text">MSBuild</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同时兼容多种编译方式"><span class="nav-number">6.3.3.4.</span> <span class="nav-text">同时兼容多种编译方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打包"><span class="nav-number">6.3.4.</span> <span class="nav-text">打包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构建脚本包含打包"><span class="nav-number">6.3.4.1.</span> <span class="nav-text">构建脚本包含打包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建脚本不包含打包"><span class="nav-number">6.3.4.2.</span> <span class="nav-text">构建脚本不包含打包</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置包信息"><span class="nav-number">6.3.5.</span> <span class="nav-text">配置包信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建本地的conan包"><span class="nav-number">6.4.</span> <span class="nav-text">创建本地的conan包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#conan-打包的内部过程"><span class="nav-number">6.4.1.</span> <span class="nav-text">conan 打包的内部过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#只打包不编译"><span class="nav-number">6.4.2.</span> <span class="nav-text">只打包不编译</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#把本地的conan包上传到远程的仓库"><span class="nav-number">6.5.</span> <span class="nav-text">把本地的conan包上传到远程的仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-添加远程仓库"><span class="nav-number">6.5.1.</span> <span class="nav-text">1. 添加远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-获取上传权限"><span class="nav-number">6.5.2.</span> <span class="nav-text">2. 获取上传权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-上传包"><span class="nav-number">6.5.3.</span> <span class="nav-text">3. 上传包</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#美中不足"><span class="nav-number">7.</span> <span class="nav-text">美中不足</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉编译"><span class="nav-number">7.1.</span> <span class="nav-text">交叉编译</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

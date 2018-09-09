@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C/CPP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这篇文章总结了一些 Linux 下高效C++编程的工具。">
+<meta name="keywords" content="C&#x2F;CPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 高效编程的一些总结">
+<meta property="og:url" content="http://blog.guorongfei.com/2017/05/14/effective-cpp-coding/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="这篇文章总结了一些 Linux 下高效C++编程的工具。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.747Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 高效编程的一些总结">
+<meta name="twitter:description" content="这篇文章总结了一些 Linux 下高效C++编程的工具。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2017/05/14/effective-cpp-coding/"/>
+
+
+
+
+
+  <title>Linux 高效编程的一些总结 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2017/05/14/effective-cpp-coding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux 高效编程的一些总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-14T19:20:07+08:00">
+                2017-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/14/effective-cpp-coding/" class="leancloud_visitors" data-flag-title="Linux 高效编程的一些总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章总结了一些 Linux 下高效C++编程的工具。</p>
+<a id="more"></a>
+<h1 id="专业"><a href="#专业" class="headerlink" title="专业"></a>专业</h1><p>菜鸟写一天的产出可能高不过高手一个小时，工具神马的都是浮云，自身的专业才是最重要
+的。</p>
+<h1 id="高效的核心技能——自动化"><a href="#高效的核心技能——自动化" class="headerlink" title="高效的核心技能——自动化"></a>高效的核心技能——自动化</h1><p>绝大部分时间，你觉得效率不高是因为你在不断的重复，把重复的东西自动化就是效率。</p>
+<h2 id="自动化的关键——脚本语言"><a href="#自动化的关键——脚本语言" class="headerlink" title="自动化的关键——脚本语言"></a>自动化的关键——脚本语言</h2><p>脚本语言非常适合自动化的工作，可以大大的提供效率，比如说我有一个专门用于创建新的
+项目的 cpds（cpp project directory structure），它可以用来初始化一个可以新项目的
+完整目录结构和基本的配置文件</p>
+<p>动静结合，动态语言 + 静态语言 = 编程效率 + 程序的效率</p>
+<p>我个人使用 Python，非常棒的一门语言，我用它写脚本，写爬虫，写VIM插件等等</p>
+<h1 id="高效的-VIM"><a href="#高效的-VIM" class="headerlink" title="高效的 VIM"></a>高效的 VIM</h1><p>C++编程在 Linux 下没有太多好用的IDE，编辑器 + GCC + automake（或者 clang + cmake
+）可能是最高效的开发方式，编程的绝大部分时间都是在和编辑器打交道，善用好使用编辑
+器可以极大的提高效率。编辑器无好坏之分，个人使用VIM，这里介绍高效使用VIM的一些
+TIPS。</p>
+<h2 id="VIM-从入门到不放弃"><a href="#VIM-从入门到不放弃" class="headerlink" title="VIM 从入门到不放弃"></a>VIM 从入门到不放弃</h2><p>很多人耐不住寂寞，熬不到入门的那一天就放弃了 VIM。学习曲线没有想象中的那么高，入
+门只需要看 vimtutor 就够了。坚持用 VIM 两个礼拜，基本上都能入门。很多人没有办法
+习惯 HJKL 的操作习惯，对自己狠一点，置之死地而后生，直接把方向键全部屏蔽掉。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">noremap &lt;Up&gt; &lt;Nop&gt;</span><br><span class="line">noremap &lt;Down&gt; &lt;Nop&gt;</span><br><span class="line">noremap &lt;Left&gt; &lt;Nop&gt;</span><br><span class="line">noremap &lt;Right&gt; &lt;Nop&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="学会高效的使用VIM的核心功能"><a href="#学会高效的使用VIM的核心功能" class="headerlink" title="学会高效的使用VIM的核心功能"></a>学会高效的使用VIM的核心功能</h2><p>斧子需要磨才会锋利，但是千万不要磨错了边。急于求成是很多人死在VIM进阶路上的绊脚
+石，欲速则不达，先看看《Vim实用技巧》这本书，在考虑去配置的各种各样的插件。不要
+做一个无插件不能用的VIM党。</p>
+<h2 id="好用的插件的推荐"><a href="#好用的插件的推荐" class="headerlink" title="好用的插件的推荐"></a>好用的插件的推荐</h2><h3 id="YouCompleteMe"><a href="#YouCompleteMe" class="headerlink" title="YouCompleteMe"></a>YouCompleteMe</h3><p>需要注意的地方：</p>
+<ol>
+<li><p>这个插件需要编译，记得在编译的时候加上 –clang-completer 选项</p>
+</li>
+<li><p>这个插件需要你提供 <code>.ycm_extra_conf.py</code> 文件，每个项目都应该单独在根目录下放
+一个这样的文件。关键部分在于配置开头的 flags 选项中的中头文件路径。</p>
+</li>
+</ol>
+<p>这个配置文件不用手动生成，可以使用<code>YCM-Generator</code>自动生成，安装完成之后，在你
+的编译目录下（包含 Makefile 的那个目录）运行 <code>YcmGenerateConfig</code> 命令即可生成
+配置文件，然后调整配置文件中的相对路径（编译目录可能不是根目录）即可。</p>
+<ol start="3">
+<li>这个插件超级难以安装，因为下载 clang 需要很长时间，耐心一点，欲速则不达。</li>
+</ol>
+<h3 id="UltiSnippet-vim-snippet"><a href="#UltiSnippet-vim-snippet" class="headerlink" title="UltiSnippet + vim-snippet"></a>UltiSnippet + vim-snippet</h3><p>代码自动生成的另外一个神器，前者是引擎，后者是脚本，他们的关系在xxx一文中有提及
+，不再赘述。</p>
+<p>需要注意的地方：</p>
+<ol>
+<li>你可以自己编辑代码块儿生成规则！你可以用它来插入你自己定制常用代码，相关教程
+参考xxx</li>
+</ol>
+<h3 id="NERDTree"><a href="#NERDTree" class="headerlink" title="NERDTree"></a>NERDTree</h3><p>强大的目录树，工程管理必备</p>
+<h3 id="ctrlp"><a href="#ctrlp" class="headerlink" title="ctrlp"></a>ctrlp</h3><p>快速的查找文件，这个功能来自 sublime，sublime 的用户应该会非常顺手。</p>
+<p>需要注意的地方：</p>
+<ol>
+<li><p>你可以配置搜索程序，目前最快是不是 grep，也不是 ack，是 ag。</p>
+</li>
+<li><p>你可以配置 ag，来忽略掉其中的某些你不想要的文件，只要在 HOME 目录下放一个
+.agignore用力配置你想要忽略的文件即可</p>
+</li>
+<li><p>它是一个框架有大量基于它的插件，比如 buffer，funky，mru，我自己基于它写过一个
+用于引入头文件的 ctrlp-header</p>
+</li>
+</ol>
+<h3 id="vim-fswitch"><a href="#vim-fswitch" class="headerlink" title="vim-fswitch"></a>vim-fswitch</h3><p>快速的交换头文件和实现文件</p>
+<h3 id="vim-multiple-cursors"><a href="#vim-multiple-cursors" class="headerlink" title="vim-multiple-cursors"></a>vim-multiple-cursors</h3><p>来自 sublime 的功能，多行同时编辑，重命名的得力助手</p>
+<h3 id="ctrlsf-vim"><a href="#ctrlsf-vim" class="headerlink" title="ctrlsf.vim"></a>ctrlsf.vim</h3><p>同样是来自 sublime 的功能，配置前面的 vim-multiple-cursors 可以同时修改多个文件
+中的名字。</p>
+<h3 id="vim-autoformat"><a href="#vim-autoformat" class="headerlink" title="vim-autoformat"></a>vim-autoformat</h3><p>代码格式化的工具</p>
+<h3 id="Ack-vim"><a href="#Ack-vim" class="headerlink" title="Ack.vim"></a>Ack.vim</h3><p>需要注意的地方：</p>
+<ol>
+<li>它只是名字脚本 Ack，但是可以配置使用 ag 来进行搜索</li>
+</ol>
+<p>不要再退出vim，使用 grep 搜索之后按照行号来打开文件，你完全可以在 Vim 中完成这项
+工作。</p>
+<h3 id="fugitive"><a href="#fugitive" class="headerlink" title="fugitive"></a>fugitive</h3><p>你不要退出 vim 进行 git 操作，它的强大超乎你的想象。</p>
+<h1 id="高效的终端"><a href="#高效的终端" class="headerlink" title="高效的终端"></a>高效的终端</h1><p>高效的另一个关键点个人认为是：专注，心无旁骛。如果电脑只有一个终端，一个键盘，你
+可能会成为最高效的程序员。</p>
+<h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2><p>一个 tmux 顶 N 个显示屏，丢掉鼠标，你的效率会直线上升。</p>
+<h2 id="zsh-oh-my-zsh-antigen"><a href="#zsh-oh-my-zsh-antigen" class="headerlink" title="zsh + oh-my-zsh + antigen"></a>zsh + oh-my-zsh + antigen</h2><p>需要注意的地方：</p>
+<ol>
+<li><p>zsh 是可以配置插件的，它的插件管理器有很多，比如 antigen。</p>
+</li>
+<li><p>非常好用的一些插件：</p>
+<ul>
+<li>zsh-syntax-highlighting</li>
+<li>zsh-autosuggestions</li>
+</ul>
+</li>
+</ol>
+<h2 id="fzf"><a href="#fzf" class="headerlink" title="fzf"></a>fzf</h2><p>把模糊匹配带到你的终端上来，好用到爆</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-CPP/" rel="tag"># C/CPP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/19/unnamed-namespace-vs-static/" rel="next" title="匿名命名空间和 static 声明的区别">
+                <i class="fa fa-chevron-left"></i> 匿名命名空间和 static 声明的区别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/14/json-for-modern-cpp-note/" rel="prev" title="C++ 常用库 —— JSON for Modern C++">
+                C++ 常用库 —— JSON for Modern C++ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#专业"><span class="nav-number">1.</span> <span class="nav-text">专业</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效的核心技能——自动化"><span class="nav-number">2.</span> <span class="nav-text">高效的核心技能——自动化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动化的关键——脚本语言"><span class="nav-number">2.1.</span> <span class="nav-text">自动化的关键——脚本语言</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效的-VIM"><span class="nav-number">3.</span> <span class="nav-text">高效的 VIM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VIM-从入门到不放弃"><span class="nav-number">3.1.</span> <span class="nav-text">VIM 从入门到不放弃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学会高效的使用VIM的核心功能"><span class="nav-number">3.2.</span> <span class="nav-text">学会高效的使用VIM的核心功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#好用的插件的推荐"><span class="nav-number">3.3.</span> <span class="nav-text">好用的插件的推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#YouCompleteMe"><span class="nav-number">3.3.1.</span> <span class="nav-text">YouCompleteMe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UltiSnippet-vim-snippet"><span class="nav-number">3.3.2.</span> <span class="nav-text">UltiSnippet + vim-snippet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NERDTree"><span class="nav-number">3.3.3.</span> <span class="nav-text">NERDTree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctrlp"><span class="nav-number">3.3.4.</span> <span class="nav-text">ctrlp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim-fswitch"><span class="nav-number">3.3.5.</span> <span class="nav-text">vim-fswitch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim-multiple-cursors"><span class="nav-number">3.3.6.</span> <span class="nav-text">vim-multiple-cursors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctrlsf-vim"><span class="nav-number">3.3.7.</span> <span class="nav-text">ctrlsf.vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim-autoformat"><span class="nav-number">3.3.8.</span> <span class="nav-text">vim-autoformat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ack-vim"><span class="nav-number">3.3.9.</span> <span class="nav-text">Ack.vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fugitive"><span class="nav-number">3.3.10.</span> <span class="nav-text">fugitive</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效的终端"><span class="nav-number">4.</span> <span class="nav-text">高效的终端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tmux"><span class="nav-number">4.1.</span> <span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zsh-oh-my-zsh-antigen"><span class="nav-number">4.2.</span> <span class="nav-text">zsh + oh-my-zsh + antigen</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fzf"><span class="nav-number">4.3.</span> <span class="nav-text">fzf</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

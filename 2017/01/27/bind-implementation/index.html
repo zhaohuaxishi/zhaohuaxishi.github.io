@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C/CPP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="C++11 中有一个非常神奇的函数std::bind，它让你可以对函数进行适配，动态的绑定参 数。比如你有一个函数接收两个参数，一个算法接收单参数的callable object，那么通 过std::bind我们可以让两者协同工作。 12345678void Foo(int a, int b);template&amp;lt; class InputIt, class UnaryFunction &amp;gt;">
+<meta name="keywords" content="C&#x2F;CPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="std::bind 的实现原理">
+<meta property="og:url" content="http://blog.guorongfei.com/2017/01/27/bind-implementation/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="C++11 中有一个非常神奇的函数std::bind，它让你可以对函数进行适配，动态的绑定参 数。比如你有一个函数接收两个参数，一个算法接收单参数的callable object，那么通 过std::bind我们可以让两者协同工作。 12345678void Foo(int a, int b);template&amp;lt; class InputIt, class UnaryFunction &amp;gt;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-25T15:28:46.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="std::bind 的实现原理">
+<meta name="twitter:description" content="C++11 中有一个非常神奇的函数std::bind，它让你可以对函数进行适配，动态的绑定参 数。比如你有一个函数接收两个参数，一个算法接收单参数的callable object，那么通 过std::bind我们可以让两者协同工作。 12345678void Foo(int a, int b);template&amp;lt; class InputIt, class UnaryFunction &amp;gt;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2017/01/27/bind-implementation/"/>
+
+
+
+
+
+  <title>std::bind 的实现原理 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2017/01/27/bind-implementation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">std::bind 的实现原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-27T11:43:06+08:00">
+                2017-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/01/27/bind-implementation/" class="leancloud_visitors" data-flag-title="std::bind 的实现原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>C++11 中有一个非常神奇的函数<code>std::bind</code>，它让你可以对函数进行适配，动态的绑定参
+数。比如你有一个函数接收两个参数，一个算法接收单参数的<code>callable object</code>，那么通
+过<code>std::bind</code>我们可以让两者协同工作。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Foo</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt; <span class="class"><span class="keyword">class</span> <span class="title">InputIt</span>, <span class="title">class</span> <span class="title">UnaryFunction</span> &gt;</span></span><br><span class="line"><span class="class"><span class="title">UnaryFunction</span> <span class="title">for_each</span>( <span class="title">InputIt</span> <span class="title">first</span>, <span class="title">InputIt</span> <span class="title">last</span>, <span class="title">UnaryFunction</span> <span class="title">f</span> );</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">10</span>;</span><br><span class="line">for_each(v.begin(), v.end(), <span class="built_in">std</span>::bind(Foo, _1, b))</span><br></pre></td></tr></table></figure>
+<p>那么这个神奇的 <code>bind</code> 函数和神奇的占位符到底是怎么实现的呢，它们的工作原理是什么
+？这个问题困扰我很久，最近在网上找到一篇讲解非常清晰的<a href="https://accu.org/index.php/journals/1397" target="_blank" rel="noopener">文章</a>，这里对其中的
+内容做简单的摘要和翻译，希望对于大家理解背后的工作原理会有帮助。</p>
+<a id="more"></a>
+<h1 id="bind-是一个工厂方法"><a href="#bind-是一个工厂方法" class="headerlink" title="bind 是一个工厂方法"></a>bind 是一个工厂方法</h1><p>很显然 bind 是一个工厂方法，因为我们传递给 for_each 的是 bind 的返回值而不是
+bind 本身。bind 创建的对象在 boost 实现中叫做 bind_t。因为 bind 要做的事情是适配
+器，所以它返回的对象必然和它接受的对象是一样的—— <code>callable object</code>。因此，bind_t
+中必然重载了函数调用符。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bind_t</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A a);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>此外，bind_t 需要以用户给定的参数调用原本的函数，所以它的内部实际还存储了另外两
+个成员，也就是原本的函数和用户已经确定的参数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bind_t</span> &#123;</span></span><br><span class="line">    F f_;</span><br><span class="line">    L l_;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">bind_t</span>(F f, L l) : f_(f), l_(l) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A a);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><p>对于<code>std::bind</code>来说，参数分为两种，一种是用户创建<code>bind_t</code>的时候提供的，另一种是
+调用 bind_t 的<code>operator()()</code>的时候提供的，前者在创建 bind_t 的时候就已经知道，而
+后者是在调用<code>bind_t</code>的<code>operator()()</code>的时候才知道，为了方便描述我们把它们分别叫做
+L 和 A 。</p>
+<p>很显然，L 和 A 都可能有多个，多个 A 可以通过重载不同版本的 operator() 来解决，比
+如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bind_t</span> &#123;</span></span><br><span class="line">    F f_;</span><br><span class="line">    L l_;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A a);            <span class="comment">// 单个参数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A1 a1, A2 a2);   <span class="comment">// 两个参数</span></span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><del>但是多个 L 却不行，因为类是没有办法重载的，你不能既定义 bind_t 有两个模板参
+数又定义它有三个模板参数。而且就算你可以这么做，</del>你可以以相同的方式处理L，
+使用模板的偏特化定义多个不同版本的 <code>bind_t</code>，这种方式是一种不太合理的做法，因为
+这样会导致 L 和 A 进行排列组合，实现起来将会极其复杂。boost 内部解决办法是归一，
+增加一层间接性，使用 List 而不是使用单个元素。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List1</span> &#123;</span></span><br><span class="line">    <span class="comment">// 省略了构造函数</span></span><br><span class="line">    A1 a1;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List2</span> &#123;</span></span><br><span class="line">    <span class="comment">// 省略了构造函数</span></span><br><span class="line">    A1 a1;</span><br><span class="line">    A2 a2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来我们就可以使用 List1 和 List2 作为 bind_t 的参数从而解决 L 有多个的问题
+。所以实际上，bind 这个函数的工作就是做 List 的封装以及对应 bind_t 的创建。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, A1, A2&gt;</span><br><span class="line"><span class="keyword">bind_t</span>&lt;F, List2&gt; bind(F f, A1 a1, A2 a2) &#123;</span><br><span class="line">    <span class="function">List2 <span class="title">list</span><span class="params">(a1, a2)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">bind_t</span>&lt;F, List2&gt;(f, <span class="built_in">list</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然为了能够支持多个参数，实际上 bind 是一个系列的模板函数的重载。</p>
+<h1 id="bind-t-的-operator-的实现"><a href="#bind-t-的-operator-的实现" class="headerlink" title="bind_t 的 operator() 的实现"></a>bind_t 的 operator() 的实现</h1><p>有了上面的基础之后，我们来看operator()的具体实现，首先我们需要知道的是，在
+bind_t中，我们并不知道 L 到底是几个参数（就像你在 vector 的定义中不可能知道你存
+储的到底是什么类型）。所以我们没有办法在 bind_t 中去处理参数绑定的问题，相反我们
+需要让 L 去处理参数的绑定问题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bind_t</span> &#123;</span></span><br><span class="line">    F f_;</span><br><span class="line">    L l_;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A a) &#123;</span><br><span class="line">        l_(f, a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>也就是说，List 也必须提供函数调用操作符。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List2</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> A&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(F f, A a);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    A1 a1;</span><br><span class="line">    A2 a2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们之前说过，bind_t 为了能够支持多个参数的调用，重载了多个 <code>operator()</code> 而这些
+重载的函数如果按照前面的实现方式——调用 List 对应的<code>operator()</code>的话就会导致 List
+也需要重载多个 <code>operator</code>，而这无疑是非常繁琐的事情。为了解决这个问题，同样可以
+用列表替代单个参数。也就是像下面这样实现 bind_t 的函数调用操作符。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bind_t</span> &#123;</span></span><br><span class="line">    F f_;</span><br><span class="line">    L l_;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A a) &#123;</span><br><span class="line">        <span class="function">List1 <span class="title">list</span><span class="params">(a)</span></span>;</span><br><span class="line">        l_(f, <span class="built_in">list</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(A1 a1, A2 a2) &#123;</span><br><span class="line">        <span class="function">List2 <span class="title">list</span><span class="params">(a1, a2)</span></span>;</span><br><span class="line">        l_(f, <span class="built_in">list</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="ListN-的-operator-的实现"><a href="#ListN-的-operator-的实现" class="headerlink" title="ListN 的 operator() 的实现"></a>ListN 的 operator() 的实现</h1><p><strong>ListN 表示 List1，List2，List3 中的任何一个，这里一 List2 为例</strong></p>
+<p>List2 需要完成两件事情，完成参数的绑定和调用实际的函数 f。所以 operator() 最终看
+起来应该是这个样子。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List2</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(F f, L l) &#123;</span><br><span class="line">        f(l1, l2);  <span class="comment">// 这里的 l1，l2 是根据 L 推导出来的</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    A1 a1;</span><br><span class="line">    A2 a2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以我们剩下的问题是如何根据 l，a1，a2 最终推导出 f 的实际调用参数 l1，l2。其实
+这个算法很简单。以 A1 为例，如果 A1 是普通的值，那么 l1 == a1。如果 A1 是一个占
+位符，那么 l1 就等于 l 中对应的值。boost 在实现这个逻辑的时候使用了一个非常巧妙
+的方式——函数重载。它重载了 List 的 <code>[]</code> 操作符，然后根据参数的类型来判断返回什么
+值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List2</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line">    <span class="keyword">operator</span>()(F f, L l) &#123;</span><br><span class="line">        f(l[a1], l[a2]);  <span class="comment">// 这里的根据 a1，a2 的类型得到实际的值</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    A1 a1;</span><br><span class="line">    A2 a2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A1&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List1</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    A1 <span class="keyword">operator</span>[](placeholder&lt;<span class="number">1</span>&gt;) <span class="keyword">const</span> &#123; <span class="keyword">return</span> a1; &#125; <span class="comment">// 如果是占位符</span></span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    T <span class="keyword">operator</span>[](T v) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v; &#125;   <span class="comment">// 如果是普通的类型</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    A1 a1;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里的实现使用了一个C++比较偏门的特性，在重载解析的时候，普通函数的优先级高于模
+板函数，也就是说当遇到类型为 <code>placeholder&lt;1&gt;</code> 的参数时候，虽然模板函数也可以实例
+化出正确的函数，但是因为有一个不需要要实例化的普通函数存在，重载解析会选择调用普
+通的函数，也就是调用返回占位符对应的值的那个函数。</p>
+<h1 id="placeholder-的作用"><a href="#placeholder-的作用" class="headerlink" title="placeholder 的作用"></a>placeholder<1> 的作用</1></h1><p>从上面的代码我们可以看出，实际上，placeholder<1> 只是用来做重载解析的分派用的，
+我们需要的是它的类型而不是它的值，所以你会发现前面 <code>operator[]</code> 甚至没有给出参数
+名称。placeholder<1> 的定义非常简单：</1></1></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> I&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">placeholder</span>&#123;</span>&#125;;</span><br><span class="line">placeholder&lt;<span class="number">1</span>&gt; _1;</span><br><span class="line">placeholder&lt;<span class="number">2</span>&gt; _2;</span><br><span class="line">placeholder&lt;<span class="number">3</span>&gt; _3;</span><br></pre></td></tr></table></figure>
+<p>这种把数值当类型的技巧可以参考《C++设计新思维》一书。相信现在你应该很清楚
+<code>std::placeholder::_1</code> 是什么东西了吧。</p>
+<h1 id="实际例子"><a href="#实际例子" class="headerlink" title="实际例子"></a>实际例子</h1><p>为了方便理解这个参数绑定的过程，我们以文章开头的例子来详细分析一下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Foo</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;</span><br><span class="line"></span><br><span class="line">for_each(v.begin(), v.end(), <span class="built_in">std</span>::bind(Foo, _1, b));</span><br></pre></td></tr></table></figure>
+<p>这个例子中，std::bind 返回的 bind_t 类型是</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bind_t</span>&lt;<span class="keyword">void</span>(<span class="keyword">int</span>, <span class="keyword">int</span>), List2&lt;placeholder&lt;<span class="number">1</span>&gt;, <span class="keyword">int</span>&gt;&gt; binder = &#123;</span><br><span class="line">    Foo,          <span class="comment">// f_</span></span><br><span class="line">    &#123;_1, <span class="number">10</span>&#125;      <span class="comment">// l_</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们用单参数调用 <code>binder</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binder(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+<p>那么实际上调用的代码是 binder 的 <code>operator()(int a)</code> 函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bind_t</span>&lt;void(int, int), List2&lt;placeholder&lt;1&gt;, int&gt;&gt; &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">operator</span>()(<span class="keyword">int</span> a) &#123;</span><br><span class="line">        List1&lt;<span class="keyword">int</span>&gt; <span class="built_in">list</span>(<span class="number">5</span>);</span><br><span class="line">        l_(f_, <span class="built_in">list</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>然后调用了 <code>List2&lt;std::placeholder, int&gt;</code> 的 <code>operator()(List1 list)</code> 函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List2</span>&lt;std::placeholder&lt;1&gt;, int&gt; &#123;</span> <span class="comment">// binder 中的成员变量 l_</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">operator</span>()(<span class="keyword">void</span>(*f)(<span class="keyword">int</span>, <span class="keyword">int</span>), List1 <span class="built_in">list</span>) &#123;</span><br><span class="line">        f(<span class="built_in">list</span>[a1], <span class="built_in">list</span>[a2])</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    placeholder&lt;<span class="number">1</span>&gt; a1;      <span class="comment">// 占位符 _1</span></span><br><span class="line">    <span class="keyword">int</span> a2                  <span class="comment">// 创建 binder 的时候提供的参数 10</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>最终调用了List1<int>的<code>operator[](placeholder&lt;1&gt;)</code>函数和<code>operator[](int a)</code> 函数
+：</int></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List1</span>&lt;int&gt; &#123;</span>  <span class="comment">// bind_t 的 operator()(int) 中创建的 local 变量</span></span><br><span class="line">    <span class="keyword">operator</span>[](placeholder&lt;<span class="number">1</span>&gt;) &#123;</span><br><span class="line">        <span class="keyword">return</span> a1;      <span class="comment">// 返回 5</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">operator</span>[](<span class="keyword">int</span> a) &#123;</span><br><span class="line">        <span class="keyword">return</span> a;       <span class="comment">// 返回 10</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> a1;     <span class="comment">// 这个是函数调用的实参也就是 binder(5) 调用中的 `5`</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="如果实际调用的参数比绑定的参数多会怎么样？"><a href="#如果实际调用的参数比绑定的参数多会怎么样？" class="headerlink" title="如果实际调用的参数比绑定的参数多会怎么样？"></a>如果实际调用的参数比绑定的参数多会怎么样？</h1><p><code>std::bind</code> 有一个非常有意思的特性那就是你可以提供比绑定的参数更多的实际参数，多
+出来的这些参数会被自动忽略掉。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> binder = <span class="built_in">std</span>::bind(foo, <span class="built_in">std</span>::placeholder::_1);</span><br><span class="line"></span><br><span class="line">binder(<span class="number">1</span>);</span><br><span class="line">binder(<span class="number">1</span>, <span class="number">2</span>);       <span class="comment">// 这个调用是合法的！</span></span><br></pre></td></tr></table></figure>
+<p>为什么呢？因为<code>binder</code>根本不知道<code>2</code>这个参数的存在。如前所述，<code>binder</code>的<code>L</code>是
+<code>List1</code>（因为绑定的时候只有 std::placeholder::_1 这个参数）：</p>
+<p>所以当我们调用<code>binder(1, 2)</code>的时候调用的是<code>List1</code>的<code>operator()(F f, A a)</code>成员函
+数，这里的<code>f</code>是<code>foo</code>，而<code>a</code>是我们提供的实际调用参数<code>List2</code>（1, 2）。</p>
+<p>实际上 <code>List1</code> 的 <code>operator()()</code> 实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> L&gt;</span><br><span class="line"><span class="keyword">operator</span>()(F f, L l) &#123;</span><br><span class="line">    f(l[a1]);   <span class="comment">// a1 就是 std::placeholder::_1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这个调用最终变成了<code>foo(1)</code>，也就是说 <code>2</code> 这个参数默默的被吞掉了。</p>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p>这种看似诡异的行为其实有它独特的作用，那就是选择性的忽略掉你不想处理参数，比如你
+有一个回调函数的原型如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::function&lt;<span class="keyword">void</span>(<span class="keyword">int</span>, <span class="keyword">double</span>)&gt;;</span><br></pre></td></tr></table></figure>
+<p>那么你在设置这个回调的时候可以使用下面这个<code>binder</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="built_in">std</span>::bind(foo, <span class="built_in">std</span>::placeholder::_1);</span><br></pre></td></tr></table></figure>
+<p>也可以使用下面这个<code>binder</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">double</span>)</span></span>;</span><br><span class="line"><span class="built_in">std</span>::bind(bar, <span class="built_in">std</span>::placeholder::_1, <span class="built_in">std</span>::placeholder::_2);</span><br></pre></td></tr></table></figure>
+<p>这种灵活性使用<code>lambda</code>好像没有办法实现。</p>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>实际上<code>std::bind</code>的实现方式和这里提到的有些许出入，比如说为了提高效率，很多地方
+都是使用引用而不是值，再不然这里没有处理函数的返回值的问题，实际上的实现中处理了
+。但是实现原理上应该八九不离十了，<code>boost</code>的实现放在 <code>boost/bind/bind.hpp</code> 中，读
+者可以参考一下。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-CPP/" rel="tag"># C/CPP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/25/enbale-shared-from-this-implementaion/" rel="next" title="enable_shared_from_this 的使用及实现原理">
+                <i class="fa fa-chevron-left"></i> enable_shared_from_this 的使用及实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/05/effective-modern-cpp-note/" rel="prev" title="读书札记之——《Effective Modern C++》">
+                读书札记之——《Effective Modern C++》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#bind-是一个工厂方法"><span class="nav-number">1.</span> <span class="nav-text">bind 是一个工厂方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数"><span class="nav-number">2.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bind-t-的-operator-的实现"><span class="nav-number">3.</span> <span class="nav-text">bind_t 的 operator() 的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ListN-的-operator-的实现"><span class="nav-number">4.</span> <span class="nav-text">ListN 的 operator() 的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#placeholder-的作用"><span class="nav-number">5.</span> <span class="nav-text">placeholder 的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际例子"><span class="nav-number">6.</span> <span class="nav-text">实际例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如果实际调用的参数比绑定的参数多会怎么样？"><span class="nav-number">7.</span> <span class="nav-text">如果实际调用的参数比绑定的参数多会怎么样？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用"><span class="nav-number">7.1.</span> <span class="nav-text">作用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结束语"><span class="nav-number">8.</span> <span class="nav-text">结束语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

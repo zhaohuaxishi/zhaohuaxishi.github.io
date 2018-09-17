@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="编程工具," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="平常习惯了linux的zsh+tmux+vim组合，开发体验非常完美，最近应该工作需求不得不 在 Windows上做大量的开发，简直就是煎熬。花了一下写时间折腾，最终用 nvim+powershell 的方式勉强支撑起Windows下的开发。这篇文章总结了我尝试过的各 种方式，谈谈我对这几种方式的优缺点的看法。">
+<meta name="keywords" content="编程工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux开发者的Windows生存指南">
+<meta property="og:url" content="http://blog.guorongfei.com/2018/09/15/windows-powershell-tips/index.html">
+<meta property="og:site_name" content="时习之">
+<meta property="og:description" content="平常习惯了linux的zsh+tmux+vim组合，开发体验非常完美，最近应该工作需求不得不 在 Windows上做大量的开发，简直就是煎熬。花了一下写时间折腾，最终用 nvim+powershell 的方式勉强支撑起Windows下的开发。这篇文章总结了我尝试过的各 种方式，谈谈我对这几种方式的优缺点的看法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-17T03:13:49.824Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux开发者的Windows生存指南">
+<meta name="twitter:description" content="平常习惯了linux的zsh+tmux+vim组合，开发体验非常完美，最近应该工作需求不得不 在 Windows上做大量的开发，简直就是煎熬。花了一下写时间折腾，最终用 nvim+powershell 的方式勉强支撑起Windows下的开发。这篇文章总结了我尝试过的各 种方式，谈谈我对这几种方式的优缺点的看法。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.guorongfei.com/2018/09/15/windows-powershell-tips/"/>
+
+
+
+
+
+  <title>Linux开发者的Windows生存指南 | 时习之</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">时习之</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学而时习之，不亦说乎</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2018/09/15/windows-powershell-tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux开发者的Windows生存指南</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-15T21:41:41+08:00">
+                2018-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/09/15/windows-powershell-tips/" class="leancloud_visitors" data-flag-title="Linux开发者的Windows生存指南">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>平常习惯了<code>linux</code>的<code>zsh+tmux+vim</code>组合，开发体验非常完美，最近应该工作需求不得不
+在 Windows上做大量的开发，简直就是煎熬。花了一下写时间折腾，最终用
+<code>nvim+powershell</code> 的方式勉强支撑起<code>Windows</code>下的开发。这篇文章总结了我尝试过的各
+种方式，谈谈我对这几种方式的优缺点的看法。</p>
+<a id="more"></a>
+<h1 id="visual-studio-vim-插件"><a href="#visual-studio-vim-插件" class="headerlink" title="visual studio + vim 插件"></a>visual studio + vim 插件</h1><p>个人的构建工具，很久以前就从<code>automake</code>切到了<code>cmake</code>，所以切到Windows系统下做开发
+，第一种尝试就是直接用<code>cmake</code>生成sln项目，然后用<code>visual studio</code>做编译和调试。我
+最终弃用它作为首选方式的原因主要有下面两个：</p>
+<h2 id="割裂"><a href="#割裂" class="headerlink" title="割裂"></a>割裂</h2><p>这种方式给人一种强烈割裂感：我需要在<code>cmd</code>种去执行<code>cmake</code>生成项目，然后
+切换到 <code>visual studio</code>上做编辑。<code>visual studio 2017</code>实际上集成了<code>cmake</code>支持，但
+是还是会有需要从<code>cmake</code>模式切换到解决方案模式的情况（比如设置一些调试参数之类的
+），依旧没有办法找到一种很舒适的集成环境。</p>
+<h2 id="文件编码"><a href="#文件编码" class="headerlink" title="文件编码"></a>文件编码</h2><p><code>visual studio</code>是一个很奇怪的IDE，无比臃肿，但却没有提供设置文件默认编码格式的功
+能（至少没有较简单的方式），这对于跨平台的开发来说简直就是噩梦，我不得不手动的把
+每一个源文件转换成统一的UTF8格式，防止在Linux平台打开的时候出现乱码（写个脚本也
+许可以稍微减轻这种痛苦）。</p>
+<h1 id="WSL"><a href="#WSL" class="headerlink" title="WSL"></a>WSL</h1><p><code>WSL</code>刚出来那会儿，个人还是有点小激动，有些人甚至开始调侃说<code>Windows</code>会成为最好的
+<code>Linux</code>发行版本。我尝试着用了一段时间，最后还是弃了，原因主要有下面几个：</p>
+<h2 id="IO太慢"><a href="#IO太慢" class="headerlink" title="IO太慢"></a>IO太慢</h2><p>这点在操作GIT的时候尤其明显，经常卡到飞起。</p>
+<h2 id="终端太难用"><a href="#终端太难用" class="headerlink" title="终端太难用"></a>终端太难用</h2><p>WSL默认的终端太丑，连主题配置都不支持。我试过很多其他的终端，包括<code>wsl-terminal</code>
+，<code>hyper</code>，对于主题和字体的支持都不尽如人意。算起来<code>hyper</code>其实是一个不错的选择，
+只是没有办法很好的支持<code>nerd fonts</code>。</p>
+<h2 id="系统上下文的切换很繁琐"><a href="#系统上下文的切换很繁琐" class="headerlink" title="系统上下文的切换很繁琐"></a>系统上下文的切换很繁琐</h2><p><code>WSL</code>像是一个内置到windows中的小虚拟机，所以这种方式和使用虚拟机一样，需要在两个
+系统中不停的切换。进程的上下文切换有开销，系统切换同样也有。</p>
+<p>比如，WSL中有<code>python、cmake、git</code>，原生系统中也有<code>python、cmake、git</code>。但是两套
+工具在行为上并没有办法完全做到一致。</p>
+<p>最明显的例子就是<code>cmake</code>，它在<code>Linux</code>上是接受 <code>cmake_build_type</code>这个参数的，但是
+在windows上会直接忽略掉，因为<code>Linux</code>上，会为 <code>release</code>和<code>debug</code>生成不同的
+makefile，而<code>visual studio</code>只生成同一个<code>sln</code>并在构建的时候动态指定 <code>release</code>和
+<code>debug</code>。我没有办法完全在<code>WSL</code>中工作，所以需要不断在两种系统上下文中切换。这种感
+觉这就像是你为同一个功能写了两份代码，你不得不维护两份。为了避免这种不一致性，你
+最好只装一套原生的工具集，如果你不得不安装两套，那就只能自求多福了（比如wsl，自
+动Python，而你用到了一些只有在原生系统中才能用的Python脚本）</p>
+<p>还有一个比较尴尬的地方就是两者对于<code>HOME</code>目录的定义不同，我要在原生系统中找到
+<code>WSL</code>中的文件夹很难，这进一步加重了切换系统的成本。</p>
+<h1 id="nvim-powershell"><a href="#nvim-powershell" class="headerlink" title="nvim + powershell"></a>nvim + powershell</h1><p>这种方式是我目前比较习惯的一种方式，nvim基本兼容vim，而且内置了对于terminal的支
+持，当然nvim默认的终端是cmd，你可以把它改成Powershell。</p>
+<p>我之所以使用这种方式主要是应为下面这几个原因：</p>
+<h2 id="快"><a href="#快" class="headerlink" title="快"></a>快</h2><p>天下武功唯快不破，<code>nvim</code>的轻巧可以碾压<code>visual studio</code>好几条街，编辑的体验也比
+<code>visual studio</code>好太多。</p>
+<h2 id="美"><a href="#美" class="headerlink" title="美"></a>美</h2><p>我得承认我是一个颜控，我没有办法忍受难看的字体，更受不了无法配置主题的终端。
+<code>nvim+powershell</code>这种方式，可以支持<code>nerd fonts</code>，可以支持主题的配置，powershell
+的主题和字体设置默认随<code>nvim</code>的相关设置，集成度非常的高。</p>
+<h2 id="原滋原味"><a href="#原滋原味" class="headerlink" title="原滋原味"></a>原滋原味</h2><p>这种方式不需要使用<code>WSL</code>，没有切换系统的烦恼，也不存在两套工具之间的差异的苦恼。</p>
+<h2 id="模拟Linux的开发体验"><a href="#模拟Linux的开发体验" class="headerlink" title="模拟Linux的开发体验"></a>模拟Linux的开发体验</h2><p>Linux给开发带来的感觉如丝般顺滑，而<code>nvim+powershell</code>的组合可以尽可能的模拟这种体
+验。这主要归功于<code>powershell</code>的插件支持，下面是我用到的一些插件。</p>
+<h3 id="psreadline"><a href="#psreadline" class="headerlink" title="psreadline"></a>psreadline</h3><p>这个插件可以给你linux的终端命令输入体验，你可以通过<code>ctrl-w</code>删除一个单词，可以用
+<code>ctrl-a</code>跳到行首，这些操作的便捷性远远高于原生的输入方式。<code>psreadline</code>甚至支持
+<code>vi-mode</code>，简直完美。</p>
+<h3 id="psfzf"><a href="#psfzf" class="headerlink" title="psfzf"></a>psfzf</h3><p>fzf，我通常只用于查找历史命令，但是这对于一个终端控来说，就这一个功能带来的效率
+提升就已经无与伦比了</p>
+<h3 id="posh-git"><a href="#posh-git" class="headerlink" title="posh-git"></a>posh-git</h3><p>让 git 的命令可以自动提示，分支可以自动显示。可惜这个插件有点慢。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程工具/" rel="tag"># 编程工具</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/09/zuozhuan-one/" rel="next" title="读左传——鲁隐公">
+                <i class="fa fa-chevron-left"></i> 读左传——鲁隐公
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avatar.jpg"
+                alt="郭荣飞" />
+            
+              <p class="site-author-name" itemprop="name">郭荣飞</p>
+              <p class="site-description motion-element" itemprop="description">记录成长路上的点点滴滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#visual-studio-vim-插件"><span class="nav-number">1.</span> <span class="nav-text">visual studio + vim 插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#割裂"><span class="nav-number">1.1.</span> <span class="nav-text">割裂</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件编码"><span class="nav-number">1.2.</span> <span class="nav-text">文件编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WSL"><span class="nav-number">2.</span> <span class="nav-text">WSL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IO太慢"><span class="nav-number">2.1.</span> <span class="nav-text">IO太慢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#终端太难用"><span class="nav-number">2.2.</span> <span class="nav-text">终端太难用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统上下文的切换很繁琐"><span class="nav-number">2.3.</span> <span class="nav-text">系统上下文的切换很繁琐</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nvim-powershell"><span class="nav-number">3.</span> <span class="nav-text">nvim + powershell</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#快"><span class="nav-number">3.1.</span> <span class="nav-text">快</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#美"><span class="nav-number">3.2.</span> <span class="nav-text">美</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原滋原味"><span class="nav-number">3.3.</span> <span class="nav-text">原滋原味</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟Linux的开发体验"><span class="nav-number">3.4.</span> <span class="nav-text">模拟Linux的开发体验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#psreadline"><span class="nav-number">3.4.1.</span> <span class="nav-text">psreadline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#psfzf"><span class="nav-number">3.4.2.</span> <span class="nav-text">psfzf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#posh-git"><span class="nav-number">3.4.3.</span> <span class="nav-text">posh-git</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭荣飞</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("V1PJeRmlN6tlfaIb6xQuuPF1-gzGzoHsz", "qGVK83JNhrlzwAxp4nqbD6iC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

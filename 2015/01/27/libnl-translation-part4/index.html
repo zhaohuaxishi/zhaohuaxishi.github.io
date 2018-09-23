@@ -595,7 +595,7 @@ Handle Message Type
 </code></pre><h2 id="auto_ack"> Auto-ACK 模式</h2>
 
 <p>TODO</p>
-<p>  [^1]: 这句话的原文是 <code>optioanl struct msgdhr containing the peer address</code> 从语法上翻译的话应该是说 <code>struct msghdr</code> 结构体是可选的。但是这本身是解释不通的，因为 <code>nl_sendmsg()</code> 这个函数的函数原型中参数 struct msghdr * hdr 是固定的参数而并非可选的，这一点可以参考API文档中的 <a href="http://www.infradead.org/~tgr/libnl/doc/api/group__send__recv.html#gad9fed072e3e69c2860d4c8e7c991677b" target="_blank" rel="noopener">相关介绍</a>。从上一段关于 <code>nl_send_iovec()</code> 函数的寻址处理中提到地址可能最终不确定，所以这里翻译成了msgdhr 可能包含地址，如果有更合理的解释，请联系我 <a href="mailto:&#103;&#x75;&#x6f;&#x72;&#111;&#x6e;&#103;&#x66;&#x65;&#105;&#64;&#49;&#x32;&#x36;&#46;&#x63;&#111;&#109;" target="_blank" rel="noopener">&#103;&#x75;&#x6f;&#x72;&#111;&#x6e;&#103;&#x66;&#x65;&#105;&#64;&#49;&#x32;&#x36;&#46;&#x63;&#111;&#109;</a>。「译者注」</p>
+<p>  [^1]: 这句话的原文是 <code>optioanl struct msgdhr containing the peer address</code> 从语法上翻译的话应该是说 <code>struct msghdr</code> 结构体是可选的。但是这本身是解释不通的，因为 <code>nl_sendmsg()</code> 这个函数的函数原型中参数 struct msghdr * hdr 是固定的参数而并非可选的，这一点可以参考API文档中的 <a href="http://www.infradead.org/~tgr/libnl/doc/api/group__send__recv.html#gad9fed072e3e69c2860d4c8e7c991677b" target="_blank" rel="noopener">相关介绍</a>。从上一段关于 <code>nl_send_iovec()</code> 函数的寻址处理中提到地址可能最终不确定，所以这里翻译成了msgdhr 可能包含地址，如果有更合理的解释，请联系我 <a href="mailto:&#103;&#x75;&#111;&#114;&#x6f;&#x6e;&#x67;&#102;&#x65;&#105;&#x40;&#x31;&#x32;&#54;&#46;&#99;&#x6f;&#109;" target="_blank" rel="noopener">&#103;&#x75;&#111;&#114;&#x6f;&#x6e;&#x67;&#102;&#x65;&#105;&#x40;&#x31;&#x32;&#54;&#46;&#99;&#x6f;&#109;</a>。「译者注」</p>
 <p>  [^2]: 这个例子在的最后一条语句中 <code>nl_send_simple</code> 函数的第一个参数写成了 <code>sock</code>，个人认为这是笔误。</p>
 
       
@@ -722,7 +722,7 @@ Handle Message Type
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-count">103</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -735,7 +735,7 @@ Handle Message Type
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -320,6 +320,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/02/26/python-regx-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/02/26/python-regx-note/" itemprop="url">Python 正则表达式疑难点</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-26T21:23:51+08:00">
+                2016-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/02/26/python-regx-note/" class="leancloud_visitors" data-flag-title="Python 正则表达式疑难点">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="和-A-以及-和-Z-的区别"><a href="#和-A-以及-和-Z-的区别" class="headerlink" title="^ 和 \A 以及 $ 和 \Z 的区别"></a><code>^</code> 和 <code>\A</code> 以及 <code>$</code> 和 <code>\Z</code> 的区别</h1><p>Python 的文档中对于这几个的记号的含义解释如下：</p>
+<ul>
+<li><p><code>^</code></p>
+<blockquote>
+<p>Matches the start of the string, and in MULTILINE mode also matches
+immediately after each newline.</p>
+</blockquote>
+</li>
+<li><p><code>$</code></p>
+<blockquote>
+<p>Matches the end of the string or just before the newline at the end of
+the string, and in MULTILINE mode also matches before a newline. foo
+matches both ‘foo’ and ‘foobar’, while the regular expression foo$
+matches only ‘ foo’. More interestingly, searching for foo.$ in
+‘foo1\nfoo2\n’ matches ‘ foo2’ normally, but ‘foo1’ in MULTILINE mode;
+searching for a single $ in ‘foo\n’ will find two (empty) matches: one
+just before the newline, and one at the end of the string.</p>
+</blockquote>
+</li>
+<li><p><code>\A</code></p>
+<blockquote>
+<p>Matches only at the start of the string.</p>
+</blockquote>
+</li>
+<li><p><code>\Z</code></p>
+<blockquote>
+<p>Matches only at the end of the string.</p>
+</blockquote>
+</li>
+</ul>
+<p>从上面的文档看 <code>$</code> 和 <code>\Z</code> 的含义只有在 MULTILINE 模式下才会有区别，比如说下面
+的例子[^1]:</p>
+<p>[^1]: 例子来自 <a href="http://stackoverflow.com/questions/22519318/regex-differences-between-and-a-z" target="_blank" rel="noopener">stackoverflow</a></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/02/26/python-regx-note/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/02/24/poly-and-inher/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1579,148 +1746,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/01/18/inside-cpp-object-model/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭荣飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="时习之">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/01/18/inside-cpp-object-model/" itemprop="url">读书札记之 —— 《深度探索 C++ 对象模型》</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-18T11:30:31+08:00">
-                2016-01-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/01/18/inside-cpp-object-model/" class="leancloud_visitors" data-flag-title="读书札记之 —— 《深度探索 C++ 对象模型》">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这本书应该有一个副标题——隐藏在编译器背后的故事。这是一本非常有深度的书，它告诉我
-们编译器在实现C++的那些特性（封装，单继承，多继承，虚拟继承、虚函数，构造，拷贝
-，析构，模板，内联，异常，RTTI等等）时帮我们做了什么。</p>
-<p>译者侯捷在译序中说的本立道生可谓是一语中的。不了解这些东西你可以写出正确的C++程
-序，因为你知道C++语法。但是如果你知道C++中的特性是如何实现的，它们的开销是什么，
-你就可以在单继承、多继承、虚拟继承之间；抽象类、实体类之间；继承和组合之间做出最
-合适你自己的选择。同时了解这些知识会让你对于自己写的程序理解的非常透侧，一个优秀
-的程序员要对自己写下的代码了如指掌。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/01/18/inside-cpp-object-model/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1775,7 +1800,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-count">103</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1788,7 +1813,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

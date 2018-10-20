@@ -533,6 +533,55 @@ conan upload Hello/0.0.1@conan/testing --all
 
 但是Android的NDK，现在也支持使用`toolchain`这种方式，但是这种方式在后续会被慢慢的移除掉。NDK目前的交叉编译使用的是CMake的toolchain.cmake这种方式，直接使用CMake系统来完成交叉编译，它不需要单独制作`toolchian`，使用起来其实方便很多。但是目前conan并不支持这种方式。
 
+# 使用技巧
+
+使用了一段时间的conan之后，积累了一些相关的经验补充在这里：
+
+## 使用alias创建别名包，避免频繁的更新依赖
+
+我们在创建和使用一个conan包的时候都需要指定这个conan包的版本
+
+```
+# 创建
+conan create . HelloConan/0.1.0@conan/teting
+
+# 使用
+conan install HelloConan/0.1.0@conan/teting
+```
+
+这给使用上带来的问题是，如果我更新了一个包，但是并没有改变他的接口，使用者依旧
+需要更新自己的依赖：比如更新`conanfile.txt`。使用者很多时候只要前后版本可以兼容
+，使用者通常自是想要使用最新版本就可以了。
+
+conan提供了`alias`来实现最新版本这个概念，比如如果我们刚刚创建了`0.1`系列最新的包`HelloConan/0.1.5@conan/teting`这个包，我们可以使用下面的命令把最新版本设置为这个包：
+
+```
+conan alias HelloConan/0.1@conan/testing HelloConan/0.1.5@conan/testing
+```
+
+## 手动创建包，避免每次更新都重新编译整包
+
+`conan create`这条命令的背后实际上执行了整个打包流程【5】，这条命令很方便，但是
+会导致所有的包都重新编译一遍，而很多时候其实我们只是做了非常小的一个改动而已。
+为了充分的利用编译缓存，我们可以手动的执行打包流程，也就是手动执行`conan
+create`背后的指令：
+
+```
+conan install . --install-folder=./build
+conan build . --source-folder=./ --build-folder=./build
+conan export-pkg . HelloConan/0.1.0@conan/testing --package-folder=./build/package
+```
+
+`conan create`实际上依次执行了`conan source`，`conan install`，`conan build`，`conan package`，`conan export-pkg`这几条命名。它之所以慢是因为每次都需要重新执行这些命令，如果我们手动创建包，我们可以有下面这些改进：
+
+- 不执行`source`，因为源码就在我们手上，可能就是当前这个目录
+- 选择性执行`conan install`，依赖项实际上我们可以只安装一次，后续的编译不需要重复执行
+- 指定同一个编译目录，这个是最见效的方式，我们可以把编译目录手动设置为固定的目录，这样可以充分的利用编译缓存来极大是缩短编译时间。
+- 不执行`conan package`，因为`conan export-pkg`会执行`package()`函数，也就是`conan package`命令做的事情。
+
+**需要注意的是，`export-pkg`包含两种不同的执行模式，如果我们在`build`这个步骤中使用了`cmake.install()`创建了包，我们只需要指定`package-folder`就可以了（这种情况通常我们不写`package`函数），否则我们需要指定`source-folder`和`build-folder`，以便执行`package`函数打包。**
+
+
 ---
 
 【1】：为什么使用脚本语言来实现编译语言的包版本管理器可以参考官方的解释：[Why a C++ package manager can't be written in C++](http://blog.conan.io/2016/09/27/Why-a-C++-package-manager-can't-be-written-in-C++.html)
@@ -542,3 +591,5 @@ conan upload Hello/0.0.1@conan/testing --all
 【3】：Windows 中的 HOME 目录通常是用户目录的根目录。
 
 【4】：比如目前网络上存在大量的开源C/C++项目没有conan包，我们可以为这些包编写打包脚本
+
+【5】：https://docs.conan.io/en/latest/developing_packages/package_dev_flow.html

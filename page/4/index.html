@@ -320,6 +320,296 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/12/03/vim-ultisnipt-google-c-cpp-header-gurad/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/12/03/vim-ultisnipt-google-c-cpp-header-gurad/" itemprop="url">使用 vim 的 UltiSnips 插件生成符合 google 规范的头文件保护宏</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-03T19:00:09+08:00">
+                2016-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/12/03/vim-ultisnipt-google-c-cpp-header-gurad/" class="leancloud_visitors" data-flag-title="使用 vim 的 UltiSnips 插件生成符合 google 规范的头文件保护宏">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>google 的 cpp style guide 中推荐把头文件保护宏定义成如下格式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;PROJECT&gt;_&lt;PATH&gt;_&lt;FILE&gt;_H_</span><br></pre></td></tr></table></figure>
+<p>目前大部分的头文件保护宏生成工具都没有办法按照路径来生成这个宏。在 Vim 的
+UltiSnips 插件的默认 Snippet 代码中可以使用 <code>once</code> 来生成类似于下面这样的头文件
+保护宏：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;FILE&gt;_&lt;RANDOM_CHARS&gt;_H</span><br></pre></td></tr></table></figure>
+<p>这种默认的行为已经能非常好的避免头文件多重包含问题了，但是从美观性和规范性上来说
+，google 的标准写法略胜一筹。幸运的是 UltiSnips 允许你定义自己的 snippet。本文介
+绍一种通过自己编写 snippet 的方式生成符合 google 规范的头文件保护宏。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/12/03/vim-ultisnipt-google-c-cpp-header-gurad/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/11/20/doxygen-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/11/20/doxygen-usage/" itemprop="url">使用 Doxygen 生成文档注释</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-20T19:51:32+08:00">
+                2016-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/11/20/doxygen-usage/" class="leancloud_visitors" data-flag-title="使用 Doxygen 生成文档注释">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>全文是个人关于注释的观点，很可能有误，不想误人子弟，请慎重考虑其中的任何一个观点
+，欢迎拍砖。</p>
+<h1 id="注释不是越多越好"><a href="#注释不是越多越好" class="headerlink" title="注释不是越多越好"></a>注释不是越多越好</h1><p>刚开始学编程的时候，总是会有一些老鸟程序员告诉我，优秀的程序员都习惯给自己的代码
+加上大量的注释，这一点甚至有很多的老师都是这么教的，以至于有很长一段时间我都对这
+个观点深信不疑。</p>
+<p>第一个让我这个观点产生怀疑的人是“林纳斯·托瓦兹”，有一段时间疯狂的迷恋操作系统的
+内核，而我尝试读一些源码的时候发现，大神们写的代码其实并不会有太多的注释，但是他
+们的代码依旧很漂亮。</p>
+<p>第二个让我对于注释越多越好的观点产生怀疑的人是C++之父，忘记在他的那一本书中看到
+，注释如果和源码不同步比没有注释更糟糕。</p>
+<p>注释是你的源码的一部分，只要你选择写下一行注释，你就需要担负起维护它的责任。我们
+经常会在重构一段源码的时候忘记给更改的地方的注释加上相应的修改。最后留给源码的阅
+读者无尽的苦恼这段代码怎么就能实现注释里面说的这个功能呢。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/11/20/doxygen-usage/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/11/20/mingw-with-msvc-cpp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1465,291 +1755,6 @@ export这个特性很多的编译器不支持，而且在新的标准中已经�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/04/22/more-exceptional-cpp-note/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭荣飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="时习之">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/04/22/more-exceptional-cpp-note/" itemprop="url">读书札记之 —— 《More Exceptional C++》</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-22T17:14:09+08:00">
-                2016-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/04/22/more-exceptional-cpp-note/" class="leancloud_visitors" data-flag-title="读书札记之 —— 《More Exceptional C++》">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>和《More Effective C++》中的<code>more</code>不一样的是，这本书的<code>more</code>体现在广度上而不是
-深度上。《Exceptional C++》一书的已经是非常有深度的一本书了（或者说是比较难的一
-本书了），这本书是前者在其他内容上的扩展。</p>
-<p>这本书涉及到很多内容，包括范型模板、性能调优等等方面。个认识收获最多的是
-<code>traits</code>类的使用。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/04/22/more-exceptional-cpp-note/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/04/18/wanqin-minguo-note/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭荣飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="时习之">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/04/18/wanqin-minguo-note/" itemprop="url">读书札记之 —— 《从晚晴到民国》</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-18T10:47:17+08:00">
-                2016-04-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/04/18/wanqin-minguo-note/" class="leancloud_visitors" data-flag-title="读书札记之 —— 《从晚晴到民国》">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这是一部有趣的“野史”，让我了解到正史（教科书）之外的各种史料和观点，给我的感觉
-是醍醐灌顶，耳目一新。我高中学文科，对这一段的历史还算了解，书中提到的大事基本
-熟悉，只是作者站在一个全新的角度去看待这些事情，给人的体会自然也就不一样了。</p>
-<p>《从晚晴到民国》这本书是《晚期七十年》一书的删减版本，至于删减了什么东西我不太
-清楚，不过剩下的东西很值得一读。本书覆盖了鸦片战争（1840）年到辛亥革命（1911）
-这七十年左右的历史，按照作者的历史转型观点，这段时期十几年发生一次巨变，应该也
-就是所谓穷则变，变则通，不通再变，循环往复。这段时期大概是200年，我们目前还处于
-这样一个时期，也许不久的将来还会大变。</p>
-<p>这段历史是我们的国难史，这段历史当中的国人身处水火之中，人命如蝼蚁，惨不堪言。
-在内忧外患之中，我们能够保持领土完整、主权独立可以说是不幸中的万幸。我们之所以
-没有沦落为殖民地很大一部分的原因在于那些在民族危亡之际挺身而出的民族英雄。我读
-这本书，最吸引我的内容也就是这些人的英雄事迹，他们理当名垂青史，流芳百世。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/04/18/wanqin-minguo-note/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1804,7 +1809,7 @@ export这个特性很多的编译器不支持，而且在新的标准中已经�
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">103</span>
+                  <span class="site-state-item-count">105</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1817,7 +1822,7 @@ export这个特性很多的编译器不支持，而且在新的标准中已经�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

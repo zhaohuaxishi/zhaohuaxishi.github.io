@@ -320,6 +320,293 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/03/24/blanks-in-scanf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/03/24/blanks-in-scanf/" itemprop="url">关于 scanf() 函数格式字符串中的空白字符</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-03-24T00:00:00+08:00">
+                2015-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/03/24/blanks-in-scanf/" class="leancloud_visitors" data-flag-title="关于 scanf() 函数格式字符串中的空白字符">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>最近重读 《The C Programing Language》 一书，7.4 节讲解格式化输入<code>scanf</code>，书中
+关于 <code>scanf()</code> 函数的第一个参数——格式字符串的组成部分描述时有下面这样一句话。</p>
+<blockquote>
+<p>Blanks or tabs, which are ignored.</p>
+</blockquote>
+<p>然而使用 <code>man 3 scanf</code> 查看关于 <code>scanf()</code> 函数的文档时，同样关于格式字符串的
+组成部分描述有下面这段话：</p>
+<blockquote>
+<p>A sequence of white-space characters (space, tab, newline, etc.; see
+isspace(3)).  This directive matches  any  amount of white space, including
+none, in the input.</p>
+</blockquote>
+<p>K&amp;R 中说空白是被忽略的成分，而文档中给出的说法是空白会匹配输入流中任意空白字符
+（包括 0 ）。那么到底那一种说法比较妥当呢？</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/03/24/blanks-in-scanf/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/03/07/lfs-build-fcitx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/03/07/lfs-build-fcitx/" itemprop="url">LFS 中编译 Fcitx</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-03-07T00:00:00+08:00">
+                2015-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2015/03/07/lfs-build-fcitx/" class="leancloud_visitors" data-flag-title="LFS 中编译 Fcitx">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><code>LFS</code> 教会我从无到有构建一个 <code>Linux</code> 系统，也让我对 <code>Linux</code> 系统的内部工作原理
+有了更加深刻的理解。但是 <code>LFS</code> 和 <code>BLFS</code> 终究还是外国人写的，所以在中文支持方面
+并不是特别让人满意。要想自己编译一个可以供日常使用的 <code>Linux</code> 系统对于我来说最大
+的障碍在于 <code>BLFS</code> 中没有关于如何编译输入法的内容，而且网上能够找到的关于如何编译
+输入法的资料几乎为零。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/03/07/lfs-build-fcitx/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/02/26/lkd-chapter-three/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -677,7 +964,7 @@
             <p>这是<code>libnl</code>库的官方开发者文档教程的中文翻译，原文可以在<a href="http://www.infradead.org/~tgr/libnl/doc/core.html" target="_blank" rel="noopener">这个地址</a>中
 找到。该文档由郭荣飞翻译，希望可以给开源世界贡献一份自己微薄的力量。本人非专业翻
 译因此文中必然有翻译不当之处，如果您发现了这样的问题，请联系
-<a href="mailto:&#x67;&#x75;&#x6f;&#x72;&#x6f;&#x6e;&#x67;&#x66;&#x65;&#x69;&#x40;&#49;&#50;&#54;&#x2e;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#x67;&#x75;&#x6f;&#x72;&#x6f;&#x6e;&#x67;&#x66;&#x65;&#x69;&#x40;&#49;&#50;&#54;&#x2e;&#x63;&#x6f;&#x6d;</a>。</p>
+<a href="mailto:&#103;&#117;&#x6f;&#x72;&#111;&#110;&#103;&#x66;&#x65;&#105;&#x40;&#49;&#x32;&#x36;&#x2e;&#99;&#111;&#x6d;" target="_blank" rel="noopener">&#103;&#117;&#x6f;&#x72;&#111;&#110;&#103;&#x66;&#x65;&#105;&#x40;&#49;&#x32;&#x36;&#x2e;&#99;&#111;&#x6d;</a>。</p>
 <hr>
 <p>目录</p>
 <ol>
@@ -1483,287 +1770,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/01/27/libnl-translation-part4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭荣飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="时习之">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/01/27/libnl-translation-part4/" itemprop="url">Netlink 库 -- 官方开发者教程中文版第四部分</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-27T00:00:00+08:00">
-                2015-01-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2015/01/27/libnl-translation-part4/" class="leancloud_visitors" data-flag-title="Netlink 库 -- 官方开发者教程中文版第四部分">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="snd_rcv_msg_data">4. 消息或数据的发送和接收</h1>
-
-<h2 id="send_msg">4.1 发送消息</h2>
-
-<p>使用 netlink 套接字发送一条 netlink 消息的标准方式是调用 <code>nl_send_auto()</code> 函数。
-这个函数会通过填充缺失的字段以及填充 netlink 消息头部自动完成这条 netlink 消息的
-构建。此外这个函数还会根据 netlink 套接字设置的选项和地址来处理寻址问题。之后这
-个消息会被传递给 nl_send() 函数。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/01/27/libnl-translation-part4/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2015/01/26/libnl-translation-part3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭荣飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="时习之">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/01/26/libnl-translation-part3/" itemprop="url">Netlink 库 -- 官方开发者教程中文版第三部分</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-26T00:00:00+08:00">
-                2015-01-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2015/01/26/libnl-translation-part3/" class="leancloud_visitors" data-flag-title="Netlink 库 -- 官方开发者教程中文版第三部分">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="netlink_sock">3. Netlink 套接字</h1>
-
-<p>为了使用 netlink 协议，我们首先需要一个 netlink 套接字[^1]。每个套接字都定义了一
-个独立的消息发送和接收的上下文环境。一个应用程序可以使用多个套接字，比如一个套接
-字用于发送请求消息和接受应答消息另一个套接字用来订阅某个多播组以便接收通知消息。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/01/26/libnl-translation-part3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1818,7 +1824,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">103</span>
+                  <span class="site-state-item-count">105</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1831,7 +1837,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

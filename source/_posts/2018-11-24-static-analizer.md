@@ -11,9 +11,9 @@ tags:
 
 # clang-format
 
-严格来说，它不是静态检查工具，而是代码格式化的工具，类似的工具还有`astyle`，但是相对来说，`clang-format`会好用一些，支持的配置参数也多一些。
+严格来说，它不是静态检查工具，而是代码格式化的工具，类似的工具还有`astyle`，但是相对来说，`clang-format`会好用一些，支持的配置参数也多一些。它的使用请参考[Clang-Format Style Options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)。
 
-它的使用请参考[Clang-Format Style Options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
+使用统一的代码格式化工具，可以极大的代码格式上面的问题，在多人合作的项目中显得特别的有用。
 
 # cpplint
 
@@ -25,17 +25,15 @@ Guide][guide]，我们目前的编码规范是基于`Google`的规范，所以�
 
 ## 安装
 
-这个工具是Python写的，所以你可以直接通过
+这个工具是Python写的，所以你可以直接通过pip来安装这个工具的最新版本
 
 ```bash
 pip3 install cpplint
 ```
 
-来安装这个工具的最新版本
-
 ## 使用
 
-这个工具的使用比较简单，直接一些命令：
+这个工具的使用比较简单，直接使用命令：
 
 ```bash
 cpplint <文件名>
@@ -139,7 +137,7 @@ cppcheck是一个历史比较悠久的静态检查工具，它的侧重点在于
 
 绝大部分的系统，可以直接通过包管理器安装`cppcheck`，以`Ubuntu`为例：
 
-```
+```bash
 sudo apt install cppcheck
 ```
 
@@ -147,7 +145,7 @@ sudo apt install cppcheck
 
 `cppcheck`比`cpplint`方便一些的地方在于，它支持目录检查，而`cpplint`只支持文件检查。
 
-```
+```bash
 cppcheck src
 ```
 
@@ -157,18 +155,21 @@ cppcheck src
 
 和`cpplint`一样，这个工具支持过滤，你可以通过`--enable=all`打开所有的过滤器
 
-```
+```bash
 cppcheck --enable=all src
 ```
+
+具体支持的filter，可以通过`cppcheck --help`中的`--enable`选项说明来查看，这不再赘述。
+
 ## 不足
 
 这个工具最大的问题在于比较容易误判，所以我通常很少会直接使用`--enable=all`，而是直接使用默认的配置。
 
 # clang-check、clang static analyzer、clang-tidy
 
-把这三个工具放一块儿讲，因为它们实际上都是`clang`衍生出来的工具，极其类似忽悠交叉，大部分情况下我们使用其中之一就够了（我实际上不清楚为什么会有三个这样的工具同时存在）。
+把这三个工具放一块儿讲是因为它们实际上都是`clang`衍生出来的工具，极其类似互有交叉，大部分情况下我们使用其中之一就够了（我实际上不清楚为什么会有三个这样的工具同时存在）。
 
-这几个工具实际上是编译器级别的检查，他们需要编译文件从而检查代码，所以理论上他们的可靠性会比`cpplint`和`cppcheck`要强一些，同时它的耗时也会它们长一些。
+这几个工具实际上是编译器级别的检查，它们需要编译文件从而检查代码，所以理论上他们的可靠性会比`cpplint`和`cppcheck`要强一些，同时它的耗时也会它们长一些。
 
 目前我使用的是`clang-tidy`，它和`clang-check`非常类似，但是它支持扩展自定义的检查。另外官方提供`run-clang-tidy`脚本用于实现对整个项目的文件做检查，用起来非常的方便。
 
@@ -205,5 +206,7 @@ clang-tidy -list-checks
 ```
 
 来查看所有已经`enable`的检查，具体的文档请参考[clang-tidy][tidy]
+
+**注意：如果你使用的是zsh，上面的通配符会失效，你可以切换到bash执行这些命令，或者使用`setopt no_nomatch`来关闭zsh对于通配符的拦截**
 
 [tidy]: http://clang.llvm.org/extra/clang-tidy/

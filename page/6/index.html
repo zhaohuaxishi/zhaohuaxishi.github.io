@@ -320,6 +320,149 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/03/10/python-like-str-formater-in-cpp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭荣飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="时习之">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/03/10/python-like-str-formater-in-cpp/" itemprop="url">C++中实现简单的Python风格字符串格式化函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-10T16:44:04+08:00">
+                2016-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/03/10/python-like-str-formater-in-cpp/" class="leancloud_visitors" data-flag-title="C++中实现简单的Python风格字符串格式化函数">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>前一段时间学习 <code>Python</code>，被这门语言的便利性惊艳到了，比如你可以这样产生一个字
+符串：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># output "hello world, PI is 3.14"</span></span><br><span class="line"><span class="string">"&#123;&#125; world, PI is &#123;&#125;"</span>.format(<span class="string">"hello"</span>, <span class="number">3.14</span>)</span><br></pre></td></tr></table></figure>
+<p>最近学习C++标准库，看到C++11新的变参模板，发现它可以用来实现一个简单的类似
+<code>Python</code> 风格字符串格式化函数[^1]，语法如下：。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// output "hello world, PI is 3.14"</span></span><br><span class="line">FormateString(<span class="string">"&#123;&#125; world, PI is &#123;&#125;"</span>, <span class="string">"hello"</span>, <span class="number">3.14</span>)</span><br></pre></td></tr></table></figure>
+<p>本文讲解一个非常简单的实现版本，不处理下面这样的语法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// output "say you say me"</span></span><br><span class="line">FormateString(<span class="string">"&#123;0&#125; you &#123;0&#125; me"</span>, <span class="string">"say"</span>)</span><br></pre></td></tr></table></figure>
+<p>如果你需要一个丰富的字符串格式化功能，可以考虑使用<a href="https://github.com/cppformat/cppformat" target="_blank" rel="noopener">cppformat</a>这个库。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/03/10/python-like-str-formater-in-cpp/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/03/09/cppx-list-initilization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1609,151 +1752,6 @@ just before the newline, and one at the end of the string.</p>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.guorongfei.com/2016/01/25/more-effective-cpp-note/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭荣飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="时习之">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/01/25/more-effective-cpp-note/" itemprop="url">读书札记之 —— 《More Effective C++》</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-25T09:31:31+08:00">
-                2016-01-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/01/25/more-effective-cpp-note/" class="leancloud_visitors" data-flag-title="读书札记之 —— 《More Effective C++》">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这本书没有《Effective C++》一书重要，但仍然值得一读。这是我看过最多的关于这本书
-的评价。这个评价还算中肯，但是这句话面向的是初学者。这本书里面提到的很多技术估计
-没有几年的开发经验应该不太可能用到，比如自己处理引用计数，自己设计代理类等等。如
-果你是比较高阶（至少你自己是这么认为的）的C++程序员（嗯，或者你可以说自己是工程
-师），这本书非常值得一看，因为里面设计的引用技术、字符代理、双分派问题都是近乎神
-技，即使用不到这些技术，你依旧可以在这些代码中学到很多设计方面的新的思维。</p>
-<p>还有很多人说这本书有点过时，这是实话，作者在书中提到模板、异常可能不受支持的问题
-现在看来像是在开玩笑。但是作者写这本书的时候确实有这个问题，而且这些论断并不会影
-响文中其他内容的讨论，所以认为这本书太老而不值得一读的人完全可以消除这个顾虑。唯
-一的例外是关于异常规格（exception specification）的讨论确实有点过时，因为新的标
-准中已经废弃的这一功能，但是阅读相关的内容会让你更容易理解为什么它会遭到废弃。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/01/25/more-effective-cpp-note/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1808,7 +1806,7 @@ just before the newline, and one at the end of the string.</p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-count">106</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

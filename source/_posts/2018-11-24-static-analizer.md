@@ -37,6 +37,7 @@ pip3 install cpplint
 
 ```bash
 cpplint <文件名>
+cpplint --recursive <目录名>
 ```
 
 比如我们有源文件`hello.cpp`如下：
@@ -142,8 +143,6 @@ sudo apt install cppcheck
 ```
 
 ## 使用
-
-`cppcheck`比`cpplint`方便一些的地方在于，它支持目录检查，而`cpplint`只支持文件检查。
 
 ```bash
 cppcheck src

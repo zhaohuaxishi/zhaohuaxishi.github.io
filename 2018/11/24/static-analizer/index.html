@@ -131,7 +131,7 @@
 <meta property="og:site_name" content="时习之">
 <meta property="og:description" content="最近在尝试做代码审查，发现很多时候我们把时间花在了低级的规范性错误上面，为了节省这一部分的时间，我尝试了各种静态检查工具，这里做个简单的汇总，方便日后的查看。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-25T13:52:51.952Z">
+<meta property="og:updated_time" content="2018-12-15T01:08:25.014Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++静态检查工具总结">
 <meta name="twitter:description" content="最近在尝试做代码审查，发现很多时候我们把时间花在了低级的规范性错误上面，为了节省这一部分的时间，我尝试了各种静态检查工具，这里做个简单的汇总，方便日后的查看。">
@@ -408,7 +408,7 @@ Guide</a>，我们目前的编码规范是基于<code>Google</code>的规范，�
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>这个工具是Python写的，所以你可以直接通过pip来安装这个工具的最新版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install cpplint</span><br></pre></td></tr></table></figure>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>这个工具的使用比较简单，直接使用命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpplint &lt;文件名&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cpplint &lt;文件名&gt;</span><br><span class="line">cpplint --recursive &lt;目录名&gt;</span><br></pre></td></tr></table></figure>
 <p>比如我们有源文件<code>hello.cpp</code>如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> message = <span class="string">"Hello World"</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; message &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用<code>cpplint hello.cpp</code>我们会得到如下消息：</p>
@@ -429,8 +429,7 @@ Total errors found: 2</copyright></p>
 <h1 id="cppcheck"><a href="#cppcheck" class="headerlink" title="cppcheck"></a>cppcheck</h1><p>cppcheck是一个历史比较悠久的静态检查工具，它的侧重点在于检查代码的逻辑而不是代码的风格。它可以和<code>cpplint</code>一起使用，相互补充。</p>
 <h2 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h2><p>绝大部分的系统，可以直接通过包管理器安装<code>cppcheck</code>，以<code>Ubuntu</code>为例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install cppcheck</span><br></pre></td></tr></table></figure>
-<h2 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h2><p><code>cppcheck</code>比<code>cpplint</code>方便一些的地方在于，它支持目录检查，而<code>cpplint</code>只支持文件检查。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cppcheck src</span><br></pre></td></tr></table></figure>
+<h2 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cppcheck src</span><br></pre></td></tr></table></figure>
 <p>表示检查<code>src</code>路径下面的所有文件</p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>和<code>cpplint</code>一样，这个工具支持过滤，你可以通过<code>--enable=all</code>打开所有的过滤器</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cppcheck --<span class="built_in">enable</span>=all src</span><br></pre></td></tr></table></figure>
@@ -573,7 +572,7 @@ Total errors found: 2</copyright></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">108</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
